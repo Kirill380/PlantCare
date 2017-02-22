@@ -1,7 +1,7 @@
 package com.redkite.plantcare.common.constraint;
 
 
-import org.kaaproject.sentinel.dto.utils.PasswordRuleChecker;
+import com.redkite.plantcare.common.util.PasswordRuleChecker;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
