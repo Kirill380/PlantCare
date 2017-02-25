@@ -43,9 +43,12 @@
   :profiles {:dev {:dependencies [[binaryage/dirac "1.1.5"]
                                   [figwheel-sidecar "0.5.9"]
                                   [com.cemerick/piggieback "0.2.1"]]
+                   :plugins [[lein-kibit "0.1.3"]
+                             [lein-bikeshed "0.4.1"]]
                    :source-paths ["src" "dev"]
                    :repl-options {:port 8230
                                   :nrepl-middleware [dirac.nrepl/middleware]
                                   :init (do
                                           (require 'dirac.agent)
-                                          (dirac.agent/boot!))}}})
+                                          (dirac.agent/boot!))}}}
+  :aliases {"lint" ["do" ["kibit"] ["bikeshed"]]})
