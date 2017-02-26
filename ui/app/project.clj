@@ -10,7 +10,8 @@
                  [org.clojure/clojurescript "1.9.229"]
                  [org.clojure/core.async "0.2.395"
                   :exclusions [org.clojure/tools.reader]]
-                 [rum "0.10.8"]]
+                 [rum "0.10.8"]
+                 [funcool/bide "1.4.0"]]
 
   :plugins [[lein-figwheel "0.5.9"]
             [lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]]
@@ -22,7 +23,7 @@
   :cljsbuild {:builds
               [{:id "dev"
                 :source-paths ["src"]
-                :figwheel {:on-jsload "app.core/on-js-reload"}
+                :figwheel {:on-jsload "app.core/render"}
 
                 :compiler {:main app.core
                            :asset-path "js/compiled/out"
