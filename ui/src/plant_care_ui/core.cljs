@@ -1,6 +1,6 @@
-(ns app.core
+(ns plant-care-ui.core
   (:require [rum.core :as rum]
-            [app.router :refer [router route]]))
+            [plant-care-ui.router :refer [router route]]))
 
 (enable-console-print!)
 

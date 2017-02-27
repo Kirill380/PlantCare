@@ -1,4 +1,4 @@
-(ns app.router
+(ns plant-care-ui.router
   (:require [bide.core :as r]
             [rum.core :as rum]))
 

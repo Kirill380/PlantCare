@@ -1,4 +1,4 @@
-(defproject app "0.1.0-SNAPSHOT"
+(defproject plant-care-ui "0.1.0-SNAPSHOT"
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -23,9 +23,9 @@
   :cljsbuild {:builds
               [{:id "dev"
                 :source-paths ["src"]
-                :figwheel {:on-jsload "app.core/render"}
+                :figwheel {:on-jsload "plant-care-ui.core/render"}
 
-                :compiler {:main app.core
+                :compiler {:main plant-care-ui.core
                            :asset-path "js/compiled/out"
                            :output-to "resources/public/js/compiled/app.js"
                            :output-dir "resources/public/js/compiled/out"
@@ -34,7 +34,7 @@
                {:id "min"
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/app.js"
-                           :main app.core
+                           :main plant-care-ui.core
                            :optimizations :advanced
                            :pretty-print false}}]}
 
