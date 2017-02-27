@@ -1,7 +1,8 @@
-package com.redkite.plantcare.notifications;
+package com.redkite.plantcare.controllers;
 
 
 import com.redkite.plantcare.common.dto.NotificationRequest;
+import com.redkite.plantcare.notifications.NotificationException;
 import com.redkite.plantcare.notifications.senders.NotificationSender;
 
 import lombok.extern.slf4j.Slf4j;

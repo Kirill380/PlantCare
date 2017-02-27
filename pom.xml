@@ -9,11 +9,7 @@
     <version>0.1.0-SNAPSHOT</version>
     <modules>
         <module>core-service</module>
-        <module>notifiation-service</module>
-        <module>statistic-service</module>
         <module>common</module>
-        <module>endpoint-service</module>
-        <module>configuration-service</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -25,7 +21,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <spring.boot.version>1.4.2.RELEASE</spring.boot.version>
-        <spring.cloud.dependencies.version>Brixton.SR6</spring.cloud.dependencies.version>
         <mariadb.java.client.version>1.5.4</mariadb.java.client.version>
         <apache.commons.lang3.version>3.5</apache.commons.lang3.version>
         <com.google.guava.version>19.0</com.google.guava.version>
@@ -47,13 +42,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring.cloud.dependencies.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
