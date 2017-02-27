@@ -1,11 +1,12 @@
 (ns plant-care-ui.router
   (:require [bide.core :as r]
-            [rum.core :as rum]))
+            [rum.core :as rum]
+            [plant-care-ui.pages.landing :refer [landing-page]]))
 
 (defonce route (atom))
 
 (def *router
-  (r/router [["/" ::root]
+  (r/router [["/" ::landing]
              ["/page1" ::page1]
              ["/page1/:id" ::page1-by-id]]))
 
@@ -22,6 +23,6 @@
         state (rum/react *state)]
     [:div
      (case handler
-       ::root [:div "ROOT"]
+       ::landing (landing-page)
        ::page1 [:div "PAGE 1"]
        ::page1-by-id [:div (str "PAGE 1 " params)])]))
