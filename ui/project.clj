@@ -11,10 +11,15 @@
                  [org.clojure/core.async "0.2.395"
                   :exclusions [org.clojure/tools.reader]]
                  [rum "0.10.8"]
-                 [funcool/bide "1.4.0"]]
+                 [funcool/bide "1.4.0"]
+                 [cljsjs/material-ui "0.17.0-0"
+                  :exclusions [cljsjs/react cljsjs/react-dom]]]
+
+  :npm {:dependencies []}
 
   :plugins [[lein-figwheel "0.5.9"]
-            [lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]]
+            [lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]
+            [lein-npm "0.6.2"]]
 
   :source-paths ["src"]
 
@@ -41,7 +46,7 @@
   :figwheel {:server-port 3000
              :css-dirs ["resources/public/css"]}
 
-  :profiles {:dev {:dependencies [[binaryage/dirac "1.1.5"]
+  :profiles {:dev {:dependencies [[binaryage/dirac "1.1.6"]
                                   [figwheel-sidecar "0.5.9"]
                                   [com.cemerick/piggieback "0.2.1"]]
                    :plugins [[lein-kibit "0.1.3"]

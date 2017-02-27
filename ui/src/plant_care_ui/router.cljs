@@ -1,6 +1,7 @@
 (ns plant-care-ui.router
   (:require [bide.core :as r]
             [rum.core :as rum]
+            [plant-care-ui.components.material :as m]
             [plant-care-ui.pages.landing :refer [landing-page]]))
 
 (defonce route (atom))
@@ -16,13 +17,13 @@
                  :query query}))
 
 (r/start! *router {:default ::root
-                  :on-navigate on-navigate})
+                   :on-navigate on-navigate})
 
 (rum/defc router < rum/reactive [route *state]
   (let [{:keys [handler params query]} (rum/react route)
-        state (rum/react *state)]
-    [:div
+         state (rum/react *state)]
+    (m/mui-theme-provider
      (case handler
        ::landing (landing-page)
        ::page1 [:div "PAGE 1"]
-       ::page1-by-id [:div (str "PAGE 1 " params)])]))
+       ::page1-by-id [:div (str "PAGE 1 " params)]))))
