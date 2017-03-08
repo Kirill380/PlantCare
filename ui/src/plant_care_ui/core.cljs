@@ -1,13 +1,13 @@
 (ns plant-care-ui.core
-  (:require [rum.core :as rum]
-            [plant-care-ui.router :refer [router route]]))
+  (:require [reagent.core :as reagent]
+            [plant-care-ui.router.core :refer [router]]))
 
 (enable-console-print!)
 
 (defonce state (atom {:text "Hello world!"}))
 
 (defn render []
-  (rum/mount (router route state)
-             (.getElementById js/document "app")))
+ (reagent/render [router]
+  (.getElementById js/document "app")))
 
 (render)

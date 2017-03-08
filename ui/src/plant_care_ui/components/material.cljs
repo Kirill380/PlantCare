@@ -1,4 +1,5 @@
-(ns plant-care-ui.components.material)
+(ns plant-care-ui.components.material
+  (:require [reagent.core :as reagent]))
 
 (defn create-element
   ([elem] (create-element elem {} nil))
@@ -6,11 +7,8 @@
   ([elem props children]
    (js/React.createElement elem (clj->js props) (clj->js children))))
 
-(defn mui-theme-provider [children]
-  (create-element
-   js/MaterialUI.MuiThemeProvider
-   {}
-   children))
+(def mui-theme-provider
+  (reagent/adapt-react-class js/MaterialUI.MuiThemeProvider))
 
 (defn button [props]
   (create-element

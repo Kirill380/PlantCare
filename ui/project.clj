@@ -10,12 +10,11 @@
                  [org.clojure/clojurescript "1.9.495"]
                  [org.clojure/core.async "0.3.441"
                   :exclusions [org.clojure/tools.reader]]
-                 [rum "0.10.8"]
+                 [reagent "0.6.0"]
+                 [re-frame "0.9.2"]
                  [funcool/bide "1.4.0"]
                  [cljsjs/material-ui "0.17.0-0"
-                  :exclusions [cljsjs/react cljsjs/react-dom]]
-                 [reagent "0.6.0" :exclusions [cljsjs/react]]
-                 [re-frame "0.9.2"]]
+                  :exclusions [cljsjs/react cljsjs/react-dom]]]
 
   :npm {:dependencies []}
 
