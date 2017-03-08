@@ -2,7 +2,8 @@
   (:require [plant-care-ui.components.material :as m]
             [reagent.core :as reagent]
             [re-frame.core :as re-frame]
-            [plant-care-ui.pages.landing.events]))
+            [plant-care-ui.pages.landing.events]
+            [plant-care-ui.router.core :as router]))
 
 (defn login-form []
   (let [*login (reagent/atom "")
@@ -34,4 +35,10 @@
                  :align-items "center"
                  :height 500
                  :width "100%"}}
-   [login-form]])
+   [login-form]
+   [:div {:style {:margin-top 5
+                  :width 256}}
+    [m/raised-button {:primary true
+                      :label "REGISTRATION"
+                      :full-width true
+                      :on-click #(router/navigate! :registration)}]]])
