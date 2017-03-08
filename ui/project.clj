@@ -7,13 +7,15 @@
   :min-lein-version "2.7.1"
 
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.229"]
-                 [org.clojure/core.async "0.2.395"
+                 [org.clojure/clojurescript "1.9.495"]
+                 [org.clojure/core.async "0.3.441"
                   :exclusions [org.clojure/tools.reader]]
                  [rum "0.10.8"]
                  [funcool/bide "1.4.0"]
                  [cljsjs/material-ui "0.17.0-0"
-                  :exclusions [cljsjs/react cljsjs/react-dom]]]
+                  :exclusions [cljsjs/react cljsjs/react-dom]]
+                 [reagent "0.6.0" :exclusions [cljsjs/react]]
+                 [re-frame "0.9.2"]]
 
   :npm {:dependencies []}
 
@@ -23,7 +25,10 @@
 
   :source-paths ["src"]
 
-  :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
+  :clean-targets ^{:protect false} ["resources/public/js/compiled"
+                                    "target"
+                                    "out"
+                                    "node_modules"]
 
   :cljsbuild {:builds
               [{:id "dev"
@@ -46,7 +51,8 @@
   :figwheel {:server-port 3000
              :css-dirs ["resources/public/css"]}
 
-  :profiles {:dev {:dependencies [[binaryage/dirac "1.1.6"]
+  :profiles {:dev {:dependencies [[binaryage/dirac "1.2.0"
+                                   :exclusions [org.clojure/tools.reader]]
                                   [figwheel-sidecar "0.5.9"]
                                   [com.cemerick/piggieback "0.2.1"]]
                    :plugins [[lein-kibit "0.1.3"]
