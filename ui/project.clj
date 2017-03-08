@@ -14,7 +14,8 @@
                  [re-frame "0.9.2"]
                  [funcool/bide "1.4.0"]
                  [cljsjs/material-ui "0.17.0-0"
-                  :exclusions [cljsjs/react cljsjs/react-dom]]]
+                  :exclusions [cljsjs/react cljsjs/react-dom]]
+                 [day8.re-frame/http-fx "0.1.3"]] 
 
   :npm {:dependencies []}
 

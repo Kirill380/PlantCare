@@ -1,6 +1,6 @@
 (ns plant-care-ui.router.subs
-  (:require [re-frame.core :as rf]))
+  (:require [re-frame.core :as re-frame]))
 
-(rf/reg-sub :route
+(re-frame/reg-sub :route
             (fn [db _]
               (:route db)))
