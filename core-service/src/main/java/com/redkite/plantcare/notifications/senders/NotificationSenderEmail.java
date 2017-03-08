@@ -27,7 +27,7 @@ public class NotificationSenderEmail implements NotificationSender {
   @Autowired
   private JavaMailSender mailSender;
 
-  @Value("${sender.email}")
+  @Value("${spring.mail.username}")
   private String senderEmail;
 
   @Autowired
