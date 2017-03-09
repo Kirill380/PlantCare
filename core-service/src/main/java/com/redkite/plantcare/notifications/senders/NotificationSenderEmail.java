@@ -25,14 +25,11 @@ import java.util.Map;
 public class NotificationSenderEmail implements NotificationSender {
 
   @Autowired
+  Configuration freemarkerConfiguration;
+  @Autowired
   private JavaMailSender mailSender;
-
   @Value("${spring.mail.username}")
   private String senderEmail;
-
-  @Autowired
-  Configuration freemarkerConfiguration;
-
 
   @Override
   public void sendNotification(NotificationRequest request) {

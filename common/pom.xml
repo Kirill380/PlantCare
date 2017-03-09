@@ -7,10 +7,11 @@
         <groupId>com.redkite</groupId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.redkite.plant-care</groupId>
     <artifactId>common</artifactId>
+    <packaging>jar</packaging>
+    <modelVersion>4.0.0</modelVersion>
 
     <dependencies>
         <dependency>

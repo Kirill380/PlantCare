@@ -6,16 +6,16 @@ import com.redkite.plantcare.common.dto.UserResponse;
 
 public interface UserService {
 
-    UserResponse createUser(UserRequest userRequest);
+  UserResponse createUser(UserRequest userRequest);
 
-    UserList getUsers();
+  UserList getUsers();
 
-    UserResponse getUser(Long userId);
+  UserResponse getUser(Long userId);
 
-    void editUser(UserRequest userRequest);
+  void editUser(UserRequest userRequest);
 
-    void deleteUser(UserRequest userRequest);
+  void deleteUser(UserRequest userRequest);
 
-    boolean checkPasswordMatching(String email, String password);
+  boolean checkPasswordMatching(String email, String password);
 
 }
