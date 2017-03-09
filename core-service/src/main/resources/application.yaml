@@ -2,6 +2,8 @@ server:
   port: 8081
 
 spring:
+  jackson:
+    default-property-inclusion: NON_NULL
   freemarker:
     template-loader-path: classpath:/templates
   datasource:
