@@ -1,9 +1,9 @@
 (ns plant-care-ui.pages.landing.core
-  (:require [plant-care-ui.components.material :as m]
-            [reagent.core :as reagent]
+  (:require [reagent.core :as reagent]
             [re-frame.core :as re-frame]
+            [plant-care-ui.components.material :as m]
             [plant-care-ui.pages.landing.events]
-            [plant-care-ui.router.core :as router]))
+            [plant-care-ui.router.nav :as router]))
 
 (defn login-form []
   (let [*login (reagent/atom "")
