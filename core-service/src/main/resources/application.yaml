@@ -1,0 +1,29 @@
+server:
+  port: 8081
+
+spring:
+  jackson:
+    default-property-inclusion: NON_NULL
+  freemarker:
+    template-loader-path: classpath:/templates
+  datasource:
+    url: jdbc:mysql://localhost/plant_care
+    username: root
+    password: send08
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  mail:
+    username: stonedfox42@gmail.com
+    password: Blackmirror123
+    host: smtp.gmail.com
+    port: 465
+    protocol: smtps
+
+
+
+

@@ -2,29 +2,26 @@
   (:require [bide.core :as r]
             [reagent.core :as reagent]
             [re-frame.core :as re-frame]
-            [plant-care-ui.router.subs]
-            [plant-care-ui.router.events]
             [plant-care-ui.components.material :as m]
+            [plant-care-ui.router.nav :as nav]
             [plant-care-ui.pages.landing.core :refer [landing-page]]
-            [plant-care-ui.pages.registration.core :refer [registration-page]]))
-
-(def *router
-  (r/router [["/" :landing]
-             ["/registration" :registration]
-             ["/page1/:id" :page1-by-id]]))
+            [plant-care-ui.pages.registration.core :refer [registration-page]]
+            [plant-care-ui.router.subs]
+            [plant-care-ui.router.events]))
 
 (defn on-navigate [name params query]
+  (println "on-navigate " name)
   (re-frame/dispatch [:set-route {:handler name
                                   :params params
                                   :query query}]))
 
-(r/start! *router {:default :landing
-                   :on-navigate on-navigate})
 
-(def navigate! (partial r/navigate! *router))
+(r/start! nav/*router {:default :landing
+                       :on-navigate on-navigate})
 
 (defn router []
   (let [{:keys [handler params query]} @(re-frame/subscribe [:route])]
+    (println "handler" handler)
     [m/mui-theme-provider
      (case handler
        :landing [landing-page]

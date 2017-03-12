@@ -7,10 +7,12 @@
 
 (defn registration-form []
   (let [first-name @(re-frame/subscribe [:registration-first-name])
-        last-name @(re-frame/subscribe [:registration-last-name])]
+        last-name @(re-frame/subscribe [:registration-last-name])
+        email @(re-frame/subscribe [:registration-email])]
     (println "first nme" first-name)
     [:form {:style {:display "flex"
-                    :flex-direction "column"}
+                    :flex-direction "column"
+                    :width 256}
             :on-submit (fn [e]
                          (.preventDefault e)
                          (re-frame/dispatch [:register-request]))}

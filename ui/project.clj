@@ -19,7 +19,7 @@
 
   :npm {:dependencies []}
 
-  :plugins [[lein-figwheel "0.5.9"]
+  :plugins [[lein-figwheel "0.5.9" :exclusions [[org.clojure/clojure]]]
             [lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]
             [lein-npm "0.6.2"]]
 
@@ -56,7 +56,7 @@
                                   [figwheel-sidecar "0.5.9"]
                                   [com.cemerick/piggieback "0.2.1"]]
                    :plugins [[lein-kibit "0.1.3"]
-                             [lein-bikeshed "0.4.1"]]
+                             [lein-bikeshed "0.4.1" :exclusions [[org.clojure/tools.cli]]]]
                    :source-paths ["src" "dev"]
                    :repl-options {:port 8230
                                   :nrepl-middleware [dirac.nrepl/middleware]

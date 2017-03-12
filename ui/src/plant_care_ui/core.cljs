@@ -9,8 +9,8 @@
 (defonce state (atom {:text "Hello world!"}))
 
 (defn render []
-  (re-frame/dispatch-sync [:init-db])
   (reagent/render [router]
    (.getElementById js/document "app")))
 
+(re-frame/dispatch-sync [:init-db])
 (render)

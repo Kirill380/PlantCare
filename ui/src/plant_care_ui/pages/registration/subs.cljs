@@ -19,3 +19,15 @@
 (reg-sub-for-field
  :last-name
  :registration-last-name)
+
+(reg-sub-for-field
+ :email
+ :registration-email)
+
+(reg-sub-for-field
+ :password
+ :registration-password)
+
+(reg-sub-for-field
+ :confirm-password
+ :registration-confirm-password)
