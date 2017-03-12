@@ -13,9 +13,10 @@
                       :flex-direction "column"}
               :on-submit (fn [e]
                            (.preventDefault e)
-                           (re-frame/dispatch [:login-request]
-                                         {:login @*login
-                                          :password @*password}))}
+                           (re-frame/dispatch
+                            [:login-request
+                             {:login @*login
+                              :password @*password}]))}
        [m/text-field {:type "text"
                       :floating-label-text "Login"
                       :value @*login

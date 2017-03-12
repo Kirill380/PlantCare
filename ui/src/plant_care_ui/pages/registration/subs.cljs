@@ -5,7 +5,6 @@
   (re-frame/reg-sub
    id
    (fn [db _]
-     (println "sub for " field " calculated" db)
      (->> db
           :pages
           :registration

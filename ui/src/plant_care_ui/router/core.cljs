@@ -10,7 +10,6 @@
             [plant-care-ui.router.events]))
 
 (defn on-navigate [name params query]
-  (println "on-navigate " name)
   (re-frame/dispatch [:set-route {:handler name
                                   :params params
                                   :query query}]))
@@ -21,7 +20,6 @@
 
 (defn router []
   (let [{:keys [handler params query]} @(re-frame/subscribe [:route])]
-    (println "handler" handler)
     [m/mui-theme-provider
      (case handler
        :landing [landing-page]
