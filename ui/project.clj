@@ -15,7 +15,7 @@
                  [funcool/bide "1.4.0"]
                  [cljsjs/material-ui "0.17.0-0"
                   :exclusions [cljsjs/react cljsjs/react-dom]]
-                 [day8.re-frame/http-fx "0.1.3"]] 
+                 [day8.re-frame/http-fx "0.1.3"]]
 
   :npm {:dependencies []}
 
@@ -45,8 +45,9 @@
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/app.js"
                            :main plant-care-ui.core
-                           :optimizations :advanced
-                           :pretty-print false}}]}
+                           :optimizations :simple
+                           :pretty-print false
+                           :pseudo-names false}}]}
 
   :figwheel {:server-port 3000
              :css-dirs ["resources/public/css"]}
