@@ -2,11 +2,23 @@
   (:require [re-frame.core :as re-frame]
             [ajax.core :as ajax]
             [day8.re-frame.http-fx]
-            [plant-care-ui.utils.core :refer [common-interceptors]]))
+            [plant-care-ui.utils.core :as utils]))
+
+(re-frame/reg-event-db
+ :landing-set-login
+ [utils/common-interceptors]
+ (fn [db [_ value]]
+   (assoc-in db [:pages :landing :fields :login] value)))
+
+(re-frame/reg-event-db
+ :landing-set-password
+ [utils/common-interceptors]
+ (fn [db [_ value]]
+   (assoc-in db [:pages :landing :fields :password] value)))
 
 (re-frame/reg-event-fx
  :login-request
- [common-interceptors]
+ [utils/common-interceptors]
  (fn [coefx event]
    {:http-xhrio {:method :get
                  :uri "https://google.com"
@@ -16,12 +28,12 @@
 
 (re-frame/reg-event-fx
  :login-success
- [common-interceptors]
+ [utils/common-interceptors]
  (fn [coefx event]
    (println "SUCCESS" coefx event)))
 
 (re-frame/reg-event-fx
  :login-failure
- [common-interceptors]
+ [utils/common-interceptors]
  (fn [coefx event]
    (println "FAIL" coefx event)))

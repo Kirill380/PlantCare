@@ -2,32 +2,35 @@
   (:require [reagent.core :as reagent]
             [re-frame.core :as re-frame]
             [plant-care-ui.components.material :as m]
+            [plant-care-ui.router.nav :as router]
+            [plant-care-ui.utils.core :as utils]
             [plant-care-ui.pages.landing.events]
-            [plant-care-ui.router.nav :as router]))
+            [plant-care-ui.pages.landing.subs]))
 
 (defn login-form []
-  (let [*login (reagent/atom "")
-        *password (reagent/atom "")]
-    (fn []
+  (let [login (utils/listen :landing-login)
+        password (utils/listen :landing-password)]
       [:form {:style {:display "flex"
                       :flex-direction "column"}
               :on-submit (fn [e]
                            (.preventDefault e)
-                           (re-frame/dispatch
-                            [:login-request
-                             {:login @*login
-                              :password @*password}]))}
-       [m/text-field {:type "text"
-                      :floating-label-text "Login"
-                      :value @*login
-                      :on-change #(reset! *login (-> % .-target .-value))}]
-       [m/text-field {:type "password"
-                      :floating-label-text "Password"
-                      :value @*password
-                      :on-change #(reset! *password (-> % .-target .-value))}]
+                           (re-frame/dispatch [:login-request]))}
+       [m/text-field
+        (utils/build-text-field-options
+         "Login"
+         :landing-set-login
+         login)]
+
+       [m/text-field
+        (merge
+         (utils/build-text-field-options
+          "Password"
+          :landing-set-password
+          password)
+         {:type "password"})]
        [m/raised-button {:type "submit"
                          :primary true
-                         :label "LOGIN"}]])))
+                         :label "LOGIN"}]]))
 
 (defn landing-page []
   [:div {:style {:display "flex"

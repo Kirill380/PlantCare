@@ -2,9 +2,12 @@
   (:require [re-frame.core :as re-frame]))
 
 (def default-values
-  {:pages {:registration {:fields
+  {:pages
+   {:registration {:fields
                           {:first-name ""
                            :last-name ""
                            :email ""
                            :password ""
-                           :confirm-password ""}}}})
+                           :confirm-password ""}}
+    :landing {:fields {:login ""
+                       :password ""}}}})

@@ -1,17 +1,10 @@
 (ns plant-care-ui.pages.registration.core
   (:require [reagent.core :as reagent]
             [re-frame.core :as re-frame]
-            [plant-care-ui.utils.core :refer [listen]]
+            [plant-care-ui.utils.core :refer [listen build-text-field-options]]
             [plant-care-ui.components.material :as m]
             [plant-care-ui.pages.registration.events]
             [plant-care-ui.pages.registration.subs]))
-
-(defn build-text-field-options [label dispatch-key value]
-  {:floating-label-text label
-   :value value
-   :on-change #(re-frame/dispatch
-                [dispatch-key
-                 (-> % .-target .-value)])})
 
 (defn registration-form []
   (let [first-name (listen :registration-first-name)
