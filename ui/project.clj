@@ -45,7 +45,7 @@
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/app.js"
                            :main plant-care-ui.core
-                           :optimizations :simple
+                           :optimizations :advanced
                            :pretty-print false
                            :pseudo-names false}}]}
 
@@ -64,4 +64,5 @@
                                   :init (do
                                           (require 'dirac.agent)
                                           (dirac.agent/boot!))}}}
-  :aliases {"lint" ["do" ["kibit"] ["bikeshed"]]})
+  :aliases {"lint" ["do" ["kibit"] ["bikeshed"]]
+            "build" ["do" ["clean"] ["cljsbuild" "once" "min"]]})
