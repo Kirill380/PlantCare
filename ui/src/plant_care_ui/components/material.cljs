@@ -18,3 +18,12 @@
 
 (def drawer
   (reagent/adapt-react-class js/MaterialUI.Drawer))
+
+(def menu
+  (reagent/adapt-react-class js/MaterialUI.Menu))
+
+(def menu-item
+  (reagent/adapt-react-class js/MaterialUI.MenuItem))
+
+(def divider
+  (reagent/adapt-react-class js/MaterialUI.Divider))
