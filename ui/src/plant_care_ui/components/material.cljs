@@ -12,3 +12,9 @@
 
 (def text-field
   (reagent/adapt-react-class js/MaterialUI.TextField))
+
+(def app-bar
+  (reagent/adapt-react-class js/MaterialUI.AppBar))
+
+(def drawer
+  (reagent/adapt-react-class js/MaterialUI.Drawer))

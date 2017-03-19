@@ -45,7 +45,7 @@
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/app.js"
                            :main plant-care-ui.core
-                           :optimizations :advanced
+                           :optimizations :simple
                            :pretty-print false
                            :pseudo-names false}}]}
 
