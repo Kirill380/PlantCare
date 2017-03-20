@@ -27,3 +27,6 @@
 
 (def divider
   (reagent/adapt-react-class js/MaterialUI.Divider))
+
+(def paper
+  (reagent/adapt-react-class js/MaterialUI.Paper))

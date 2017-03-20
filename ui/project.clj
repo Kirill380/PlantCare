@@ -40,7 +40,8 @@
                            :output-to "resources/public/js/compiled/app.js"
                            :output-dir "resources/public/js/compiled/out"
                            :source-map-timestamp true
-                           :preloads [dirac.runtime.preload]}}
+                           :preloads [dirac.runtime.preload devtools.preload]}}
+
                {:id "min"
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/app.js"
@@ -52,8 +53,9 @@
   :figwheel {:server-port 3000
              :css-dirs ["resources/public/css"]}
 
-  :profiles {:dev {:dependencies [[binaryage/dirac "1.2.0"
+  :profiles {:dev {:dependencies [[binaryage/dirac "1.2.2"
                                    :exclusions [org.clojure/tools.reader]]
+                                  [binaryage/devtools "0.9.2"]
                                   [figwheel-sidecar "0.5.9"]
                                   [com.cemerick/piggieback "0.2.1"]]
                    :plugins [[lein-kibit "0.1.3"]
