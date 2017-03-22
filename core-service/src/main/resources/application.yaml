@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost/plant_care
     username: root
-    password: send08
+    password: 
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:

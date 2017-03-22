@@ -6,7 +6,7 @@
             [plant-care-ui.components.app.views :refer [app]]
             [plant-care-ui.router.nav :as nav]
             [plant-care-ui.pages.landing.core :refer [landing-page]]
-            [plant-care-ui.pages.registration.core :refer [registration-page]]
+            [plant-care-ui.pages.registration.views :refer [registration-page]]
             [plant-care-ui.router.subs]
             [plant-care-ui.router.events]))
 
