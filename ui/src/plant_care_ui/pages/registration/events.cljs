@@ -13,6 +13,7 @@
    {:http-xhrio {:method :post
                  :uri (str config/api-url "/users")
                  :response-format (ajax/json-response-format {:keywords? true})
+                 :format (ajax/json-request-format)
                  :params (get-in coefx [:db :pages :registration :fields])
                  :on-success [:registration-user/success]
                  :on-failure [:registration-user/failure]}}))

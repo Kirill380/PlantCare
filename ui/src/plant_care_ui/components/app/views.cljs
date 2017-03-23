@@ -34,10 +34,15 @@
    [mui-navigation-header]
    [m/menu
     [m/menu-item {:primary-text "Dashboard"
-                  :on-touch-tap #(println "go to dashboard")}]
-    [m/menu-item {:primary-text "Sensors page"}]
-    [m/menu-item {:primary-text "Flowers page"}]
-    [m/menu-item {:primary-text "Connections page"}]]])
+                  :on-touch-tap #(println "go to dashboard")
+                  :left-icon (m/dashboard-icon)}]
+
+    [m/menu-item {:primary-text "Sensors page"
+                  :left-icon (m/memory-icon)}]
+    [m/menu-item {:primary-text "Flowers page"
+                  :left-icon (m/flower-icon)}]
+    [m/menu-item {:primary-text "Connections page"
+                  :left-icon (m/ethernet-icon)}]]])
 
 (defn app [child]
   (let [open? (utils/listen :app/drawer-open?)]
