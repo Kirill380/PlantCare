@@ -1,0 +1,265 @@
+#%RAML 1.0
+title: Plant Care
+version: v1
+baseUri: http://localhost/
+mediaType: application/json
+
+uses:
+  common: types/common.raml
+
+securitySchemes:
+  JWT:
+    description: Json Web Schemas
+    type: x-jwt
+    describedBy:
+      headers:
+        Authorization:
+          required: true
+          type: string
+          displayName: access_token
+      responses:
+        401:
+            description: Bad or expired token.
+    settings:
+      x-jwt-header:
+        x-jwt-typ: JWT
+        x-jwt-alg: RS512
+
+/auth:
+  post:
+    description: Authenticate user by email and password
+    body:
+      application/json:
+        type: common.Signup
+    responses:
+      200:
+        body:
+          application/json:
+              #type: common.SignupOk
+              example: |
+                {
+                   "access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJraWQiOiI2cDFtdFBrVnhUdTlVNngxTk5yaTNPSDVLcnBGVzZRUCJ9.9Qawf8PE8YgxyFw0ccgrFza1Uxr8Q_U9z3dlWdzpSYo"
+                }
+      400:
+        description: The credentials are invalid.
+      401:
+        description: The specified password is wrong.
+      404:
+        description: The User does not exist.
+
+/invalidate-token:
+  post:
+    securedBy:
+      - JWT
+    description: Invalidate user token when the user logs out.
+    headers:
+      application/json:
+        type: string
+        displayName: access_token
+        example: |
+          Authorization: Bearer eHZ6MWV2Ro4OERSZHlPZw==
+          Host: kaaiot.io
+          Accept: */*
+          Content-Length: 119
+          Content-Type: application/json
+
+    responses:
+      204:
+        description: Token invalidated.
+      400:
+        description: Access token format is invalid.
+      401:
+        description: Expired or blacklisted access token.
+      404:
+        description: The User does not exist.
+
+/invalidate-all-tokens:
+  post:
+    securedBy:
+      - JWT
+    description: Invalidate user's tokens when the user logs out on all devices or changing a password
+    headers:
+      application/json:
+        type: string
+        displayName: access_token
+        example: |
+          Authorization: Bearer eHZ6MWV2Ro4OERSZHlPZ9w==
+          Host: kaaiot.io
+          Accept: */*
+          Content-Length: 119
+          Content-Type: application/json
+
+    responses:
+      204:
+        description: Tokens were invalidated.
+      400:
+        description: Access token format is invalid.
+      401:
+        description: Expired or blacklisted access token.
+      404:
+        description: User with such token doesn't exist.
+
+/users:
+  get:
+    queryParameters:
+      offset:
+        description: Returns records that match your query starting with response number offset +1.
+        type:        integer
+        maximum:     199
+        required: false
+        example:     10
+      limit:
+        description: Number of records per page.
+        required: false
+        type:        integer
+        maximum:     200
+        default:     20
+        example:     50
+      sortBy:
+        description: Sorting field ascending, by default sort by email
+        type: string
+        required: false
+        default: email
+        example: john@gmail.com
+      email:
+        description: filter users by email
+        type: string
+        required: false
+        example: jo
+
+    securedBy:
+      - JWT
+    description: Get the list of users in the scope
+    responses:
+      200:
+        body:
+          application/json:
+            #type: object
+            example: |
+              {
+                "users": [
+                  {
+                    "id": "21",
+                    "creationTime": "2017-03-02T09:55:44",
+                    "editTime": "2017-03-02T09:55:44",
+                    "email": "j2aasdasdfd@example.com",
+                    "firstName": "Joasasdadadn",
+                    "lastName": "Daasdaasd2e",
+                    "status": "UNVERIFIED",
+                  }
+                ],
+                "count": 1
+              }
+      400:
+        description: Some query params are invalid.
+      401:
+        description: The user is not authenticated.
+      403:
+        description: The user does not have permission.
+
+  post:
+    description: Create a user
+    body:
+      application/json:
+        type: common.UserCreate
+        example: |
+          {
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "john@example.com",
+            "password": "Password1",
+          }
+
+    responses:
+      201:
+        description: The user was created.
+        body:
+          application/json:
+            #type: object
+              example: |
+                {
+                  "id": "123",
+                  "creationTime": "2017-01-23T15:37:18.691",
+                  "editTime": "2017-01-23T15:37:18.691",
+                  "status": "UNVERIFIED"
+                }
+      400:
+        description: The request is invalid.
+      404:
+        description: The scope does not exist.
+      409:
+        description: The email already exists.
+
+  /activation:
+    get:
+      queryParameters:
+        token:
+          description: user activation token
+          type: string
+          example: NjVmLWVlZjctNGQ4NC1hNzNmLTkzMWIxNWU5MzJiOQ==
+      description: Activate a specific user.
+      responses:
+        200:
+          description: User was succesfully activated.
+        400:
+          description: Invalid or expired user activation token.
+        404:
+          description: User does not exists.
+
+  /{userId}:
+    get:
+      securedBy:
+        - JWT
+      description: Return user account info.
+      responses:
+        200:
+          description: Returns a user. This resource cannot be accessed anonymously.
+          body:
+            application/json:
+              type: common.User
+        401:
+          description: The user is not authenticated.
+        403:
+          description: The user does not have permission.
+        404:
+          description: User not found.
+
+    put:
+      securedBy:
+        - JWT
+      description: Update a user.
+      body:
+        application/json:
+          type: common.UserEdit
+      responses:
+        200:
+          body:
+            application/json:
+              type: common.User
+        400:
+          description: The request is invalid.
+        401:
+          description: The user is not authenticated.
+        403:
+          description: The user does not have permission to edit the user.
+        404:
+          description: The user does not exist.
+
+    delete:
+      securedBy:
+        - JWT
+      description: Remove a user.
+      body:
+        application/json:
+          type: string
+          displayName: userEmail
+      responses:
+        204:
+          description: The user was deleted successfully.
+        401:
+          description: The user is not authenticated.
+        403:
+          description: The user does not have permission to remove the user.
+        404:
+          description: The user does not exist.
+
