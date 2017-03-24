@@ -1,0 +1,74 @@
+#%RAML 1.0 Library
+types:
+
+  Token:
+    type: object
+    properties:
+      accessToken: string
+    example:
+      accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJraWQiOiI2cDFtdFBrVnhUdTlVNngxTk5yaTNPSDVLcnBGVzZRUCJ9.9Qawf8PE8YgxyFw0ccgrFza1Uxr8Q_U9z3dlWdzpSYo"
+
+  Signup:
+    type: object
+    properties:
+      email: string
+      password: string
+
+  SignupOk:
+    type: object
+    properties:
+      scopedPermission: object
+      access_token: string
+
+  UserResources:
+    type: object
+    properties:
+      systems: number[]
+      tenants: number[]
+      solutions: number[]
+      apps: number[]
+      assets: number[]
+      web: number[]
+
+  ChangePassword:
+    type: object
+    properties:
+      oldPassword: string
+      newPassword: string
+
+  UserCreate:
+    type: object
+    properties:
+      firstName: string
+      lastName: string
+      company: string
+      email: string
+      country: { type: string, required: false }
+      password:
+              type: string
+              description: Password must contains at least one upper case letter, one lower case letter and one digit. The minimum password's size is 8 and maximum is 255.
+      targetUrl: string
+      scopeId: string
+
+
+  User:
+    type: object
+    properties:
+      id: string
+      email: string
+      firstName: string
+      lastName: string
+      company: string
+      country: string
+      status: string
+      editTime: string
+      creationTime: string
+      createdBy: string
+
+  UserEdit:
+    type: object
+    properties:
+      firstName: { type: string, required: false }
+      lastName: { type: string, required: false }
+      company: { type: string, required: false }
+      country: { type: string, required: false }
