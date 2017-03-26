@@ -30,3 +30,19 @@
 
 (def paper
   (reagent/adapt-react-class js/MaterialUI.Paper))
+
+(defn dashboard-icon
+  ([] (dashboard-icon #js {}))
+  ([props] (reagent/create-element js/MaterialUISvgIcons.ActionDashboard props)))
+
+(defn flower-icon
+  ([] (flower-icon #js {}))
+  ([props] (reagent/create-element js/MaterialUISvgIcons.MapsLocalFlorist props)))
+
+(defn ethernet-icon
+  ([] (ethernet-icon #js {}))
+  ([props] (reagent/create-element js/MaterialUISvgIcons.ActionSettingsEthernet props)))
+
+(defn memory-icon
+  ([] (memory-icon #js {}))
+  ([props] (reagent/create-element js/MaterialUISvgIcons.HardwareMemory props)))

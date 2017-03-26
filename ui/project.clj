@@ -15,7 +15,8 @@
                  [funcool/bide "1.4.0"]
                  [cljsjs/material-ui "0.17.0-0"
                   :exclusions [cljsjs/react cljsjs/react-dom]]
-                 [day8.re-frame/http-fx "0.1.3"]]
+                 [day8.re-frame/http-fx "0.1.3"]
+                 [cljs-ajax "0.5.8"]]
 
   :npm {:dependencies []}
 

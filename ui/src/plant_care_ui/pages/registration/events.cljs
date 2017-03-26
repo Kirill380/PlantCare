@@ -1,12 +1,36 @@
 (ns plant-care-ui.pages.registration.events
   (:require [re-frame.core :as re-frame]
-            [plant-care-ui.utils.core :refer [common-interceptors]]))
+            [day8.re-frame.http-fx]
+            [ajax.core :as ajax]
+            [plant-care-ui.utils.core :refer [common-interceptors]]
+            [plant-care-ui.config :as config]))
 
 (re-frame/reg-event-fx
- :register-request
+ :registration-user/request
  [common-interceptors]
  (fn [coefx event]
-   (println "db" (get-in coefx [:db :pages :registration :fields]))))
+   (println "db" (get-in coefx [:db :pages :registration :fields]))
+   {:http-xhrio {:method :post
+                 :uri (str config/api-url "/users")
+                 :response-format (ajax/json-response-format {:keywords? true})
+                 :format (ajax/json-request-format)
+                 :params (get-in coefx [:db :pages :registration :fields])
+                 :on-success [:registration-user/success]
+                 :on-failure [:registration-user/failure]}}))
+
+(defn registration-user-success [db event]
+  (println "SUCCESS" event))
+(re-frame/reg-event-db
+ :registration-user/success
+ [common-interceptors]
+ registration-user-success)
+
+(defn registration-user-failre [db event]
+  (println "FAILURE" event))
+(re-frame/reg-event-db
+ :registration-user/failure
+ [common-interceptors]
+ registration-user-failre)
 
 (defn reg-event-db-for-field [field id]
   (re-frame/reg-event-db

@@ -1,4 +1,4 @@
-(ns plant-care-ui.pages.registration.core
+(ns plant-care-ui.pages.registration.views
   (:require [reagent.core :as reagent]
             [re-frame.core :as re-frame]
             [plant-care-ui.utils.core :refer [listen build-text-field-options]]
@@ -17,7 +17,7 @@
                     :width 256}
             :on-submit (fn [e]
                          (.preventDefault e)
-                         (re-frame/dispatch [:register-request]))}
+                         (re-frame/dispatch [:registration-user/request]))}
      [m/text-field
       (build-text-field-options
        "First Name"
@@ -56,5 +56,5 @@
 (defn registration-page []
   [:div {:style {:display "flex"
                  :flex-direction "column"}}
-   "Registration Page !"
+   [:h2 "Registration page"]
    [registration-form]])

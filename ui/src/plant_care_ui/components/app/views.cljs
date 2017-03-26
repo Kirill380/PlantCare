@@ -12,9 +12,9 @@
   (let [app-bar-theme (-> (js->clj props :keywordize-keys true)
                        :muiTheme
                        :appBar)
-        color (-> app-bar-theme :color)
-        text-color (-> app-bar-theme :textColor)
-        height (-> app-bar-theme :height)]
+        color (:color app-bar-theme)
+        text-color (:textColor app-bar-theme)
+        height (:height app-bar-theme)]
    [m/paper {:z-depth 2
              :style {:background-color color}}
     [:div {:style {:display "flex"
@@ -34,10 +34,15 @@
    [mui-navigation-header]
    [m/menu
     [m/menu-item {:primary-text "Dashboard"
-                  :on-touch-tap #(println "go to dashboard")}]
-    [m/menu-item {:primary-text "Sensors page"}]
-    [m/menu-item {:primary-text "Flowers page"}]
-    [m/menu-item {:primary-text "Connections page"}]]])
+                  :on-touch-tap #(println "go to dashboard")
+                  :left-icon (m/dashboard-icon)}]
+
+    [m/menu-item {:primary-text "Sensors page"
+                  :left-icon (m/memory-icon)}]
+    [m/menu-item {:primary-text "Flowers page"
+                  :left-icon (m/flower-icon)}]
+    [m/menu-item {:primary-text "Connections page"
+                  :left-icon (m/ethernet-icon)}]]])
 
 (defn app [child]
   (let [open? (utils/listen :app/drawer-open?)]
