@@ -54,7 +54,7 @@
   :figwheel {:server-port 3000
              :css-dirs ["resources/public/css"]}
 
-  :profiles {:dev {:dependencies [[binaryage/dirac "1.2.2"
+  :profiles {:dev {:dependencies [[binaryage/dirac "1.2.3"
                                    :exclusions [org.clojure/tools.reader]]
                                   [binaryage/devtools "0.9.2"]
                                   [figwheel-sidecar "0.5.9"]
