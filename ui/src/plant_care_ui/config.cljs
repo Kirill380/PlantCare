@@ -9,6 +9,5 @@
 (def api-url
   (str
    API_PROTOCOL "://" API_HOST ":" API_PORT
-   (when
-    (not (empty? API_PATH))
+   (when (seq API_PATH)
     "/" API_PATH)))

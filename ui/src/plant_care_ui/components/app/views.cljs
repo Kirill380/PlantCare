@@ -12,9 +12,9 @@
   (let [app-bar-theme (-> (js->clj props :keywordize-keys true)
                        :muiTheme
                        :appBar)
-        color (-> app-bar-theme :color)
-        text-color (-> app-bar-theme :textColor)
-        height (-> app-bar-theme :height)]
+        color (:color app-bar-theme)
+        text-color (:textColor app-bar-theme)
+        height (:height app-bar-theme)]
    [m/paper {:z-depth 2
              :style {:background-color color}}
     [:div {:style {:display "flex"
