@@ -14,11 +14,13 @@
                  [re-frame "0.9.2"]
                  [funcool/bide "1.4.0"]
                  [cljsjs/material-ui "0.17.0-0"
-                  :exclusions [cljsjs/react cljsjs/react-dom]]]
+                  :exclusions [cljsjs/react cljsjs/react-dom]]
+                 [day8.re-frame/http-fx "0.1.3"]
+                 [cljs-ajax "0.5.8"]]
 
   :npm {:dependencies []}
 
-  :plugins [[lein-figwheel "0.5.9"]
+  :plugins [[lein-figwheel "0.5.9" :exclusions [[org.clojure/clojure]]]
             [lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]
             [lein-npm "0.6.2"]]
 
@@ -39,27 +41,31 @@
                            :output-to "resources/public/js/compiled/app.js"
                            :output-dir "resources/public/js/compiled/out"
                            :source-map-timestamp true
-                           :preloads [dirac.runtime.preload]}}
+                           :preloads [dirac.runtime.preload devtools.preload]}}
+
                {:id "min"
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/app.js"
                            :main plant-care-ui.core
-                           :optimizations :advanced
-                           :pretty-print false}}]}
+                           :optimizations :simple
+                           :pretty-print false
+                           :pseudo-names false}}]}
 
   :figwheel {:server-port 3000
              :css-dirs ["resources/public/css"]}
 
-  :profiles {:dev {:dependencies [[binaryage/dirac "1.2.0"
+  :profiles {:dev {:dependencies [[binaryage/dirac "1.2.3"
                                    :exclusions [org.clojure/tools.reader]]
+                                  [binaryage/devtools "0.9.2"]
                                   [figwheel-sidecar "0.5.9"]
                                   [com.cemerick/piggieback "0.2.1"]]
                    :plugins [[lein-kibit "0.1.3"]
-                             [lein-bikeshed "0.4.1"]]
+                             [lein-bikeshed "0.4.1" :exclusions [[org.clojure/tools.cli]]]]
                    :source-paths ["src" "dev"]
                    :repl-options {:port 8230
                                   :nrepl-middleware [dirac.nrepl/middleware]
                                   :init (do
                                           (require 'dirac.agent)
                                           (dirac.agent/boot!))}}}
-  :aliases {"lint" ["do" ["kibit"] ["bikeshed"]]})
+  :aliases {"lint" ["do" ["kibit"] ["bikeshed"]]
+            "build" ["do" ["clean"] ["cljsbuild" "once" "min"]]})

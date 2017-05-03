@@ -1,16 +1,48 @@
 (ns plant-care-ui.components.material
   (:require [reagent.core :as reagent]))
 
-(defn create-element
-  ([elem] (create-element elem {} nil))
-  ([elem props] (create-element elem props nil))
-  ([elem props children]
-   (js/React.createElement elem (clj->js props) (clj->js children))))
-
 (def mui-theme-provider
   (reagent/adapt-react-class js/MaterialUI.MuiThemeProvider))
 
-(defn button [props]
-  (create-element
-   js/MaterialUI.FlatButton
-   props))
+(def flat-button
+  (reagent/adapt-react-class js/MaterialUI.FlatButton))
+
+(def raised-button
+  (reagent/adapt-react-class js/MaterialUI.RaisedButton))
+
+(def text-field
+  (reagent/adapt-react-class js/MaterialUI.TextField))
+
+(def app-bar
+  (reagent/adapt-react-class js/MaterialUI.AppBar))
+
+(def drawer
+  (reagent/adapt-react-class js/MaterialUI.Drawer))
+
+(def menu
+  (reagent/adapt-react-class js/MaterialUI.Menu))
+
+(def menu-item
+  (reagent/adapt-react-class js/MaterialUI.MenuItem))
+
+(def divider
+  (reagent/adapt-react-class js/MaterialUI.Divider))
+
+(def paper
+  (reagent/adapt-react-class js/MaterialUI.Paper))
+
+(defn dashboard-icon
+  ([] (dashboard-icon #js {}))
+  ([props] (reagent/create-element js/MaterialUISvgIcons.ActionDashboard props)))
+
+(defn flower-icon
+  ([] (flower-icon #js {}))
+  ([props] (reagent/create-element js/MaterialUISvgIcons.MapsLocalFlorist props)))
+
+(defn ethernet-icon
+  ([] (ethernet-icon #js {}))
+  ([props] (reagent/create-element js/MaterialUISvgIcons.ActionSettingsEthernet props)))
+
+(defn memory-icon
+  ([] (memory-icon #js {}))
+  ([props] (reagent/create-element js/MaterialUISvgIcons.HardwareMemory props)))

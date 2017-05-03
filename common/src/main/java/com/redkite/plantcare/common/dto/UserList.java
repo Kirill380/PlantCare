@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 public class UserList {
 
-    private List<UserResponse> users;
+  private List<UserResponse> users;
 
-    private Long count;
+  private Long count;
 }

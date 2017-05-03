@@ -1,7 +1,8 @@
 (ns plant-care-ui.router.events
-  (:require [re-frame.core :as rf]))
+  (:require [re-frame.core :as re-frame]
+            [plant-care-ui.utils.core :refer [common-interceptors]]))
 
-(rf/reg-event-db :set-route
-                 [(rf/path :route)]
+(re-frame/reg-event-db :set-route
+                 [(re-frame/path :route) common-interceptors]
                  (fn [db [_ new]]
                   new))
