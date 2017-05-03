@@ -1,3 +1,7 @@
+cassandra:
+  host: localhost
+  keyspace: plant_care
+
 server:
   port: 8081
 
