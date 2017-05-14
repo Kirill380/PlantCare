@@ -39,7 +39,6 @@ public class User {
   @Column(name = "creation_date")
   private LocalDateTime creationDate;
 
-  @Column
   @ManyToOne
   @JoinColumn(nullable = false)
   private Role role;

@@ -38,7 +38,6 @@ public class Plant {
     private User owner;
 
 
-    @Column
     @ManyToMany
     @JoinTable(joinColumns = {@JoinColumn(name = "sensor_id")},
             inverseJoinColumns = {@JoinColumn(name = "plant_id")})
