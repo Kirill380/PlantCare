@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+
 @RestController
 public class EndpointController {
 
@@ -16,6 +18,7 @@ public class EndpointController {
 
     @RequestMapping(value = "/endpoints/data", method = RequestMethod.POST)
     public void logData(@RequestBody LogData logData) {
+        logData.setLogTime(new Date());
         logDataDao.save(logData);
     }
 
