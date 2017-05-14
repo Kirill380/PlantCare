@@ -1,17 +1,15 @@
 package com.redkite.plantcare.model;
 
 
-import static com.redkite.plantcare.constants.DabConstants.UserTable;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.redkite.plantcare.constants.DabConstants.UserTable;
 
 @Entity
 @Data
@@ -35,4 +33,14 @@ public class User {
   @Column(name = UserTable.PASSWORD_HASH, nullable = false)
   private String passwordHash;
 
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+  private List<Plant> plants;
+
+  @Column(name = "creation_date")
+  private LocalDateTime creationDate;
+
+  @Column
+  @ManyToOne
+  @JoinColumn(nullable = false)
+  private Role role;
 }
