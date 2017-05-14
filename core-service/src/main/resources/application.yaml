@@ -8,12 +8,14 @@ server:
 spring:
   jackson:
     default-property-inclusion: NON_NULL
+    serialization:
+      write-dates-as-timestamps: false
   freemarker:
     template-loader-path: classpath:/templates
   datasource:
     url: jdbc:mysql://localhost/plant_care
     username: root
-    password: 
+    password:
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:

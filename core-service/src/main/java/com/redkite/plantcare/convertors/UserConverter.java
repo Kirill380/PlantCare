@@ -28,9 +28,7 @@ public class UserConverter implements ToModelConverter<User, UserRequest>, ToDto
   public UserResponse toDto(User model) {
     UserResponse userResponse = new UserResponse();
     userResponse.setId(model.getId());
-    userResponse.setEmail(model.getEmail());
-    userResponse.setFirstName(model.getFirstName());
-    userResponse.setLastName(model.getLastName());
+    userResponse.setCreationDate(model.getCreationDate());
     return userResponse;
   }
 }

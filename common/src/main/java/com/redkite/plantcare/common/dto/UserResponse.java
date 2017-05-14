@@ -4,6 +4,8 @@ package com.redkite.plantcare.common.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class UserResponse {
@@ -15,5 +17,7 @@ public class UserResponse {
   private String firstName;
 
   private String lastName;
+
+  private LocalDateTime creationDate;
 
 }
