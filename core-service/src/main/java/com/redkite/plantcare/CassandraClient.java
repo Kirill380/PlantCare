@@ -4,6 +4,7 @@ import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,11 @@ public class CassandraClient {
   private Session session;
   private MappingManager mappingManager;
 
+  /**
+   * Get new session for working with cassandra.
+   *
+   * @return the session
+   */
   public Session getSession() {
     if (session == null) {
       session = cluster.connect(keyspaceName);
@@ -41,15 +47,17 @@ public class CassandraClient {
     return mappingManager;
   }
 
+
   @PostConstruct
   public void init() {
-    cluster = Cluster.builder()
-              .addContactPoint(host)
-              .build();
+    cluster = Cluster.builder().addContactPoint(host).build();
   }
 
+  /**
+   * Close connection with cassandra cluster.
+   */
   @PreDestroy
-  public void  destroy() {
+  public void destroy() {
     if (cluster != null) {
       cluster.close();
     }

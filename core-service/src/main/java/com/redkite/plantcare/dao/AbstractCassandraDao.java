@@ -7,7 +7,9 @@ import com.datastax.driver.core.Statement;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.mapping.Mapper;
 import com.redkite.plantcare.CassandraClient;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -51,14 +53,19 @@ public abstract class AbstractCassandraDao<T, K> {
   }
 
 
+  /**
+   * Return all entities in table.
+   *
+   * @return the list of items.
+   */
   public List<T> findAll() {
     return getMapper().map(
-        getSession().execute(
-            QueryBuilder.select()
-                .all()
-                .from(getColumnFamilyName())
-                .setConsistencyLevel(getConsistencyLevel())
-        )
+            getSession().execute(
+                    QueryBuilder.select()
+                            .all()
+                            .from(getColumnFamilyName())
+                            .setConsistencyLevel(getConsistencyLevel())
+            )
     ).all();
   }
 

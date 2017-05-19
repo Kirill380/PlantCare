@@ -8,36 +8,25 @@ public enum PasswordRuleChecker {
   DEFAULT(true, true, true, false), // check all except special characters
   ALL_CHECKS(true, true, true, true);
 
+  public static final String NULL_STRING_VIOLATION = "The password can't be null";
+  public static final String LENGTH_VIOLATION = "The password length should be equal or greater that 8";
+  public static final String MAX_LENGTH_VIOLATION = "The password length should not be greater that 255";
+  public static final String ALLOWED_SYMBOLS_VIOLATION = "The password contains illegal symbols. "
+          + "You are only allowed to use upper and lower case latin letters, digits and special symbols _#?!@$%^&*-";
+  public static final String LOWER_CASE_VIOLATION = "The password should have at least one "
+          + "lower case latin letter";
+  public static final String UPPER_CASE_VIOLATION = "The password should have at least one "
+          + "upper case latin letter";
+  public static final String DIGIT_VIOLATION = "The password  should have at least one upper digit";
+  public static final String SPECIAL_CHARACTER_VIOLATION = "The password should have at least one "
+          + "special character";
+  public static final String SUCCESS = "Success";
   private static final String LOWER_CASE = "a-z";
   private static final String UPPER_CASE = "A-Z";
   private static final String DIGIT = "0-9";
   private static final String SPECIAL_CHARACTER = "_#?!@$%^&*-"; // big set !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
   private static final int MIN_LENGTH = 8;
   private static final int MAX_LENGTH = 255;
-
-  public static final String NULL_STRING_VIOLATION = "The password can't be null";
-
-  public static final String LENGTH_VIOLATION = "The password length should be equal or greater that 8";
-
-  public static final String MAX_LENGTH_VIOLATION = "The password length should not be greater that 255";
-
-
-  public static final String ALLOWED_SYMBOLS_VIOLATION = "The password contains illegal symbols. "
-          + "You are only allowed to use upper and lower case latin letters, digits and special symbols _#?!@$%^&*-";
-
-  public static final String LOWER_CASE_VIOLATION = "The password should have at least one "
-          + "lower case latin letter";
-
-  public static final String UPPER_CASE_VIOLATION = "The password should have at least one "
-          + "upper case latin letter";
-
-  public static final String DIGIT_VIOLATION = "The password  should have at least one upper digit";
-
-  public static final String SPECIAL_CHARACTER_VIOLATION = "The password should have at least one "
-          + "special character";
-
-  public static final String SUCCESS = "Success";
-
   private boolean checkLowerCase;
   private boolean checkUpperCase;
   private boolean checkDigit;
@@ -109,13 +98,12 @@ public enum PasswordRuleChecker {
   @Getter
   public static class ValidationResult {
 
+    private boolean isValid;
+    private String message;
+
     public ValidationResult(boolean isValid, String message) {
       this.isValid = isValid;
       this.message = message;
     }
-
-    private boolean isValid;
-
-    private String message;
   }
 }

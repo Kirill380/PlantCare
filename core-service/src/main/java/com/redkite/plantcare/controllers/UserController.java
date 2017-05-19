@@ -6,6 +6,7 @@ import com.redkite.plantcare.common.dto.FieldErrorDto;
 import com.redkite.plantcare.common.dto.UserRequest;
 import com.redkite.plantcare.common.dto.UserResponse;
 import com.redkite.plantcare.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -42,8 +43,8 @@ public class UserController {
 
   private ErrorDto getErrors(String errorMessage, BindingResult result) {
     List<FieldErrorDto> fieldErrors = result.getFieldErrors().stream()
-        .map(er -> new FieldErrorDto(er.getField(), er.getDefaultMessage()))
-        .collect(Collectors.toList());
+            .map(er -> new FieldErrorDto(er.getField(), er.getDefaultMessage()))
+            .collect(Collectors.toList());
     return new ErrorDto(errorMessage, fieldErrors);
   }
 }
