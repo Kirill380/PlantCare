@@ -17,18 +17,8 @@ types:
   SignupOk:
     type: object
     properties:
-      scopedPermission: object
       access_token: string
 
-  UserResources:
-    type: object
-    properties:
-      systems: number[]
-      tenants: number[]
-      solutions: number[]
-      apps: number[]
-      assets: number[]
-      web: number[]
 
   ChangePassword:
     type: object
@@ -41,15 +31,10 @@ types:
     properties:
       firstName: string
       lastName: string
-      company: string
       email: string
-      country: { type: string, required: false }
       password:
               type: string
               description: Password must contains at least one upper case letter, one lower case letter and one digit. The minimum password's size is 8 and maximum is 255.
-      targetUrl: string
-      scopeId: string
-
 
   User:
     type: object
@@ -58,8 +43,6 @@ types:
       email: string
       firstName: string
       lastName: string
-      company: string
-      country: string
       status: string
       editTime: string
       creationTime: string
