@@ -1,0 +1,11 @@
+version: '2'
+services:
+  mysql-service:
+    image: mysql:3.4.3
+    networks:
+      - my-tier
+    ports:
+      - "3306:3306"
+networks:
+  my-tier:
+    driver: bridge
