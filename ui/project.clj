@@ -1,4 +1,4 @@
-(defproject plant-care-ui "0.1.0-SNAPSHOT"
+(defproject ui "0.1.0-SNAPSHOT"
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -68,4 +68,5 @@
                                           (require 'dirac.agent)
                                           (dirac.agent/boot!))}}}
   :aliases {"lint" ["do" ["kibit"] ["bikeshed"]]
-            "build" ["do" ["clean"] ["cljsbuild" "once" "min"]]})
+            "build" ["do" ["clean"] ["cljsbuild" "once" "min"]]}
+  :parent [com.redkite/plant-care "0.1.0-SNAPSHOT" :relative-path "../pom.xml"])

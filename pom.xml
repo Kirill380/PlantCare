@@ -8,6 +8,7 @@
     <artifactId>plant-care</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <modules>
+        <module>ui</module>
         <module>core-service</module>
         <module>common</module>
     </modules>
@@ -39,6 +40,31 @@
         <findbugs.plugin.version>3.0.4</findbugs.plugin.version>
         <validator.collection.version>2.1.6</validator.collection.version>
     </properties>
+
+    <profiles>
+      <profile>
+        <id>Windows</id>
+        <activation>
+          <os>
+            <family>Windows</family>
+          </os>
+        </activation>
+        <properties>
+          <script.extension>.bat</script.extension>
+        </properties>
+      </profile>
+      <profile>
+        <id>unix</id>
+        <activation>
+          <os>
+            <family>unix</family>
+          </os>
+        </activation>
+        <properties>
+          <script.extension>.sh</script.extension>
+        </properties>
+      </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -149,6 +175,38 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring.boot.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.6.0</version>
+                    <executions>
+                        <execution>
+                            <id>build-ui</id>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>exec</goal>
+                            </goals>
+                            <configuration>
+                                <workingDirectory>ui</workingDirectory>
+                                <executable>lein</executable>
+                                <arguments>
+                                    <argument>build</argument>
+                                </arguments>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>copy-ui</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>exec</goal>
+                            </goals>
+                            <configuration>
+                                <workingDirectory>${session.executionRootDirectory}</workingDirectory>
+                                <executable>scripts/copy_ui${script.extension}</executable>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
