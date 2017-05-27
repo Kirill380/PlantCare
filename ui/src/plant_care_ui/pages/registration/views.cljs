@@ -2,7 +2,7 @@
   (:require [reagent.core :as reagent]
             [re-frame.core :as re-frame]
             [plant-care-ui.utils.core :refer [listen build-text-field-options]]
-            [plant-care-ui.components.material :as m]
+            [cljs-react-material-ui.reagent :as ui]
             [plant-care-ui.pages.registration.events]
             [plant-care-ui.pages.registration.subs]))
 
@@ -18,39 +18,39 @@
             :on-submit (fn [e]
                          (.preventDefault e)
                          (re-frame/dispatch [:registration-user/request]))}
-     [m/text-field
+     [ui/text-field
       (build-text-field-options
        "First Name"
        :set-registration-first-name
        first-name)]
 
-     [m/text-field
+     [ui/text-field
       (build-text-field-options
        "Last Name"
        :set-registration-last-name
        last-name)]
-     [m/text-field
+     [ui/text-field
       (build-text-field-options
        "Email"
        :set-registration-email
        email)]
-     [m/text-field
+     [ui/text-field
       (merge
        (build-text-field-options
         "Password"
         :set-registration-password
         password)
        {:type "password"})]
-     [m/text-field
+     [ui/text-field
       (merge
        (build-text-field-options
         "Confirm Password"
         :set-registration-confirm-password
         confirm-password)
        {:type "password"})]
-     [m/raised-button {:type "submit"
-                       :label "REGISTER"
-                       :primary true}]]))
+     [ui/raised-button {:type "submit"
+                        :label "REGISTER"
+                        :primary true}]]))
 
 
 (defn registration-page []

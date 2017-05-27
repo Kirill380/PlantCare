@@ -2,7 +2,7 @@
   (:require [bide.core :as r]
             [reagent.core :as reagent]
             [re-frame.core :as re-frame]
-            [plant-care-ui.components.material :as m]
+            [cljs-react-material-ui.reagent :as ui]
             [plant-care-ui.components.app.views :refer [app]]
             [plant-care-ui.router.nav :as nav]
             [plant-care-ui.pages.landing.core :refer [landing-page]]
@@ -21,7 +21,7 @@
 
 (defn router []
   (let [{:keys [handler params query]} @(re-frame/subscribe [:route])]
-    [m/mui-theme-provider
+    [ui/mui-theme-provider
      [app
       (case handler
        :landing [landing-page]
