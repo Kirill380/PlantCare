@@ -3,6 +3,7 @@ package com.redkite.plantcare.service.impl;
 import com.redkite.plantcare.common.dto.UserList;
 import com.redkite.plantcare.common.dto.UserRequest;
 import com.redkite.plantcare.common.dto.UserResponse;
+import com.redkite.plantcare.controllers.filters.UserFilter;
 import com.redkite.plantcare.convertors.UserConverter;
 import com.redkite.plantcare.dao.RoleDao;
 import com.redkite.plantcare.dao.UserDao;
@@ -12,6 +13,8 @@ import com.redkite.plantcare.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -22,6 +25,7 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -41,6 +45,8 @@ public class UserServiceImpl implements UserService {
 
   private PlatformTransactionManager txManager;
 
+  @Value("${spring.jpa.hibernate.ddl-auto}")
+  private String createDefaults;
 
   //CHECKSTYLE:OFF
   @Autowired
@@ -58,11 +64,16 @@ public class UserServiceImpl implements UserService {
   //CHECKSTYLE:ON
 
 
+  //TODO move defaults creation to separate SQL script
   /**
    * Create default admin in database add two roles -- regularUser and admin.
    */
   @PostConstruct
   public void init() {
+    if (!createDefaults.equals("create-drop")) {
+      return;
+    }
+
     TransactionTemplate tmpl = new TransactionTemplate(txManager);
     tmpl.execute(new TransactionCallbackWithoutResult() {
       @Override
@@ -91,7 +102,11 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional(isolation = Isolation.REPEATABLE_READ)
   public UserResponse createUser(UserRequest userRequest) {
-    return userConverter.toDto(createUser(userRequest, REGULAR_USER_ROLE));
+    UserResponse userResponse = userConverter.toDto(createUser(userRequest, REGULAR_USER_ROLE));
+    userResponse.setEmail(null);
+    userResponse.setFirstName(null);
+    userResponse.setLastName(null);
+    return userResponse;
   }
 
   private User createUser(UserRequest userRequest, String roleName) {
@@ -99,6 +114,14 @@ public class UserServiceImpl implements UserService {
     user.setCreationDate(LocalDateTime.now());
     user.setRole(roleDao.findByName(roleName));
     return userDao.save(user);
+  }
+
+  @Override
+  @Transactional(isolation = Isolation.REPEATABLE_READ)
+  public UserList findUsers(UserFilter filter) {
+    Page<User> users = userDao.findUserByFilter(filter.getEmail(), filter);
+    List<UserResponse> userResponses = userConverter.toDtoList(users.getContent());
+    return new UserList(userResponses, users.getTotalElements());
   }
 
   @Override
@@ -112,18 +135,20 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public UserResponse getUser(Long userId) {
-    return null;
+    return userConverter.toDto(userDao.getOne(userId));
   }
 
   @Override
-  public void editUser(UserRequest userRequest) {
+  @Transactional(isolation = Isolation.REPEATABLE_READ)
+  public void editUser(Long userId, UserRequest userRequest) {
 
   }
 
   @Override
   @Transactional(isolation = Isolation.REPEATABLE_READ)
-  public void deleteUser(UserRequest userRequest) {
+  public void deleteUser(Long userId) {
 
   }
 

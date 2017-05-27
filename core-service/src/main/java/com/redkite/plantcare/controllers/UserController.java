@@ -3,14 +3,18 @@ package com.redkite.plantcare.controllers;
 import com.redkite.plantcare.PlantCareException;
 import com.redkite.plantcare.common.dto.ErrorDto;
 import com.redkite.plantcare.common.dto.FieldErrorDto;
+import com.redkite.plantcare.common.dto.UserList;
 import com.redkite.plantcare.common.dto.UserRequest;
 import com.redkite.plantcare.common.dto.UserResponse;
+import com.redkite.plantcare.controllers.filters.UserFilter;
 import com.redkite.plantcare.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,6 +31,8 @@ public class UserController {
   private UserService userService;
 
 
+  @Autowired
+  private Validator validator;
   /**
    * Creates new user based on user request.
    *
@@ -47,5 +53,10 @@ public class UserController {
             .map(er -> new FieldErrorDto(er.getField(), er.getDefaultMessage()))
             .collect(Collectors.toList());
     return new ErrorDto(errorMessage, fieldErrors);
+  }
+
+  @RequestMapping(method = RequestMethod.GET)
+  public UserList getUsers(@ModelAttribute UserFilter filter) {
+    return userService.findUsers(filter);
   }
 }

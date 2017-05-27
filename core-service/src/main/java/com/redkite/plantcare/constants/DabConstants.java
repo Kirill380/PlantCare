@@ -12,7 +12,5 @@ public class DabConstants {
 
     private UserTable() {
     }
-
-
   }
 }
