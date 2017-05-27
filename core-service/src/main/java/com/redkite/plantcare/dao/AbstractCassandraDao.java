@@ -69,6 +69,11 @@ public abstract class AbstractCassandraDao<T, K> {
     ).all();
   }
 
+  public List<T> execute(Statement statement) {
+    return getMapper().map(
+            getSession().execute(statement)
+    ).all();
+  }
 
   protected void remove(K key) {
     getMapper().delete(key);

@@ -11,13 +11,13 @@ import java.util.Date;
 
 
 @Data
-@Table(name = "endpoint_data")
+@Table(name = "sensor_data")
 @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 public class LogData {
 
   @ClusteringColumn
-  @Column(name = "endpoint_id")
-  private String endpointId;
+  @Column(name = "sensor_id")
+  private String sensorId;
 
   @Column(name = "data_type")
   private String dataType;

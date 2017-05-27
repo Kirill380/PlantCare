@@ -1,5 +1,4 @@
-package com.redkite.plantcare.common.util;
-
+package com.redkite.plantcare.common.utils;
 
 import lombok.Getter;
 
@@ -20,6 +19,7 @@ public enum PasswordRuleChecker {
   public static final String DIGIT_VIOLATION = "The password  should have at least one upper digit";
   public static final String SPECIAL_CHARACTER_VIOLATION = "The password should have at least one "
           + "special character";
+
   public static final String SUCCESS = "Success";
   private static final String LOWER_CASE = "a-z";
   private static final String UPPER_CASE = "A-Z";

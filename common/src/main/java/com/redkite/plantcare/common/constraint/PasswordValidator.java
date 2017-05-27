@@ -1,7 +1,6 @@
 package com.redkite.plantcare.common.constraint;
 
-
-import com.redkite.plantcare.common.util.PasswordRuleChecker;
+import com.redkite.plantcare.common.utils.PasswordRuleChecker;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
