@@ -18,11 +18,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
-      </plugin>
-      <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <version>3.0.0</version>
         <executions>
@@ -35,9 +30,50 @@
             <configuration>
                 <filesets>
                     <fileset>
-                      <directory>${session.executionRootDirectory}/core-service/src/main/resources/public</directory>
+                      <directory>../core-service/src/main/resources/static</directory>
                     </fileset>
                 </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <id>build-ui</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>lein</executable>
+          <arguments>
+            <argument>build</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <echo>Copy web resources</echo>
+                <copy file="resources/public/js/compiled/app.js" tofile="../core-service/src/main/resources/static/js/compiled/app.js"/>
+                <copy file="resources/public/css/style.css" tofile="../core-service/src/main/resources/static/css/style.css"/>
+                <copy file="resources/public/index.html" tofile="../core-service/src/main/resources/static/index.html"/>
+              </tasks>
             </configuration>
           </execution>
         </executions>

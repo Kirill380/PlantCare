@@ -36,35 +36,12 @@
         <jedis>2.4.2</jedis>
         <jackson.version>2.8.5</jackson.version>
         <hikaricp.version>2.5.1</hikaricp.version>
-        <hibernate.version>5.2.5.Final</hibernate.version> <!--define explicitly because spring boot use older version-->
+        <hibernate.version>5.2.5.Final
+        </hibernate.version> <!--define explicitly because spring boot use older version-->
         <findbugs.plugin.version>3.0.4</findbugs.plugin.version>
         <validator.collection.version>2.1.6</validator.collection.version>
     </properties>
 
-    <profiles>
-      <profile>
-        <id>Windows</id>
-        <activation>
-          <os>
-            <family>Windows</family>
-          </os>
-        </activation>
-        <properties>
-          <script.extension>.bat</script.extension>
-        </properties>
-      </profile>
-      <profile>
-        <id>unix</id>
-        <activation>
-          <os>
-            <family>unix</family>
-          </os>
-        </activation>
-        <properties>
-          <script.extension>.sh</script.extension>
-        </properties>
-      </profile>
-    </profiles>
 
     <dependencies>
         <dependency>
@@ -163,8 +140,6 @@
                 <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
-
-
         </dependencies>
     </dependencyManagement>
 
@@ -175,38 +150,6 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring.boot.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.6.0</version>
-                    <executions>
-                        <execution>
-                            <id>build-ui</id>
-                            <phase>generate-resources</phase>
-                            <goals>
-                                <goal>exec</goal>
-                            </goals>
-                            <configuration>
-                                <workingDirectory>ui</workingDirectory>
-                                <executable>lein</executable>
-                                <arguments>
-                                    <argument>build</argument>
-                                </arguments>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>copy-ui</id>
-                            <phase>process-resources</phase>
-                            <goals>
-                                <goal>exec</goal>
-                            </goals>
-                            <configuration>
-                                <workingDirectory>${session.executionRootDirectory}</workingDirectory>
-                                <executable>scripts/copy_ui${script.extension}</executable>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

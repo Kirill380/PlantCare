@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController("/users")
+@RestController
+@RequestMapping("/users")
 public class UserController {
 
   @Autowired
