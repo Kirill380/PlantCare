@@ -15,13 +15,11 @@
         email (listen :registration-email)
         password (listen :registration-password)
         confirm-password (listen :registration-confirm-password)]
-    (println email)
     [:form {:style {:display "flex"
                     :flex-direction "column"
                     :width 256}
             :on-submit (fn [e]
                          (.preventDefault e)
-                         (println "lol" e)
                          (re-frame/dispatch [:registration-user/request]))}
      [ui/text-field
       (merge
