@@ -18,7 +18,8 @@
                  [funcool/bide "1.5.0"]
                  [cljs-react-material-ui "0.2.44"]
                  [day8.re-frame/http-fx "0.1.3"]
-                 [cljs-ajax "0.6.0"]]
+                 [cljs-ajax "0.6.0"]
+                 [camel-snake-kebab "0.4.0"]]
 
   :npm {:dependencies []}
 

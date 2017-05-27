@@ -24,3 +24,16 @@
 
 (def mui-themeable
   (wrap-with-react-hoc js/MaterialUIStyles.muiThemeable))
+
+(defn map-values [f hash-map]
+  (reduce (fn [result [k v]]
+            (assoc result k (f v)))
+          {}
+          hash-map))
+
+(defn deep-merge
+  "Recursively merges maps. If keys are not maps, the last value wins."
+  [& vals]
+  (if (every? map? vals)
+    (apply merge-with deep-merge vals)
+    (last vals)))
