@@ -8,6 +8,7 @@
     <artifactId>plant-care</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <modules>
+        <module>ui</module>
         <module>core-service</module>
         <module>common</module>
     </modules>
@@ -35,10 +36,12 @@
         <jedis>2.4.2</jedis>
         <jackson.version>2.8.5</jackson.version>
         <hikaricp.version>2.5.1</hikaricp.version>
-        <hibernate.version>5.2.5.Final</hibernate.version> <!--define explicitly because spring boot use older version-->
+        <hibernate.version>5.2.5.Final
+        </hibernate.version> <!--define explicitly because spring boot use older version-->
         <findbugs.plugin.version>3.0.4</findbugs.plugin.version>
         <validator.collection.version>2.1.6</validator.collection.version>
     </properties>
+
 
     <dependencies>
         <dependency>
@@ -137,8 +140,6 @@
                 <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
-
-
         </dependencies>
     </dependencyManagement>
 

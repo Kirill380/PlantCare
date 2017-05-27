@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>plant-care</artifactId>
+    <groupId>com.redkite</groupId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>com.redkite.plant-care</groupId>
+  <artifactId>ui</artifactId>
+  <packaging>jar</packaging>
+
+  <properties>
+      <main.basedir>${project.parent.basedir}</main.basedir>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>clean-generated-ui</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <configuration>
+                <filesets>
+                    <fileset>
+                      <directory>../core-service/src/main/resources/static</directory>
+                    </fileset>
+                </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <id>build-ui</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>lein</executable>
+          <arguments>
+            <argument>build</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <echo>Copy web resources</echo>
+                <copy file="resources/public/js/compiled/app.js" tofile="../core-service/src/main/resources/static/js/compiled/app.js"/>
+                <copy file="resources/public/css/style.css" tofile="../core-service/src/main/resources/static/css/style.css"/>
+                <copy file="resources/public/index.html" tofile="../core-service/src/main/resources/static/index.html"/>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
