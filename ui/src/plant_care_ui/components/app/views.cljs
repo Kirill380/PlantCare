@@ -1,7 +1,9 @@
 (ns plant-care-ui.components.app.views
   (:require [reagent.core :as reagent]
             [re-frame.core :as re-frame]
-            [plant-care-ui.components.material :as m]
+            [cljs-react-material-ui.core :refer [get-mui-theme color]]
+            [cljs-react-material-ui.reagent :as ui]
+            [cljs-react-material-ui.icons :as icons]
             [plant-care-ui.utils.core :as utils]
             [plant-care-ui.components.app.subs]
             [plant-care-ui.components.app.events]))
@@ -9,14 +11,12 @@
 (def toggle-drawer #(re-frame/dispatch [:app/toggle-drawer]))
 
 (defn navigation-header [props]
-  (let [app-bar-theme (-> (js->clj props :keywordize-keys true)
-                       :muiTheme
-                       :appBar)
+  (let [app-bar-theme (-> (js->clj (get-mui-theme) :keywordize-keys true) :appBar)
         color (:color app-bar-theme)
         text-color (:textColor app-bar-theme)
         height (:height app-bar-theme)]
-   [m/paper {:z-depth 2
-             :style {:background-color color}}
+   [ui/paper {:z-depth 2
+              :style {:background-color color}}
     [:div {:style {:display "flex"
                    :justify-content "center"
                    :align-items "center"
@@ -26,31 +26,26 @@
                    :font-size 21}}
       "Navigation"]]))
 
-(def mui-navigation-header
-  (utils/mui-themeable navigation-header))
-
 (defn navigation []
   [:div
-   [mui-navigation-header]
-   [m/menu
-    [m/menu-item {:primary-text "Dashboard"
-                  :on-touch-tap #(println "go to dashboard")
-                  :left-icon (m/dashboard-icon)}]
-
-    [m/menu-item {:primary-text "Sensors page"
-                  :left-icon (m/memory-icon)}]
-    [m/menu-item {:primary-text "Flowers page"
-                  :left-icon (m/flower-icon)}]
-    [m/menu-item {:primary-text "Connections page"
-                  :left-icon (m/ethernet-icon)}]]])
+   [navigation-header]
+   [ui/menu
+    [ui/menu-item {:primary-text "Dashboard"
+                   :left-icon (icons/action-dashboard)}]
+    [ui/menu-item {:primary-text "Sensors page"
+                   :left-icon (icons/hardware-memory)}]
+    [ui/menu-item {:primary-text "Flowers page"
+                   :left-icon (icons/maps-local-florist)}]
+    [ui/menu-item {:primary-text "Connections page"
+                   :left-icon (icons/action-settings-ethernet)}]]])
 
 (defn app [child]
   (let [open? (utils/listen :app/drawer-open?)]
    [:div
-    [m/app-bar {:title "Title"
-                :on-left-icon-button-touch-tap toggle-drawer}]
-    [m/drawer {:docked false
-               :open open?
-               :on-request-change toggle-drawer}
+    [ui/app-bar {:title "Title!"
+                 :on-left-icon-button-touch-tap toggle-drawer}]
+    [ui/drawer {:docked false
+                :open open?
+                :on-request-change toggle-drawer}
      [navigation]]
     child]))
