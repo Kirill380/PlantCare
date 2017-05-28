@@ -25,13 +25,13 @@ public class EndpointController {
   @Autowired
   private LogDataConverter logDataConverter;
 
-  @RequestMapping(value = "/endpoints/data", method = RequestMethod.POST)
+  @RequestMapping(value = "/api/endpoints/data", method = RequestMethod.POST)
   public void logData(@RequestBody LogDataRequest logData) {
     logData.setLogTime(LocalDateTime.now());
     logDataDao.save(logDataConverter.toModel(logData));
   }
 
-  @RequestMapping(value = "/endpoints/data", method = RequestMethod.GET)
+  @RequestMapping(value = "/api/endpoints/data", method = RequestMethod.GET)
   public LogDataResponse getFromPeriodOfTime(
           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {

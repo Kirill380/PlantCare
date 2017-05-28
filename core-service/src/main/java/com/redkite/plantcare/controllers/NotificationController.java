@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @RestController
-@RequestMapping("/notification")
+@RequestMapping("/api/notification")
 public class NotificationController {
 
   @Autowired

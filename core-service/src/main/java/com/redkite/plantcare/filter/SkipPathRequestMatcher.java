@@ -16,10 +16,10 @@ public class SkipPathRequestMatcher implements RequestMatcher {
 
   private RequestMatcher processingMatcher;
 
-  public SkipPathRequestMatcher(List<String> pathsToSkip, String processingPath) {
-    Assert.notNull(pathsToSkip);
-    List<RequestMatcher> matchers = pathsToSkip.stream()
-            .map(AntPathRequestMatcher::new)
+  public SkipPathRequestMatcher(List<RestApi> apisToSkip, String processingPath) {
+    Assert.notNull(apisToSkip);
+    List<RequestMatcher> matchers = apisToSkip.stream()
+            .map(api -> new AntPathRequestMatcher(api.getPath(), api.getMethod()))
             .collect(Collectors.toList());
     this.matchers = new OrRequestMatcher(matchers);
     processingMatcher = new AntPathRequestMatcher(processingPath);
@@ -30,6 +30,7 @@ public class SkipPathRequestMatcher implements RequestMatcher {
     if (matchers.matches(request)) {
       return false;
     }
+
     return processingMatcher.matches(request);
   }
 }
