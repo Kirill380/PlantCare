@@ -1,6 +1,6 @@
 package com.redkite.plantcare.service;
 
-import com.redkite.plantcare.common.dto.UserList;
+import com.redkite.plantcare.common.dto.ItemList;
 import com.redkite.plantcare.common.dto.UserRequest;
 import com.redkite.plantcare.common.dto.UserResponse;
 import com.redkite.plantcare.controllers.filters.UserFilter;
@@ -10,9 +10,7 @@ public interface UserService {
 
   UserResponse createUser(UserRequest userRequest);
 
-  UserList findUsers(UserFilter filter);
-
-  UserList getUsers();
+  ItemList<UserResponse> findUsers(UserFilter filter);
 
   User getUserByEmail(String email);
 

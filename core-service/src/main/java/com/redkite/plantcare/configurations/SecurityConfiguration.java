@@ -3,6 +3,7 @@ package com.redkite.plantcare.configurations;
 import static com.google.common.collect.ImmutableList.of;
 import static com.redkite.plantcare.configurations.WebConstants.LOGIN_ENTRY_POINT;
 import static com.redkite.plantcare.configurations.WebConstants.LOGOUT_ENTRY_POINT;
+import static com.redkite.plantcare.configurations.WebConstants.LOG_DATA_ENTRY_POINT;
 import static com.redkite.plantcare.configurations.WebConstants.REFRESH_TOKEN_ENTRY_POINT;
 import static com.redkite.plantcare.configurations.WebConstants.TOKEN_BASED_AUTH_ENTRY_POINT;
 import static com.redkite.plantcare.configurations.WebConstants.USERS_ENTRY_POINT;
@@ -78,7 +79,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   protected JwtTokenAuthenticationProcessingFilter buildJwtTokenAuthenticationProcessingFilter() throws Exception {
     List<RestApi> apisToSkip = of(a(REFRESH_TOKEN_ENTRY_POINT), a(LOGIN_ENTRY_POINT),
-                    a(LOGOUT_ENTRY_POINT), a(USERS_ENTRY_POINT, HttpMethod.POST));
+                    a(LOGOUT_ENTRY_POINT), a(USERS_ENTRY_POINT, HttpMethod.POST), a(LOG_DATA_ENTRY_POINT, HttpMethod.POST));
     SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(apisToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);
     JwtTokenAuthenticationProcessingFilter filter
             = new JwtTokenAuthenticationProcessingFilter(failureHandler, jwtTokenExtractor, matcher);
@@ -120,6 +121,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
         .authorizeRequests()
             .antMatchers(HttpMethod.POST, USERS_ENTRY_POINT).permitAll()
+            .antMatchers(HttpMethod.POST, LOG_DATA_ENTRY_POINT).permitAll()
             .antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT).authenticated() // Protected API End-points
         .and()
           .addFilterBefore(buildAjaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)

@@ -40,6 +40,9 @@ public class Plant {
   @Column
   private String location;
 
+  @Column(name = "moisture_threshold")
+  private Integer moistureThreshold;
+
   @Column(name = "creation_date")
   private LocalDateTime creationDate;
 

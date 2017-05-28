@@ -3,7 +3,7 @@ package com.redkite.plantcare.controllers;
 import com.redkite.plantcare.PlantCareException;
 import com.redkite.plantcare.common.dto.ErrorDto;
 import com.redkite.plantcare.common.dto.FieldErrorDto;
-import com.redkite.plantcare.common.dto.UserList;
+import com.redkite.plantcare.common.dto.ItemList;
 import com.redkite.plantcare.common.dto.UserRequest;
 import com.redkite.plantcare.common.dto.UserResponse;
 import com.redkite.plantcare.controllers.filters.UserFilter;
@@ -57,7 +57,7 @@ public class UserController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  public UserList getUsers(@ModelAttribute UserFilter filter) {
+  public ItemList<UserResponse> getUsers(@ModelAttribute UserFilter filter) {
     return userService.findUsers(filter);
   }
 }

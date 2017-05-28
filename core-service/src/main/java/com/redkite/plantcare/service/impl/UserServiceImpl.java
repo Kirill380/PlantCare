@@ -1,8 +1,9 @@
 package com.redkite.plantcare.service.impl;
 
-import com.redkite.plantcare.common.dto.UserList;
+import com.redkite.plantcare.common.dto.ItemList;
 import com.redkite.plantcare.common.dto.UserRequest;
 import com.redkite.plantcare.common.dto.UserResponse;
+import com.redkite.plantcare.controllers.filters.SensorFilter;
 import com.redkite.plantcare.controllers.filters.UserFilter;
 import com.redkite.plantcare.convertors.UserConverter;
 import com.redkite.plantcare.dao.RoleDao;
@@ -109,15 +110,10 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional(isolation = Isolation.REPEATABLE_READ)
-  public UserList findUsers(UserFilter filter) {
+  public ItemList<UserResponse>  findUsers(UserFilter filter) {
     Page<User> users = userDao.findUserByFilter(filter.getEmail(), filter);
     List<UserResponse> userResponses = userConverter.toDtoList(users.getContent());
-    return new UserList(userResponses, users.getTotalElements());
-  }
-
-  @Override
-  public UserList getUsers() {
-    return null;
+    return new ItemList<>(userResponses, users.getTotalElements());
   }
 
   @Override
@@ -134,7 +130,9 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional(isolation = Isolation.REPEATABLE_READ)
   public void editUser(Long userId, UserRequest userRequest) {
-
+    User user = userConverter.toModel(userRequest);
+    user.setId(userId);
+    userDao.save(user);
   }
 
   @Override

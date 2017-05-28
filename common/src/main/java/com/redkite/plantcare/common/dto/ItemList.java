@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class UserList {
+public class ItemList<T> {
 
-  private final List<UserResponse> users;
+  private final List<T> items;
 
   private final Long count;
 
-  public UserList(List<UserResponse> users, Long count) {
-    this.users = new ArrayList<>(users);
+  public ItemList(List<T> items, Long count) {
+    this.items = new ArrayList<>(items);
     this.count = count;
   }
 }

@@ -7,7 +7,7 @@ CREATE TABLE plant_care.sensor_data (
   data_type varchar,
   value int,
   log_time timestamp,
-  PRIMARY KEY ((endpoint_id), log_time)
+  PRIMARY KEY ((sensor_id), log_time)
 );
 
 
@@ -15,6 +15,5 @@ CREATE TABLE plant_care.token_blacklist (
   token varchar PRIMARY KEY
 );
 
-CREATE INDEX endpoint_data_value ON plant_care.endpoint_data(value);
 
 

@@ -1,7 +1,7 @@
 package com.redkite.plantcare.convertors;
 
 import com.redkite.plantcare.common.dto.LogDataRequest;
-import com.redkite.plantcare.model.nosql.LogData;
+import com.redkite.plantcare.model.nosql.SensorLogData;
 
 import org.springframework.stereotype.Component;
 
@@ -10,20 +10,20 @@ import java.time.ZoneId;
 import java.util.Date;
 
 @Component
-public class LogDataConverter implements ToModelConverter<LogData, LogDataRequest>, ToDtoConverter<LogData, LogDataRequest> {
+public class LogDataConverter implements ToModelConverter<SensorLogData, LogDataRequest>, ToDtoConverter<SensorLogData, LogDataRequest> {
 
   @Override
-  public LogData toModel(LogDataRequest dto) {
-    LogData logData = new LogData();
-    logData.setSensorId(dto.getEndpointId());
-    logData.setValue(dto.getValue());
-    logData.setLogTime(Date.from(dto.getLogTime().atZone(ZoneId.systemDefault()).toInstant()));
-    logData.setDataType(dto.getDataType());
-    return logData;
+  public SensorLogData toModel(LogDataRequest dto) {
+    SensorLogData sensorLogData = new SensorLogData();
+    sensorLogData.setSensorId(dto.getSensorId());
+    sensorLogData.setValue(dto.getValue());
+    sensorLogData.setLogTime(Date.from(dto.getLogTime().atZone(ZoneId.systemDefault()).toInstant()));
+    sensorLogData.setDataType(dto.getDataType());
+    return sensorLogData;
   }
 
   @Override
-  public LogDataRequest toDto(LogData model) {
+  public LogDataRequest toDto(SensorLogData model) {
     LogDataRequest logDataRequest = new LogDataRequest();
     logDataRequest.setValue(model.getValue());
     logDataRequest.setLogTime(LocalDateTime.ofInstant(model.getLogTime().toInstant(), ZoneId.systemDefault()));

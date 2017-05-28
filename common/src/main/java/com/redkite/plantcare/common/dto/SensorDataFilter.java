@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class SensorDataFilter {
 
+  private Long sensorId;
+
   private LocalDateTime from;
 
   private LocalDateTime to;

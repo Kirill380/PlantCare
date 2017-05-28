@@ -6,11 +6,13 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 public class LogDataRequest {
 
-  @NotBlank
-  private String endpointId;
+  @NotNull
+  private Long sensorId;
 
   private String dataType;
 

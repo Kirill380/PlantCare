@@ -1,5 +1,7 @@
 package com.redkite.plantcare.dao;
 
+import static com.datastax.driver.core.querybuilder.QueryBuilder.asc;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;
 import static com.datastax.driver.core.querybuilder.QueryBuilder.gte;
 import static com.datastax.driver.core.querybuilder.QueryBuilder.lte;
 
@@ -7,7 +9,7 @@ import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.redkite.plantcare.common.dto.LogDataResponse;
 import com.redkite.plantcare.common.dto.SensorDataFilter;
 import com.redkite.plantcare.convertors.LogDataConverter;
-import com.redkite.plantcare.model.nosql.LogData;
+import com.redkite.plantcare.model.nosql.SensorLogData;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -17,14 +19,14 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public class LogDataDao extends AbstractCassandraDao<LogData, String> {
+public class SensorLogDataDao extends AbstractCassandraDao<SensorLogData, String> {
 
   @Autowired
   private LogDataConverter logDataConverter;
 
   @Override
-  protected Class<LogData> getColumnFamilyClass() {
-    return LogData.class;
+  protected Class<SensorLogData> getColumnFamilyClass() {
+    return SensorLogData.class;
   }
 
   @Override
@@ -33,12 +35,12 @@ public class LogDataDao extends AbstractCassandraDao<LogData, String> {
   }
 
   @Override
-  public LogData save(LogData entity) {
+  public SensorLogData save(SensorLogData entity) {
     return super.save(entity);
   }
 
   public LogDataResponse findByFilter(SensorDataFilter filter) {
-    List<LogData> data;
+    List<SensorLogData> data;
     if (filter == null) {
       data = findAll();
       //TODO sort on cassandra side not in java
@@ -49,12 +51,12 @@ public class LogDataDao extends AbstractCassandraDao<LogData, String> {
       data = execute(QueryBuilder.select()
               .all()
               .from(getColumnFamilyName())
-              .allowFiltering()
-              .where(gte("log_time", from))
+              .where(eq("sensor_id", filter.getSensorId()))
+              .and(gte("log_time", from))
               .and(lte("log_time", to))
+              .orderBy(asc("log_time"))
               .setConsistencyLevel(getConsistencyLevel())
       );
-      data.sort((ld1, ld2) -> ld1.getLogTime().compareTo(ld2.getLogTime()));
     }
     LogDataResponse logDataResponse = new LogDataResponse();
     logDataResponse.putAll(logDataConverter.toDtoList(data));

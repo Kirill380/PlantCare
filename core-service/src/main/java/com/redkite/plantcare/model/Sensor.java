@@ -34,11 +34,8 @@ public class Sensor {
   @Column(name = "log_frequency")
   private Integer logFrequency;
 
-  @Column(name = "moisture_threshold")
-  private Integer moistureThreshold;
 
   @Column(name = "creation_date")
   private LocalDateTime creationDate;
-
 
 }

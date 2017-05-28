@@ -4,7 +4,8 @@ import com.redkite.plantcare.common.dto.LogDataRequest;
 import com.redkite.plantcare.common.dto.LogDataResponse;
 import com.redkite.plantcare.common.dto.SensorDataFilter;
 import com.redkite.plantcare.convertors.LogDataConverter;
-import com.redkite.plantcare.dao.LogDataDao;
+import com.redkite.plantcare.dao.SensorLogDataDao;
+import com.redkite.plantcare.service.SensorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,25 +18,29 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 
 @RestController
-public class EndpointController {
+public class DataCollectionController {
 
   @Autowired
-  private LogDataDao logDataDao;
+  private SensorLogDataDao sensorLogDataDao;
+
+  @Autowired
+  private SensorService sensorService;
 
   @Autowired
   private LogDataConverter logDataConverter;
 
-  @RequestMapping(value = "/api/endpoints/data", method = RequestMethod.POST)
+  @RequestMapping(value = "/api/sensors/data", method = RequestMethod.POST)
   public void logData(@RequestBody LogDataRequest logData) {
     logData.setLogTime(LocalDateTime.now());
-    logDataDao.save(logDataConverter.toModel(logData));
+    sensorLogDataDao.save(logDataConverter.toModel(logData));
   }
 
-  @RequestMapping(value = "/api/endpoints/data", method = RequestMethod.GET)
+  @RequestMapping(value = "/api/sensors/data", method = RequestMethod.GET)
   public LogDataResponse getFromPeriodOfTime(
+          @RequestParam Long sensorId,
           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
-    return logDataDao.findByFilter(new SensorDataFilter(from, to));
+    return sensorLogDataDao.findByFilter(new SensorDataFilter(sensorId, from, to));
   }
 
 }
