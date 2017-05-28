@@ -42,7 +42,6 @@
         <validator.collection.version>2.1.6</validator.collection.version>
     </properties>
 
-
     <dependencies>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>

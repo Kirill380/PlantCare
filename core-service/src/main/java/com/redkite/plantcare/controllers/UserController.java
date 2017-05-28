@@ -33,6 +33,7 @@ public class UserController {
 
   @Autowired
   private Validator validator;
+
   /**
    * Creates new user based on user request.
    *
