@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
   private static final String REGULAR_USER_ROLE = "regularUser";
   private static final String ADMIN_ROLE = "admin";
 
+  @Autowired
   private PasswordEncoder passwordEncoder;
 
   private UserDao userDao;
@@ -50,12 +51,10 @@ public class UserServiceImpl implements UserService {
 
   //CHECKSTYLE:OFF
   @Autowired
-  public UserServiceImpl(PasswordEncoder passwordEncoder,
-                         UserDao userDao,
+  public UserServiceImpl(UserDao userDao,
                          RoleDao roleDao,
                          UserConverter userConverter,
                          @Qualifier("transactionManager") PlatformTransactionManager txManager) {
-    this.passwordEncoder = passwordEncoder;
     this.userDao = userDao;
     this.roleDao = roleDao;
     this.userConverter = userConverter;
