@@ -38,29 +38,21 @@ public class UserServiceImpl implements UserService {
   @Autowired
   private PasswordEncoder passwordEncoder;
 
+  @Autowired
   private UserDao userDao;
 
+  @Autowired
   private RoleDao roleDao;
 
+  @Autowired
   private UserConverter userConverter;
 
+  @Autowired
+  @Qualifier("transactionManager")
   private PlatformTransactionManager txManager;
 
   @Value("${spring.jpa.hibernate.ddl-auto}")
   private String createDefaults;
-
-  //CHECKSTYLE:OFF
-  @Autowired
-  public UserServiceImpl(UserDao userDao,
-                         RoleDao roleDao,
-                         UserConverter userConverter,
-                         @Qualifier("transactionManager") PlatformTransactionManager txManager) {
-    this.userDao = userDao;
-    this.roleDao = roleDao;
-    this.userConverter = userConverter;
-    this.txManager = txManager;
-  }
-  //CHECKSTYLE:ON
 
 
   //TODO move defaults creation to separate SQL script
