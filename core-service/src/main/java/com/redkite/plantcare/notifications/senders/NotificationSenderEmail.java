@@ -26,8 +26,10 @@ public class NotificationSenderEmail implements NotificationSender {
 
   @Autowired
   Configuration freemarkerConfiguration;
+
   @Autowired
   private JavaMailSender mailSender;
+
   @Value("${spring.mail.username}")
   private String senderEmail;
 

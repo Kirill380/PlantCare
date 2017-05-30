@@ -8,16 +8,22 @@ import com.redkite.plantcare.controllers.filters.SensorFilter;
 
 public interface SensorService {
 
-    String createSensor(SensorRequest sensorRequest);
+  String createSensor(SensorRequest sensorRequest);
 
-    ItemList<SensorResponse> findSensors(SensorFilter sensorFilter);
+  ItemList<SensorResponse> findSensors(SensorFilter sensorFilter);
 
-    SensorResponse getSensor(Long id);
+  SensorResponse getSensor(Long id);
 
-    String editSensor(Long id, SensorRequest sensorRequest);
+  String editSensor(Long id, SensorRequest sensorRequest);
 
-    boolean isActive(Long id);
+  boolean isActive(Long id);
 
-    void deleteSensor(Long id);
+  void checkExceedTrashHold(Long sensorId, Integer value, String dataType);
+
+  void bindToPlant(Long sensorId, Long plantId);
+
+  void unbindFromPlant(Long sensorId, Long plantId);
+
+  void deleteSensor(Long id);
 
 }

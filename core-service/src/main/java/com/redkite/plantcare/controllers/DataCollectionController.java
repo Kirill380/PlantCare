@@ -31,8 +31,11 @@ public class DataCollectionController {
 
   @RequestMapping(value = "/api/sensors/data", method = RequestMethod.POST)
   public void logData(@RequestBody LogDataRequest logData) {
-    logData.setLogTime(LocalDateTime.now());
-    sensorLogDataDao.save(logDataConverter.toModel(logData));
+    if (sensorService.isActive(logData.getSensorId())) {
+      logData.setLogTime(LocalDateTime.now());
+      sensorLogDataDao.save(logDataConverter.toModel(logData));
+      sensorService.checkExceedTrashHold(logData.getSensorId(), logData.getValue(), logData.getDataType());
+    }
   }
 
   @RequestMapping(value = "/api/sensors/data", method = RequestMethod.GET)
