@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.io.IOException;
 
@@ -35,9 +36,9 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
 
   private final Validator validator;
 
-  public AjaxLoginProcessingFilter(String defaultProcessUrl, AuthenticationSuccessHandler successHandler,
+  public AjaxLoginProcessingFilter(RequestMatcher matcher, AuthenticationSuccessHandler successHandler,
                                    AuthenticationFailureHandler failureHandler, ObjectMapper mapper, Validator validator) {
-    super(defaultProcessUrl);
+    super(matcher);
     this.successHandler = successHandler;
     this.failureHandler = failureHandler;
     this.objectMapper = mapper;

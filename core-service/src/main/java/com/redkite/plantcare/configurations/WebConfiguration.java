@@ -1,8 +1,12 @@
 package com.redkite.plantcare.configurations;
 
+import com.redkite.plantcare.filter.SimpleCorsFilter;
+
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.Ordered;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -19,7 +23,9 @@ public class WebConfiguration {
     return new WebMvcConfigurerAdapter() {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
+        registry.addMapping("/**")
+                .allowedMethods("POST", "OPTIONS", "GET", "PUT", "DELETE", "HEAD")
+                .allowedOrigins("*");
       }
     };
   }
@@ -30,5 +36,13 @@ public class WebConfiguration {
     return new LocalValidatorFactoryBean();
   }
 
+
+  @Bean
+  public FilterRegistrationBean corsFilter() {
+    FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+    registrationBean.setFilter(new SimpleCorsFilter());
+    registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+    return registrationBean;
+  }
 
 }

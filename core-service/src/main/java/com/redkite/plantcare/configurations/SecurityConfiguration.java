@@ -34,6 +34,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.List;
 
@@ -70,9 +71,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Autowired
   private Validator validator;
 
+
   protected AjaxLoginProcessingFilter buildAjaxLoginProcessingFilter() throws Exception {
     AjaxLoginProcessingFilter filter =
-            new AjaxLoginProcessingFilter(LOGIN_ENTRY_POINT, successHandler, failureHandler, objectMapper, validator);
+            new AjaxLoginProcessingFilter(new AntPathRequestMatcher(LOGIN_ENTRY_POINT, HttpMethod.POST.name()), successHandler, failureHandler, objectMapper, validator);
     filter.setAuthenticationManager(this.authenticationManager);
     return filter;
   }
