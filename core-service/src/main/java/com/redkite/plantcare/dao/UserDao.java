@@ -16,4 +16,7 @@ public interface UserDao extends JpaRepository<User, Long> {
   @Query(value = "SELECT u FROM User u where u.email like %:email% OR :email = NULL",
           countQuery = "SELECT count(u.id) FROM User u where u.email like %:email% OR :email = NULL")
   Page<User> findUserByFilter(@Param("email") String email, Pageable pageable);
+
+  @Query("SELECT count(u.id) > 0 FROM User u where u.email = ?1")
+  boolean existsByEmail(String email);
 }

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -20,8 +21,8 @@ public class ExceptionHandlerController {
    */
   @ExceptionHandler(value = Exception.class)
   public ResponseEntity<ErrorDto> handleException(HttpServletRequest req, Throwable ex) {
+    log.error(ex.getMessage(), ex);
     if (ex instanceof PlantCareException) {
-      log.error(ex.getMessage(), ex);
       PlantCareException pcException = (PlantCareException) ex;
       ResponseEntity<ErrorDto> responce;
       if (pcException.getError() != null) {
@@ -30,7 +31,9 @@ public class ExceptionHandlerController {
         responce = new ResponseEntity<>(new ErrorDto(pcException.getMessage(), null), pcException.getStatus());
       }
       return responce;
-    } else {
+    } if(ex instanceof AccessDeniedException) {
+      return new ResponseEntity<>(new ErrorDto(ex.getMessage(), null), HttpStatus.FORBIDDEN);
+    }else {
       log.error(ex.getMessage(), ex);
       return new ResponseEntity<>(new ErrorDto(ex.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
     }

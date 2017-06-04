@@ -5,16 +5,21 @@ import com.redkite.plantcare.common.constraint.Password;
 
 import lombok.Data;
 
+import javax.validation.groups.Default;
+
 @Data
 public class UserRequest {
 
-  @Email
+  @Email(groups = {Default.class})
   private String email;
 
   private String firstName;
 
   private String lastName;
 
-  @Password
+  @Password(groups = {Default.class})
   private String password;
+
+
+  public interface UserUpdate {}
 }

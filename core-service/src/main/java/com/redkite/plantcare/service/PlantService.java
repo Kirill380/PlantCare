@@ -9,7 +9,7 @@ public interface PlantService {
 
   PlantResponse createPlant(PlantRequest plantRequest);
 
-  ItemList<PlantResponse> findPlants(PlantFilter plantFilter);
+  ItemList<PlantResponse> findPlants(PlantFilter plantFilter, Long userId);
 
   PlantResponse getPlant(Long id);
 

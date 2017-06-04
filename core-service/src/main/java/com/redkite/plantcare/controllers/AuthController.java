@@ -67,8 +67,8 @@ public class AuthController {
       throw new AuthenticationServiceException("Token is invalid");
     }
 
-    String subject = refreshToken.getBody().getSubject();
-    User user = userService.getUserByEmail(subject);
+    Long subject = Long.parseLong(refreshToken.getBody().getSubject());
+    User user = userService.getFullUser(subject);
 
     if (user.getRole() == null) {
       throw new InsufficientAuthenticationException("User has no roles assigned");
@@ -76,7 +76,7 @@ public class AuthController {
 
     List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(user.getRole().getName()));
 
-    UserContext userContext = UserContext.create(user.getEmail(), authorities);
+    UserContext userContext = UserContext.create(user.getId(), authorities);
 
     return tokenFactory.createAccessJwtToken(userContext);
   }

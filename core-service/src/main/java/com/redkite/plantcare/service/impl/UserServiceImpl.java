@@ -1,9 +1,10 @@
 package com.redkite.plantcare.service.impl;
 
+import com.redkite.plantcare.PlantCareException;
 import com.redkite.plantcare.common.dto.ItemList;
+import com.redkite.plantcare.common.dto.PasswordUpdateDto;
 import com.redkite.plantcare.common.dto.UserRequest;
 import com.redkite.plantcare.common.dto.UserResponse;
-import com.redkite.plantcare.controllers.filters.SensorFilter;
 import com.redkite.plantcare.controllers.filters.UserFilter;
 import com.redkite.plantcare.convertors.UserConverter;
 import com.redkite.plantcare.dao.RoleDao;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -57,6 +59,7 @@ public class UserServiceImpl implements UserService {
 
 
   //TODO move defaults creation to separate SQL script
+
   /**
    * Create default admin in database add two roles -- regularUser and admin.
    */
@@ -102,6 +105,9 @@ public class UserServiceImpl implements UserService {
   }
 
   private User createUser(UserRequest userRequest, String roleName) {
+    if (userDao.existsByEmail(userRequest.getEmail())) {
+      throw new PlantCareException("User with email [" + userRequest.getEmail() + "] already exists", HttpStatus.CONFLICT);
+    }
     User user = userConverter.toModel(userRequest);
     user.setCreationDate(LocalDateTime.now());
     user.setRole(roleDao.findByName(roleName));
@@ -110,7 +116,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional(isolation = Isolation.REPEATABLE_READ)
-  public ItemList<UserResponse>  findUsers(UserFilter filter) {
+  public ItemList<UserResponse> findUsers(UserFilter filter) {
     Page<User> users = userDao.findUserByFilter(filter.getEmail(), filter);
     List<UserResponse> userResponses = userConverter.toDtoList(users.getContent());
     return new ItemList<>(userResponses, users.getTotalElements());
@@ -124,26 +130,52 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional(readOnly = true)
   public UserResponse getUser(Long userId) {
+    checkExistence(userId);
     return userConverter.toDto(userDao.getOne(userId));
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public User getFullUser(Long userId) {
+    checkExistence(userId);
+    return userDao.getOne(userId);
   }
 
   @Override
   @Transactional(isolation = Isolation.REPEATABLE_READ)
   public void editUser(Long userId, UserRequest userRequest) {
-    User user = userConverter.toModel(userRequest);
-    user.setId(userId);
-    userDao.save(user);
+    checkExistence(userId);
+    User user = userDao.getOne(userId);
+    user.merge(userRequest);
   }
 
   @Override
   @Transactional(isolation = Isolation.REPEATABLE_READ)
   public void deleteUser(Long userId) {
+    checkExistence(userId);
+    userDao.delete(userId);
+  }
 
+  @Override
+  @Transactional(isolation = Isolation.REPEATABLE_READ)
+  public void changePassword(Long userId, PasswordUpdateDto passwordUpdateDto) {
+    checkExistence(userId);
+    User user = userDao.getOne(userId);
+    if (!passwordEncoder.matches(passwordUpdateDto.getOldPassword(), user.getPasswordHash())) {
+      throw new PlantCareException("Password mismatch", HttpStatus.FORBIDDEN);
+    }
+    user.setPasswordHash(passwordEncoder.encode(passwordUpdateDto.getNewPassword()));
   }
 
   @Override
   public boolean checkPasswordMatching(String email, String password) {
     User user = userDao.findByEmail(email);
     return passwordEncoder.matches(password, user.getPasswordHash());
+  }
+
+  private void checkExistence(Long userId) {
+    if (!userDao.exists(userId)) {
+      throw new PlantCareException("User with id [" + userId + "] does not exist", HttpStatus.NOT_FOUND);
+    }
   }
 }

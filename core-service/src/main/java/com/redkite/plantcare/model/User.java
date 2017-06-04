@@ -3,6 +3,8 @@ package com.redkite.plantcare.model;
 
 import static com.redkite.plantcare.constants.DabConstants.UserTable;
 
+import com.redkite.plantcare.common.dto.UserRequest;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -51,4 +53,15 @@ public class User {
   @ManyToOne
   @JoinColumn(nullable = false)
   private Role role;
+
+
+  public User merge(UserRequest userRequest) {
+    if (userRequest.getFirstName() != null) {
+      this.setFirstName(userRequest.getFirstName());
+    }
+    if(userRequest.getLastName() != null) {
+      this.setLastName(userRequest.getLastName());
+    }
+    return this;
+  }
 }

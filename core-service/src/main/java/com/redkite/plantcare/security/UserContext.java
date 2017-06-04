@@ -7,26 +7,24 @@ import java.io.Serializable;
 import java.util.List;
 
 public class UserContext implements Serializable {
-  private final String username;
+
+  private final Long userId;
   private final List<GrantedAuthority> authorities;
 
-  private UserContext(String username, List<GrantedAuthority> authorities) {
-    this.username = username;
+  private UserContext(Long userId, List<GrantedAuthority> authorities) {
+    this.userId = userId;
     this.authorities = authorities;
   }
 
   /**
    * Fabric method for creating new Instance of UserContext.
    */
-  public static UserContext create(String username, List<GrantedAuthority> authorities) {
-    if (StringUtils.isBlank(username)) {
-      throw new IllegalArgumentException("Username is blank: " + username);
-    }
-    return new UserContext(username, authorities);
+  public static UserContext create(Long userId, List<GrantedAuthority> authorities) {
+    return new UserContext(userId, authorities);
   }
 
-  public String getUsername() {
-    return username;
+  public Long getUserId() {
+    return userId;
   }
 
   public List<GrantedAuthority> getAuthorities() {

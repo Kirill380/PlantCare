@@ -31,15 +31,15 @@ public class JwtTokenFactory {
    * Factory method for issuing new JWT Tokens.
    */
   public AccessJwtToken createAccessJwtToken(UserContext userContext) {
-    if (StringUtils.isBlank(userContext.getUsername())) {
-      throw new IllegalArgumentException("Cannot create JWT Token without username");
+    if (userContext.getUserId() == null) {
+      throw new IllegalArgumentException("Cannot create JWT Token without user id");
     }
 
     if (userContext.getAuthorities() == null || userContext.getAuthorities().isEmpty()) {
       throw new IllegalArgumentException("User doesn't have any privileges");
     }
 
-    Claims claims = Jwts.claims().setSubject(userContext.getUsername());
+    Claims claims = Jwts.claims().setSubject(userContext.getUserId().toString());
     claims.put("roles", userContext.getAuthorities().stream().map(Object::toString).collect(Collectors.toList()));
 
     DateTime currentTime = new DateTime();
@@ -60,13 +60,13 @@ public class JwtTokenFactory {
    * Factory method for issuing new refresh tokens.
    */
   public AccessJwtToken createRefreshToken(UserContext userContext) {
-    if (StringUtils.isBlank(userContext.getUsername())) {
-      throw new IllegalArgumentException("Cannot create JWT Token without username");
+    if (userContext.getUserId() == null) {
+      throw new IllegalArgumentException("Cannot create JWT Token without user id");
     }
 
     DateTime currentTime = new DateTime();
 
-    Claims claims = Jwts.claims().setSubject(userContext.getUsername());
+    Claims claims = Jwts.claims().setSubject(userContext.getUserId().toString());
     claims.put(IS_REFRESH, true);
 
     String token = Jwts.builder()

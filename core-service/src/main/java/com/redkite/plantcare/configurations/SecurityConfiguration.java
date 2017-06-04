@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -42,6 +43,7 @@ import javax.validation.Validator;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Autowired
@@ -73,8 +75,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
   protected AjaxLoginProcessingFilter buildAjaxLoginProcessingFilter() throws Exception {
-    AjaxLoginProcessingFilter filter =
-            new AjaxLoginProcessingFilter(new AntPathRequestMatcher(LOGIN_ENTRY_POINT, HttpMethod.POST.name()), successHandler, failureHandler, objectMapper, validator);
+    AjaxLoginProcessingFilter filter = new AjaxLoginProcessingFilter(new AntPathRequestMatcher(LOGIN_ENTRY_POINT, HttpMethod.POST.name()),
+                    successHandler, failureHandler, objectMapper, validator);
     filter.setAuthenticationManager(this.authenticationManager);
     return filter;
   }

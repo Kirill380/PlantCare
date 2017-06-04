@@ -23,10 +23,9 @@ public class PlantServiceImpl implements PlantService {
   }
 
   @Override
-  public ItemList<PlantResponse> findPlants(PlantFilter plantFilter) {
+  public ItemList<PlantResponse> findPlants(PlantFilter plantFilter, Long userId) {
     return null;
   }
-
 
   @Override
   public PlantResponse getPlant(Long id) {

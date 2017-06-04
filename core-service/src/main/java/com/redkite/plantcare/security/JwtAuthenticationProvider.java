@@ -48,7 +48,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
       throw new AuthenticationServiceException("Token is invalid");
     }
 
-    String subject = jwsClaims.getBody().getSubject();
+    Long subject = Long.parseLong(jwsClaims.getBody().getSubject());
     List<String> scopes = jwsClaims.getBody().get("roles", List.class);
     List<GrantedAuthority> authorities = scopes.stream()
             .map(SimpleGrantedAuthority::new)
