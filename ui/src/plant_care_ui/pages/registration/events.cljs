@@ -18,7 +18,7 @@
                 case-format/->camelCaseString
                 (dissoc mapped-fields :confirm-password))]
     {:http-xhrio {:method :post
-                  :uri (str config/api-url "/users")
+                  :uri (str config/api-url "/api/users")
                   :response-format (ajax/json-response-format {:keywords? true})
                   :format (ajax/json-request-format)
                   :params body

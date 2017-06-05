@@ -23,7 +23,7 @@
 
   :npm {:dependencies []}
 
-  :plugins [[lein-figwheel "0.5.9" :exclusions [[org.clojure/clojure]]]
+  :plugins [[lein-figwheel "0.5.10" :exclusions [[org.clojure/clojure]]]
             [lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]
             [lein-ancient "0.6.10"]
             [lein-npm "0.6.2"]]
@@ -46,6 +46,7 @@
                            :output-dir "resources/public/js/compiled/out"
                            :source-map-timestamp true
                            :preloads [dirac.runtime.preload devtools.preload]
+                           :parallel-build true
                            :external-config {
                                              :devtools/config {
                                                                :features-to-install [:formatters :hints]
@@ -69,7 +70,8 @@
                                    :exclusions [org.clojure/tools.reader]]
                                   [binaryage/devtools "0.9.4"]
                                   [figwheel-sidecar "0.5.10"]
-                                  [com.cemerick/piggieback "0.2.1"]]
+                                  [com.cemerick/piggieback "0.2.1"]
+                                  [re-frisk "0.4.5"]]
                    :plugins [[lein-kibit "0.1.3"]
                              [lein-bikeshed "0.4.1" :exclusions [[org.clojure/tools.cli]]]]
                    :source-paths ["src" "dev"]

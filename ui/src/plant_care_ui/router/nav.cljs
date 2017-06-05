@@ -5,7 +5,8 @@
 (def *router
   (r/router [["/" :landing]
              ["/registration" :registration]
-             ["/page1/:id" :page1-by-id]]))
+             ["/page1/:id" :page1-by-id]
+             ["/users" :users]]))
 
 (def navigate! (partial r/navigate! *router))
 
@@ -19,3 +20,9 @@
                 (:params router)
                 (:query router)))
             context)))
+
+(re-frame/reg-fx
+ :router
+ (fn [fx]
+   (when-let [{:keys [handler query params]} fx]
+     (navigate! handler params query))))

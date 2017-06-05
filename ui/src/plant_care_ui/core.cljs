@@ -4,11 +4,13 @@
             [re-frame.core :as re-frame]
             [plant-care-ui.config]
             [plant-care-ui.router.core :refer [router]]
-            [plant-care-ui.db.events]))
+            [plant-care-ui.db.events]
+            [re-frisk.core :refer [enable-re-frisk!]]))
 
-(defn render []
+(defn ^:export main []
+  (re-frame/dispatch-sync [:init-db])
+  (enable-re-frisk!)
   (reagent/render [router]
    (.getElementById js/document "app")))
 
-(re-frame/dispatch-sync [:init-db])
-(render)
+(main)

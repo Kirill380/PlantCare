@@ -1,4 +1,4 @@
-(ns plant-care-ui.pages.landing.core
+(ns plant-care-ui.pages.landing.views
   (:require [reagent.core :as reagent]
             [re-frame.core :as re-frame]
             [cljs-react-material-ui.reagent :as ui]
@@ -6,7 +6,8 @@
             [plant-care-ui.router.nav :as router]
             [plant-care-ui.utils.core :as utils]
             [plant-care-ui.pages.landing.events]
-            [plant-care-ui.pages.landing.subs]))
+            [plant-care-ui.pages.landing.subs]
+            [plant-care-ui.pages.users.events]))
 
 (defn login-form []
   (let [login (utils/listen :landing-login)

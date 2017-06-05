@@ -30,19 +30,24 @@
   [:div
    [navigation-header]
    [ui/menu
-    [ui/menu-item {:primary-text "Dashboard"
-                   :left-icon (icons/action-dashboard)}]
-    [ui/menu-item {:primary-text "Sensors page"
-                   :left-icon (icons/hardware-memory)}]
-    [ui/menu-item {:primary-text "Flowers page"
-                   :left-icon (icons/maps-local-florist)}]
-    [ui/menu-item {:primary-text "Connections page"
-                   :left-icon (icons/action-settings-ethernet)}]]])
+    (if-let [admin? (utils/listen :current-user/admin?)]
+      [ui/menu-item {:primary-text "Users"
+                     :left-icon (icons/social-group)}]
+      [ui/menu
+       [ui/menu-item {:primary-text "Dashboard"
+                      :left-icon (icons/action-dashboard)}]
+       [ui/menu-item {:primary-text "Sensors page"
+                      :left-icon (icons/hardware-memory)}]
+       [ui/menu-item {:primary-text "Flowers page"
+                      :left-icon (icons/maps-local-florist)}]
+       [ui/menu-item {:primary-text "Connections page"
+                      :left-icon (icons/action-settings-ethernet)}]])]])
 
 (defn app [child]
-  (let [open? (utils/listen :app/drawer-open?)]
+  (let [open? (utils/listen :app/drawer-open?)
+        admin? (utils/listen :current-user/admin?)]
    [:div
-    [ui/app-bar {:title "Title!"
+    [ui/app-bar {:title (str "Plant Care" (when admin? " Admin Panel"))
                  :on-left-icon-button-touch-tap toggle-drawer}]
     [ui/drawer {:docked false
                 :open open?

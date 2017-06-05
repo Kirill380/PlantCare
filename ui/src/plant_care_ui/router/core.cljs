@@ -5,8 +5,9 @@
             [cljs-react-material-ui.reagent :as ui]
             [plant-care-ui.components.app.views :refer [app]]
             [plant-care-ui.router.nav :as nav]
-            [plant-care-ui.pages.landing.core :refer [landing-page]]
+            [plant-care-ui.pages.landing.views :refer [landing-page]]
             [plant-care-ui.pages.registration.views :refer [registration-page]]
+            [plant-care-ui.pages.users.views :refer [users-page]]
             [plant-care-ui.router.subs]
             [plant-care-ui.router.events]))
 
@@ -27,4 +28,5 @@
        :landing [landing-page]
        :registration [registration-page]
        :page1-by-id [:div (str "PAGE 1 " params)]
+       :users [users-page]
        [:div "NOT FOUND"])]]))
