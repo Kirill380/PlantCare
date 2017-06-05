@@ -124,6 +124,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
+            .antMatchers(HttpMethod.OPTIONS, TOKEN_BASED_AUTH_ENTRY_POINT).permitAll()
             .antMatchers(LOGIN_ENTRY_POINT).permitAll() // Login end-point
             .antMatchers(REFRESH_TOKEN_ENTRY_POINT).permitAll() // Token refresh end-point
             .antMatchers(LOGOUT_ENTRY_POINT).permitAll() // Token refresh end-point
