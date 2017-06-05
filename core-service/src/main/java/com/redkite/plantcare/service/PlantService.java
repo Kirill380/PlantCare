@@ -5,15 +5,22 @@ import com.redkite.plantcare.common.dto.PlantRequest;
 import com.redkite.plantcare.common.dto.PlantResponse;
 import com.redkite.plantcare.controllers.filters.PlantFilter;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 public interface PlantService {
 
-  PlantResponse createPlant(PlantRequest plantRequest);
+  @PreAuthorize("hasAuthority('regularUser')")
+  PlantResponse createPlant(Long userId, PlantRequest plantRequest);
 
+  @PreAuthorize("hasAuthority('regularUser')")
   ItemList<PlantResponse> findPlants(PlantFilter plantFilter, Long userId);
 
-  PlantResponse getPlant(Long id);
+  @PreAuthorize("hasAuthority('regularUser')")
+  PlantResponse getPlant(Long userId, Long id);
 
-  String editPlant(Long id, PlantRequest plantRequest);
+  @PreAuthorize("hasAuthority('regularUser')")
+  void editPlant(Long userId, Long id, PlantRequest plantRequest);
 
-  void deletePlant(Long id);
+  @PreAuthorize("hasAuthority('regularUser')")
+  void deletePlant(Long userId, Long id);
 }

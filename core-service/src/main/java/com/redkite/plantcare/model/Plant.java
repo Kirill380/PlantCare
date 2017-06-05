@@ -1,5 +1,7 @@
 package com.redkite.plantcare.model;
 
+import com.redkite.plantcare.common.dto.PlantRequest;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -7,6 +9,7 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,8 +31,8 @@ public class Plant {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @Column(name = "plant_image")
-  private byte[] image;
+  @Column(name = "plant_image_url")
+  private String image;
 
   @Column(name = "display_name")
   private String name;
@@ -51,16 +54,42 @@ public class Plant {
   private User owner;
 
 
-  public void setImage(byte[] image) {
-    this.image = Arrays.copyOf(image, image.length);
+  public void setOwner(User user) {
+    setOwner(user, true);
   }
 
-  public byte[] getImage() {
-    return Arrays.copyOf(this.image, image.length);
+  void setOwner(User user, boolean bi) {
+    if (user != null) {
+      this.owner = user;
+      if (bi) {
+        owner.addPlant(this, false);
+      }
+    }
+
   }
+
+  public Plant merge(PlantRequest plantRequest) {
+    if (plantRequest.getImage() != null) {
+      this.image = plantRequest.getImage();
+    }
+    if (plantRequest.getName() != null) {
+      this.name = plantRequest.getName();
+    }
+    if (plantRequest.getLocation() != null) {
+      this.location = plantRequest.getLocation();
+    }
+    if (plantRequest.getSpecies() != null) {
+      this.species = plantRequest.getSpecies();
+    }
+    if (plantRequest.getMoistureThreshold() != null) {
+      this.moistureThreshold = plantRequest.getMoistureThreshold();
+    }
+    return this;
+  }
+
 
   @ManyToMany
   @JoinTable(joinColumns = {@JoinColumn(name = "sensor_id")},
           inverseJoinColumns = {@JoinColumn(name = "plant_id")})
-  private List<Sensor> sensors;
+  private Set<Sensor> sensors;
 }
