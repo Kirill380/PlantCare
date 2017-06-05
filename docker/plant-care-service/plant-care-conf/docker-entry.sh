@@ -13,4 +13,4 @@ waitForHostPortByURL "$MYSQL_HOST_PORT" "$WAIT_TIMEOUT_SEC"
 
 # Launch plant care service
 
-ijava -XX:+PrintFlagsFinal -XX:+PrintGCDetails $JAVA_OPTIONS -jar /plant-care-service.jar
+java -XX:+PrintFlagsFinal -XX:+PrintGCDetails $JAVA_OPTIONS -jar /plant-care-service.jar
