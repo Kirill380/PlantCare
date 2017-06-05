@@ -59,7 +59,7 @@ public class User {
     if (userRequest.getFirstName() != null) {
       this.setFirstName(userRequest.getFirstName());
     }
-    if(userRequest.getLastName() != null) {
+    if (userRequest.getLastName() != null) {
       this.setLastName(userRequest.getLastName());
     }
     return this;

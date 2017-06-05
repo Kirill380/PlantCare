@@ -31,9 +31,9 @@ public class ExceptionHandlerController {
         responce = new ResponseEntity<>(new ErrorDto(pcException.getMessage(), null), pcException.getStatus());
       }
       return responce;
-    } if(ex instanceof AccessDeniedException) {
+    } else if (ex instanceof AccessDeniedException) {
       return new ResponseEntity<>(new ErrorDto(ex.getMessage(), null), HttpStatus.FORBIDDEN);
-    }else {
+    } else {
       log.error(ex.getMessage(), ex);
       return new ResponseEntity<>(new ErrorDto(ex.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
     }
