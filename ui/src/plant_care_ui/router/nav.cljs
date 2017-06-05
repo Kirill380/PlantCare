@@ -6,7 +6,8 @@
   (r/router [["/" :landing]
              ["/registration" :registration]
              ["/page1/:id" :page1-by-id]
-             ["/users" :users]]))
+             ["/users" :users]
+             ["/users/:id" :user-by-id]]))
 
 (def navigate! (partial r/navigate! *router))
 

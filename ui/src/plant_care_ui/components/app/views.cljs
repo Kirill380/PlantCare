@@ -6,7 +6,8 @@
             [cljs-react-material-ui.icons :as icons]
             [plant-care-ui.utils.core :as utils]
             [plant-care-ui.components.app.subs]
-            [plant-care-ui.components.app.events]))
+            [plant-care-ui.components.app.events]
+            [plant-care-ui.router.nav :as router]))
 
 (def toggle-drawer #(re-frame/dispatch [:app/toggle-drawer]))
 
@@ -32,7 +33,8 @@
    [ui/menu
     (if-let [admin? (utils/listen :current-user/admin?)]
       [ui/menu-item {:primary-text "Users"
-                     :left-icon (icons/social-group)}]
+                     :left-icon (icons/social-group)
+                     :on-click #(router/navigate! :users)}]
       [ui/menu
        [ui/menu-item {:primary-text "Dashboard"
                       :left-icon (icons/action-dashboard)}]

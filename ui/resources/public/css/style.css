@@ -9,3 +9,21 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-weight: normal;
 }
+
+.table__wrapper {
+  width: 100%;
+  border: 1px solid #c4c5c5;
+  border-collapse: collapse;
+}
+
+.table__wrapper thead th {
+  padding: 0.9em 0.8em;
+  font-weight: 500;
+  border: 1px solid #c4c5c5;
+  text-align: left;
+}
+
+.table__wrapper tbody td {
+  padding: 0.9em 0.8em;
+  border: 1px solid #c4c5c5;
+}

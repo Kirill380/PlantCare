@@ -19,7 +19,8 @@
                  [cljs-react-material-ui "0.2.44"]
                  [day8.re-frame/http-fx "0.1.3"]
                  [cljs-ajax "0.6.0"]
-                 [camel-snake-kebab "0.4.0"]]
+                 [camel-snake-kebab "0.4.0"]
+                 [re-frame-datatable "0.5.2"]]
 
   :npm {:dependencies []}
 

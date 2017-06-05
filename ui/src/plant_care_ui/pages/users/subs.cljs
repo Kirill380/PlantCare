@@ -24,3 +24,11 @@
          :users
          :current
          :roles)))))
+
+(re-frame/reg-sub
+ :edit-user-form
+ (fn [db]
+   (->> db
+        :pages
+        :edit-user
+        :fields)))
