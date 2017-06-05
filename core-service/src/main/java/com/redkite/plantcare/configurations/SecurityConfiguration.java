@@ -76,14 +76,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   protected AjaxLoginProcessingFilter buildAjaxLoginProcessingFilter() throws Exception {
     AjaxLoginProcessingFilter filter = new AjaxLoginProcessingFilter(new AntPathRequestMatcher(LOGIN_ENTRY_POINT, HttpMethod.POST.name()),
-                    successHandler, failureHandler, objectMapper, validator);
+            successHandler, failureHandler, objectMapper, validator);
     filter.setAuthenticationManager(this.authenticationManager);
     return filter;
   }
 
   protected JwtTokenAuthenticationProcessingFilter buildJwtTokenAuthenticationProcessingFilter() throws Exception {
-    List<RestApi> apisToSkip = of(a(REFRESH_TOKEN_ENTRY_POINT), a(LOGIN_ENTRY_POINT),
-                    a(LOGOUT_ENTRY_POINT), a(USERS_ENTRY_POINT, HttpMethod.POST), a(LOG_DATA_ENTRY_POINT, HttpMethod.POST));
+    List<RestApi> apisToSkip = of(
+            a(TOKEN_BASED_AUTH_ENTRY_POINT, HttpMethod.OPTIONS),
+            a(REFRESH_TOKEN_ENTRY_POINT),
+            a(LOGIN_ENTRY_POINT),
+            a(LOGOUT_ENTRY_POINT),
+            a(USERS_ENTRY_POINT, HttpMethod.POST),
+            a(LOG_DATA_ENTRY_POINT, HttpMethod.POST));
     SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(apisToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);
     JwtTokenAuthenticationProcessingFilter filter
             = new JwtTokenAuthenticationProcessingFilter(failureHandler, jwtTokenExtractor, matcher);
@@ -112,23 +117,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable() // We don't need CSRF for JWT based authentication
-          .exceptionHandling()
-          .authenticationEntryPoint(this.authenticationEntryPoint)
-        .and()
-          .sessionManagement()
-          .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .authorizeRequests()
-          .antMatchers(LOGIN_ENTRY_POINT).permitAll() // Login end-point
-          .antMatchers(REFRESH_TOKEN_ENTRY_POINT).permitAll() // Token refresh end-point
-          .antMatchers(LOGOUT_ENTRY_POINT).permitAll() // Token refresh end-point
-        .and()
-        .authorizeRequests()
+            .exceptionHandling()
+            .authenticationEntryPoint(this.authenticationEntryPoint)
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
+            .antMatchers(LOGIN_ENTRY_POINT).permitAll() // Login end-point
+            .antMatchers(REFRESH_TOKEN_ENTRY_POINT).permitAll() // Token refresh end-point
+            .antMatchers(LOGOUT_ENTRY_POINT).permitAll() // Token refresh end-point
+            .and()
+            .authorizeRequests()
             .antMatchers(HttpMethod.POST, USERS_ENTRY_POINT).permitAll()
             .antMatchers(HttpMethod.POST, LOG_DATA_ENTRY_POINT).permitAll()
             .antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT).authenticated() // Protected API End-points
-        .and()
-          .addFilterBefore(buildAjaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
-          .addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
+            .and()
+            .addFilterBefore(buildAjaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
   }
 }
