@@ -2,16 +2,16 @@ version: '2'
 services:
   plant-care-service:
     build:
-      context: ../../
+      context: ../
       dockerfile: docker/plant-care-service/Dockerfile
       args:
         setupfile: service/target/core-service-0.1.0-SNAPSHOT.jar
     image: plant-care-service:0.1.0-SNAPSHOT
     env_file: plant-care-service/plant-care-service.env
     networks:
-      - my-tier
+      - plantnet
     ports:
-      - "30750:30750"
+      - "8083:8083"
 networks:
-  my-tier:
+  plantnet:
     driver: bridge

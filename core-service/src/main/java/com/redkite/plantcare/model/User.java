@@ -11,6 +11,7 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -45,7 +46,23 @@ public class User {
   private String passwordHash;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
-  private List<Plant> plants;
+  private Set<Plant> plants;
+
+
+  public void addPlant(Plant plant) {
+    addPlant(plant, true);
+  }
+
+  void addPlant(Plant plant, boolean bi) {
+    if (plant != null) {
+      plants.add(plant);
+      if (bi) {
+        plant.setOwner(this, false);
+      }
+    }
+  }
+
+
 
   @Column(name = "creation_date")
   private LocalDateTime creationDate;

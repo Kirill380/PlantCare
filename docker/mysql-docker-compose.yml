@@ -6,9 +6,9 @@ services:
       - MYSQL_ROOT_PASSWORD=send08
       - MYSQL_DATABASE=plant_care
     networks:
-      - my-tier
+      - plantnet
     ports:
       - "3306:3306"
 networks:
-  my-tier:
+  plantnet:
     driver: bridge

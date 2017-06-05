@@ -1,0 +1,11 @@
+version: '2'
+services:
+  cassandra-service:
+    image: cassandra:3.0
+    networks:
+      - plantnet
+    ports:
+      - "9042:9042"
+networks:
+  plantnet:
+    driver: bridge

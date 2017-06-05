@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  @Transactional(isolation = Isolation.REPEATABLE_READ)
+  @Transactional(readOnly = true)
   public ItemList<UserResponse> findUsers(UserFilter filter) {
     Page<User> users = userDao.findUserByFilter(filter.getEmail(), filter);
     List<UserResponse> userResponses = userConverter.toDtoList(users.getContent());

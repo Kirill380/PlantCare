@@ -28,7 +28,7 @@ public interface UserService {
   @PreAuthorize("hasAuthority('admin') or principal.userId == #userId")
   void editUser(Long userId, UserRequest userRequest);
 
-  @PreAuthorize("hasAuthority('admin')")
+  @PreAuthorize("hasAuthority('admin') and principal.userId != #userId")
   void deleteUser(Long userId);
 
   @PreAuthorize("principal.userId == #userId")
