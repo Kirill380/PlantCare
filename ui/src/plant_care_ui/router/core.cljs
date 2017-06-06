@@ -8,6 +8,7 @@
             [plant-care-ui.pages.landing.views :refer [landing-page]]
             [plant-care-ui.pages.registration.views :refer [registration-page]]
             [plant-care-ui.pages.users.views :refer [users-page user-by-id-page]]
+            [plant-care-ui.pages.flowers.views :refer [flowers-page flower-by-id-page]]
             [plant-care-ui.router.subs]
             [plant-care-ui.router.events]))
 
@@ -30,4 +31,6 @@
        :page1-by-id [:div (str "PAGE 1 " params)]
        :users [users-page]
        :user-by-id [user-by-id-page (:id params)]
+       :flowers [flowers-page]
+       :plant-by-id [flower-by-id-page (:id params)]
        [:div "NOT FOUND"])]]))

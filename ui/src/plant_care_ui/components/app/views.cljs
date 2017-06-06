@@ -11,6 +11,10 @@
 
 (def toggle-drawer #(re-frame/dispatch [:app/toggle-drawer]))
 
+(defn go-to-page [page-id]
+  (toggle-drawer)
+  (router/navigate! page-id))
+
 (defn navigation-header [props]
   (let [app-bar-theme (-> (js->clj (get-mui-theme) :keywordize-keys true) :appBar)
         color (:color app-bar-theme)
@@ -34,25 +38,34 @@
     (if-let [admin? (utils/listen :current-user/admin?)]
       [ui/menu-item {:primary-text "Users"
                      :left-icon (icons/social-group)
-                     :on-click #(router/navigate! :users)}]
+                     :on-click #(go-to-page :users)}]
       [ui/menu
-       [ui/menu-item {:primary-text "Dashboard"
-                      :left-icon (icons/action-dashboard)}]
+;;        [ui/menu-item {:primary-text "Dashboard"
+;;                       :left-icon (icons/action-dashboard)}]
+       [ui/menu-item {:primary-text "Sign In"
+                      :on-click #(go-to-page :landing)}]
        [ui/menu-item {:primary-text "Sensors page"
                       :left-icon (icons/hardware-memory)}]
        [ui/menu-item {:primary-text "Flowers page"
-                      :left-icon (icons/maps-local-florist)}]
+                      :left-icon (icons/maps-local-florist)
+                      :on-click #(go-to-page :flowers)}]
        [ui/menu-item {:primary-text "Connections page"
                       :left-icon (icons/action-settings-ethernet)}]])]])
 
 (defn app [child]
-  (let [open? (utils/listen :app/drawer-open?)
+  (let [drawer-open? (utils/listen :app/drawer-open?)
+        message (:message (utils/listen :app/snackbar))
         admin? (utils/listen :current-user/admin?)]
    [:div
     [ui/app-bar {:title (str "Plant Care" (when admin? " Admin Panel"))
                  :on-left-icon-button-touch-tap toggle-drawer}]
     [ui/drawer {:docked false
-                :open open?
+                :open drawer-open?
                 :on-request-change toggle-drawer}
      [navigation]]
+    (when (boolean message)
+      [ui/snackbar {:open (boolean message)
+                    :message message
+                    :auto-hide-duration 3000
+                    :on-request-close #(re-frame/dispatch [:app/hide-snackbar])}])
     child]))

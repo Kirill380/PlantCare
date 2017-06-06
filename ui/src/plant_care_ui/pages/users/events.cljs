@@ -103,17 +103,19 @@
  [utils/common-interceptors]
  edit-user-submit)
 
-(re-frame/reg-event-db
+(re-frame/reg-event-fx
  :edit-user/success
- (fn [db]
+ (fn [{:keys [db]}]
    (println "SUCCESS")
-   db))
+   {:db db
+    :dispatch [:app/show-message "User successfully edited"]}))
 
-(re-frame/reg-event-db
+(re-frame/reg-event-fx
  :edit-user/failure
- (fn [db]
+ (fn [{:keys [db]}]
    (println "FAILURE")
-   db))
+   {:db db
+    :dispatch [:app/show-message "Error while editing user"]}))
 
 (re-frame/reg-event-fx
  :delete-user/request
@@ -136,11 +138,13 @@
    (let [users (get-in db [:users :all])
          new-users (filter #(not= (js/parseInt (:id %)) (js/parseInt id)) users)]
      {:router {:handler :users}
-      :db (assoc-in db [:users :all] new-users)})))
+      :db (assoc-in db [:users :all] new-users)
+      :dispatch [:app/show-message "User successfully deleted"]})))
 
-(re-frame/reg-event-db
+(re-frame/reg-event-fx
  :delete-user/failure
  [utils/common-interceptors]
- (fn [db]
+ (fn [{:keys [db]}]
    (println "FAILURE REMOVE")
-   db))
+   {:db db
+    :dispatch [:app/show-message "Error while deleting user"]}))

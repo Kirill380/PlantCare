@@ -15,20 +15,6 @@
         [:li {:key (:email user)}
              (:email user)])]))
 
-(defn format-date [date]
-  (.replace date "T" " "))
-
-(defn date-formatter [date]
-  [:span (format-date date)])
-
-(defn id-link-formatter [id]
-  [:div {:style {:color "red"
-                 :width "100%"
-                 :height "100%"
-                 :cursor "pointer"}
-         :on-click #(re-frame/dispatch [:edit-user id])}
-   id])
-
 (defn users-table []
  [dt/datatable
   :tables/all-users
@@ -36,13 +22,13 @@
   [{::dt/column-key [:id]
     ::dt/column-label "#"
     ::dt/sorting {::dt/enabled? true}
-    ::dt/render-fn id-link-formatter}
+    ::dt/render-fn (utils/get-id-link-formatter :edit-user)}
    {::dt/column-key [:firstName] ::dt/column-label "First Name"}
    {::dt/column-key [:lastName] ::dt/column-label "Last Name"}
    {::dt/column-key [:email] ::dt/column-label "Email"}
    {::dt/column-key [:creationDate]
     ::dt/column-label "Creation Date"
-    ::dt/render-fn date-formatter}]
+    ::dt/render-fn utils/date-formatter}]
   {::dt/table-classes ["table__wrapper"]
    ::dt/pagination {::dt/enabled? true ::dt/per-page 10}}])
 

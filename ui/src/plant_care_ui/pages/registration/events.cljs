@@ -27,7 +27,8 @@
 
 (defn registration-user-success [{:keys [db]} [_ v]]
   {:db (assoc-in db [:users :current :id] (:id v))
-   :router {:handler :landing}})
+   :router {:handler :landing}
+   :dispatch [:app/show-message "Registration successfull"]})
 
 
 (re-frame/reg-event-fx
@@ -41,17 +42,18 @@
           (case-format/->kebab-case-keyword fieldName)
           errorMessage)))
 
-(defn registration-user-failre [db [_ {:keys [response]}]]
+(defn registration-user-failre [{:keys [db]} [_ {:keys [response]}]]
   (let [field-errors (:fieldErrors response)
         prepared-errors (reduce prepare-errors {} field-errors)
         error-path #(vec [:pages :registration :fields % :error-message])]
-    (-> db
-         (assoc-in (error-path :first-name) (:first-name prepared-errors))
-         (assoc-in (error-path :last-name) (:last-name prepared-errors))
-         (assoc-in (error-path :email) (:email prepared-errors))
-         (assoc-in (error-path :password) (:password prepared-errors)))))
+    {:db (-> db
+           (assoc-in (error-path :first-name) (:first-name prepared-errors))
+           (assoc-in (error-path :last-name) (:last-name prepared-errors))
+           (assoc-in (error-path :email) (:email prepared-errors))
+           (assoc-in (error-path :password) (:password prepared-errors)))
+     :dispatch [:app/show-message (:message response)]}))
 
-(re-frame/reg-event-db
+(re-frame/reg-event-fx
  :registration-user/failure
  [utils/common-interceptors]
  registration-user-failre)

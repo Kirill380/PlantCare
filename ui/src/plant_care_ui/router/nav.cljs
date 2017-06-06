@@ -7,7 +7,9 @@
              ["/registration" :registration]
              ["/page1/:id" :page1-by-id]
              ["/users" :users]
-             ["/users/:id" :user-by-id]]))
+             ["/users/:id" :user-by-id]
+             ["/flowers" :flowers]
+             ["/flowers/:id" :plant-by-id]]))
 
 (def navigate! (partial r/navigate! *router))
 
@@ -15,6 +17,7 @@
   (re-frame/->interceptor
    :id :router-interceptor
    :after (fn [context]
+            (println "context" context)
             (when-let [router (get-in context [:effects :router])]
                (navigate!
                 (:handler router)
