@@ -8,12 +8,14 @@ import com.redkite.plantcare.common.dto.PasswordUpdateDto;
 import com.redkite.plantcare.common.dto.UserRequest;
 import com.redkite.plantcare.common.dto.UserResponse;
 import com.redkite.plantcare.controllers.filters.UserFilter;
+import com.redkite.plantcare.security.UserContext;
+import com.redkite.plantcare.service.TokenInvalidationService;
 import com.redkite.plantcare.service.UserService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
@@ -34,6 +36,9 @@ public class UserController {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private TokenInvalidationService tokenInvalidationService;
 
 
   @Autowired
@@ -94,6 +99,8 @@ public class UserController {
       throw new PlantCareException(getErrors("Validation failed during user creation", result), HttpStatus.BAD_REQUEST);
     }
     userService.changePassword(userId, updateDto);
+    UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    tokenInvalidationService.invalidateAllTokensForUser(currentUser.getUserId());
   }
 
   @ResponseStatus(HttpStatus.NO_CONTENT)

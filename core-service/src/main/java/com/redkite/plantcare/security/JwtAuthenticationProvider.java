@@ -44,7 +44,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
       throw new AuthenticationServiceException(ex.getMessage());
     }
 
-    if (!tokenVerifier.verify(jwsClaims.getBody().getId())) {
+    if (!tokenVerifier.verify(jwsClaims)) {
       throw new AuthenticationServiceException("Token is invalid");
     }
 

@@ -11,6 +11,7 @@ import com.redkite.plantcare.security.token.tools.JwtTokenExtractor;
 import com.redkite.plantcare.security.token.tools.JwtTokenFactory;
 import com.redkite.plantcare.security.token.tools.JwtTokenParser;
 import com.redkite.plantcare.security.token.tools.TokenVerifier;
+import com.redkite.plantcare.service.TokenInvalidationService;
 import com.redkite.plantcare.service.UserService;
 
 import io.jsonwebtoken.Claims;
@@ -49,6 +50,9 @@ public class AuthController {
   @Autowired
   private JwtTokenExtractor tokenExtractor;
 
+  @Autowired
+  private TokenInvalidationService tokenInvalidationService;
+
 
   @RequestMapping(value = "/token", method = RequestMethod.GET)
   public AccessJwtToken refreshToken(@RequestHeader(JWT_TOKEN_HEADER_PARAM) String token) throws JwtExpiredTokenException {
@@ -62,8 +66,7 @@ public class AuthController {
       throw new AuthenticationServiceException("It is not refresh token");
     }
 
-    String jti = refreshToken.getBody().getId();
-    if (!tokenVerifier.verify(jti)) {
+    if (!tokenVerifier.verify(refreshToken)) {
       throw new AuthenticationServiceException("Token is invalid");
     }
 
@@ -81,9 +84,12 @@ public class AuthController {
     return tokenFactory.createAccessJwtToken(userContext);
   }
 
-  @RequestMapping(value = "/token", method = RequestMethod.POST)
-  public void invalidateToken(@RequestBody TokensDto tokensDto) {
-
+  @RequestMapping(value = "/logout", method = RequestMethod.POST)
+  public void invalidateToken(@RequestBody TokensDto tokensDto) throws JwtExpiredTokenException {
+    Jws<Claims> accessToken = tokenParser.parseClaims(tokensDto.getAccessToken());
+    Jws<Claims> refreshToken = tokenParser.parseClaims(tokensDto.getRefreshToken());
+    tokenInvalidationService.invalidateToken(accessToken.getBody().getId());
+    tokenInvalidationService.invalidateToken(refreshToken.getBody().getId());
   }
 
 }

@@ -4,7 +4,7 @@ import com.redkite.plantcare.common.dto.LogDataRequest;
 import com.redkite.plantcare.common.dto.LogDataResponse;
 import com.redkite.plantcare.common.dto.SensorDataFilter;
 import com.redkite.plantcare.convertors.LogDataConverter;
-import com.redkite.plantcare.dao.SensorLogDataDao;
+import com.redkite.plantcare.dao.impl.SensorLogDataDao;
 import com.redkite.plantcare.service.SensorService;
 
 import org.springframework.beans.factory.annotation.Autowired;

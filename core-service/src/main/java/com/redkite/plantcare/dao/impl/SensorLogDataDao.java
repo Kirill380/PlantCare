@@ -1,4 +1,4 @@
-package com.redkite.plantcare.dao;
+package com.redkite.plantcare.dao.impl;
 
 import static com.datastax.driver.core.querybuilder.QueryBuilder.asc;
 import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;

@@ -9,6 +9,7 @@ import com.datastax.driver.mapping.MappingManager;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +31,9 @@ public class CassandraClient {
 
   @Value("${cassandra.keyspace}")
   private String keyspaceName;
+
+  @Autowired
+  private CassandraClientOptions clientOptions;
 
   private static final String SEMICOLON = ";";
 
@@ -68,7 +72,9 @@ public class CassandraClient {
 
   @PostConstruct
   public void init() {
-    cluster = Cluster.builder().addContactPoint(host).build();
+    cluster = Cluster.builder().addContactPoint(host)
+            .withSocketOptions(clientOptions.getSocketOptions())
+            .build();
     executeInitScript();
   }
 

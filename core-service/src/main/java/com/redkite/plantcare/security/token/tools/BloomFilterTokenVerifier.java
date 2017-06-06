@@ -1,11 +1,13 @@
 package com.redkite.plantcare.security.token.tools;
 
-import org.springframework.stereotype.Component;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 
-@Component
+//@Component
 public class BloomFilterTokenVerifier implements TokenVerifier {
+
   @Override
-  public boolean verify(String jti) {
+  public boolean verify(Jws<Claims> tokenClaims) {
     return true;
   }
 }

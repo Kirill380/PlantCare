@@ -1,4 +1,4 @@
-package com.redkite.plantcare.dao;
+package com.redkite.plantcare.dao.impl;
 
 
 import com.datastax.driver.core.ConsistencyLevel;
@@ -41,9 +41,28 @@ public abstract class AbstractCassandraDao<T, K> {
   protected T save(T entity) {
     log.debug("Save entity " + entity);
     Statement saveStatement = getMapper().saveQuery(entity);
-    saveStatement.setConsistencyLevel(getConsistencyLevel()); //TODO hardcoded
-    getSession().execute(saveStatement);
+    return save(entity, saveStatement);
+  }
 
+
+  /**
+   * Save entity in cassandra database with TTL.
+   *
+   * @param entity is entity for saving
+   * @param ttl data TTL
+   * @return saved entity
+   */
+  public T save(T entity, int ttl) {
+    Statement statement = cassandraClient
+            .getMapper(getColumnFamilyClass())
+            .saveQuery(entity, Mapper.Option.ttl(ttl));
+    return save(entity, statement);
+  }
+
+  private T save(T entity, Statement saveStatement) {
+    log.debug("Save entity {}", entity);
+    saveStatement.setConsistencyLevel(getConsistencyLevel()); //TODO hardcoded
+    execute(saveStatement);
     return entity;
   }
 

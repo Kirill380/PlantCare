@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS plant_care.token_blacklist (
 
 
 CREATE TABLE IF NOT EXISTS plant_care.invalidated_tokens (
-    user_id text PRIMARY KEY,
+    user_id bigint PRIMARY KEY,
     timestamp bigint
 );
 
