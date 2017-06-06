@@ -5,7 +5,7 @@ services:
       context: ../
       dockerfile: docker/plant-care-service/Dockerfile
       args:
-        setupfile: service/target/core-service-0.1.0-SNAPSHOT.jar
+        setupfile: core-service/target/core-0.1.0-SNAPSHOT.jar
     image: plant-care-service:0.1.0-SNAPSHOT
     env_file: plant-care-service/plant-care-service.env
     networks:

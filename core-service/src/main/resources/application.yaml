@@ -1,6 +1,7 @@
 cassandra:
   host: localhost
   keyspace: plant_care
+  init-script: scripts/plant_care.cql
 
 security.jwt:
   expTime: 15 # mesure in minutes
@@ -19,9 +20,9 @@ spring:
   freemarker:
     template-loader-path: classpath:/templates
   datasource:
-    url: jdbc:mysql://localhost/plant_care
+    url: ${mysql.url:jdbc:mysql://localhost/plant_care}
     username: root
-    password: send08
+    password: ${mysql.root-pwd:send08}
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:

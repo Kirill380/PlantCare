@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -38,8 +39,8 @@ public class UserServiceImpl implements UserService {
   private static final String REGULAR_USER_ROLE = "regularUser";
   private static final String ADMIN_ROLE = "admin";
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  // @Autowired
+  private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
   @Autowired
   private UserDao userDao;
