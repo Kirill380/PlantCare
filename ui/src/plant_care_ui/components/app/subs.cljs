@@ -10,3 +10,12 @@
 (re-frame/reg-sub
  :app/drawer-open?
   app-drawer-open?)
+
+(defn app-snackbar [db _]
+  (->> db
+       :global
+       :snackbar))
+
+(re-frame/reg-sub
+  :app/snackbar
+  app-snackbar)

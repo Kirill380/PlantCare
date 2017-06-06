@@ -46,13 +46,19 @@
                       :left-icon (icons/action-settings-ethernet)}]])]])
 
 (defn app [child]
-  (let [open? (utils/listen :app/drawer-open?)
+  (let [drawer-open? (utils/listen :app/drawer-open?)
+        message (:message (utils/listen :app/snackbar))
         admin? (utils/listen :current-user/admin?)]
    [:div
     [ui/app-bar {:title (str "Plant Care" (when admin? " Admin Panel"))
                  :on-left-icon-button-touch-tap toggle-drawer}]
     [ui/drawer {:docked false
-                :open open?
+                :open drawer-open?
                 :on-request-change toggle-drawer}
      [navigation]]
+    (when (boolean message)
+      [ui/snackbar {:open (boolean message)
+                    :message message
+                    :auto-hide-duration 3000
+                    :on-request-close #(re-frame/dispatch [:app/hide-snackbar])}])
     child]))

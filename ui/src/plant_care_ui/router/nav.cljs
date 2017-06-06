@@ -15,6 +15,7 @@
   (re-frame/->interceptor
    :id :router-interceptor
    :after (fn [context]
+            (println "context" context)
             (when-let [router (get-in context [:effects :router])]
                (navigate!
                 (:handler router)

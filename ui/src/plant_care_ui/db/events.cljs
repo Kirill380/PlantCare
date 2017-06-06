@@ -5,4 +5,4 @@
 (re-frame/reg-event-fx
  :init-db
  (fn [{:keys [db]} _]
-   {:db (merge db default-values)}))
+   {:db (merge default-values db)}))
