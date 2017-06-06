@@ -58,13 +58,13 @@
              (assoc-in [:users :current :token] token)
              (assoc-in [:users :current :refresh-token] refreshToken)
              (assoc-in [:users :current :roles] roles)
-             (assoc-in [:users :current :email] login))
-     :router {:handler :users}
+             (assoc-in [:users :current :email] login)
+             (assoc-in [:users :current :logged?] true))
+     :router {:handler (if admin? :users :flowers)}
      :dispatch (when admin? [:get-all-users/request])})))
 
 (re-frame/reg-event-fx
  :login-failure
  [utils/common-interceptors]
- (fn [coefx event]
-  (let [registration-fields (get-in coefx [:db :pages :landing :fields])]
-    (println registration-fields))))
+ (fn [_ [_ v]]
+  {:dispatch [:app/show-message (-> v :response :message)]}))

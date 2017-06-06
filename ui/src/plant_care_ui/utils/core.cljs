@@ -37,3 +37,18 @@
   (if (every? map? vals)
     (apply merge-with deep-merge vals)
     (last vals)))
+
+(defn format-date [date]
+  (.replace date "T" " "))
+
+(defn date-formatter [date]
+  [:span (format-date date)])
+
+(defn get-id-link-formatter [action]
+  (fn [id]
+    [:div {:style {:color "red"
+                   :width "100%"
+                   :height "100%"
+                   :cursor "pointer"}
+           :on-click #(re-frame/dispatch [action id])}
+      id]))
