@@ -1,6 +1,7 @@
 cassandra:
   host: localhost
   keyspace: plant_care
+  init-script: scripts/plant_care.cql
 
 security.jwt:
   expTime: 15 # mesure in minutes
