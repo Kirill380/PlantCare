@@ -4,15 +4,15 @@ import com.redkite.plantcare.common.dto.UserRequest;
 import com.redkite.plantcare.common.dto.UserResponse;
 import com.redkite.plantcare.model.User;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserConverter implements ToModelConverter<User, UserRequest>, ToDtoConverter<User, UserResponse> {
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  // @Autowired
+  private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
   @Override
   public User toModel(UserRequest dto) {
