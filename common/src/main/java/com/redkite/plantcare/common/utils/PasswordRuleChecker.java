@@ -4,7 +4,7 @@ import lombok.Getter;
 
 public enum PasswordRuleChecker {
 
-  DEFAULT(true, true, true, false), // check all except special characters
+  DEFAULT(true, false, true, false), // check all except special characters
   ALL_CHECKS(true, true, true, true);
 
   public static final String NULL_STRING_VIOLATION = "The password can't be null";
