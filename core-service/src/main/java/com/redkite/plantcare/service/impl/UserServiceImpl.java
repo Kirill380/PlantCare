@@ -10,7 +10,9 @@ import com.redkite.plantcare.convertors.UserConverter;
 import com.redkite.plantcare.dao.RoleDao;
 import com.redkite.plantcare.dao.UserDao;
 import com.redkite.plantcare.model.Role;
+import com.redkite.plantcare.model.Sensor;
 import com.redkite.plantcare.model.User;
+import com.redkite.plantcare.service.SensorService;
 import com.redkite.plantcare.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -41,6 +45,7 @@ public class UserServiceImpl implements UserService {
 
   // @Autowired
   private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
   @Autowired
   private UserDao userDao;
@@ -57,6 +62,9 @@ public class UserServiceImpl implements UserService {
 
   @Value("${spring.jpa.hibernate.ddl-auto}")
   private String createDefaults;
+
+  @Autowired
+  private SensorService sensorService;
 
 
   //TODO move defaults creation to separate SQL script
@@ -154,6 +162,14 @@ public class UserServiceImpl implements UserService {
   @Transactional(isolation = Isolation.REPEATABLE_READ)
   public void deleteUser(Long userId) {
     checkExistence(userId);
+    Set<Sensor> sensors = userDao.getOne(userId).getPlants().stream()
+            .flatMap(p -> p.getSensors().stream())
+            .collect(Collectors.toSet());
+
+    for (Sensor sensor : sensors) {
+      sensorService.deleteSensor(sensor.getId());
+    }
+
     userDao.delete(userId);
   }
 

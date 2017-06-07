@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 
@@ -31,8 +32,8 @@ public class Plant {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @Column(name = "plant_image_url")
-  private String image;
+  @Column(name = "plant_image",length = 16777215)
+  private byte[] image;
 
   @Column(name = "display_name")
   private String name;
@@ -70,7 +71,7 @@ public class Plant {
 
   public Plant merge(PlantRequest plantRequest) {
     if (plantRequest.getImage() != null) {
-      this.image = plantRequest.getImage();
+      this.image = Base64.getDecoder().decode(plantRequest.getImage());
     }
     if (plantRequest.getName() != null) {
       this.name = plantRequest.getName();
