@@ -69,3 +69,6 @@
                     :auto-hide-duration 3000
                     :on-request-close #(re-frame/dispatch [:app/hide-snackbar])}])
     child]))
+
+(defn loading-indicator []
+  [ui/circular-progress {:size 60}])

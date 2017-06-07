@@ -26,6 +26,26 @@
          :roles)))))
 
 (re-frame/reg-sub
+ :current-user/user?
+ (fn [db]
+   (boolean
+    (some #{"regularUser"}
+     (->> db
+          :users
+          :current
+          :roles)))))
+
+(re-frame/reg-sub
+ :current-user-roles
+ (fn [db]
+   (or
+     (->> db
+          :users
+          :current
+          :roles)
+     [:no-roles])))
+
+(re-frame/reg-sub
  :edit-user-form
  (fn [db]
    (->> db

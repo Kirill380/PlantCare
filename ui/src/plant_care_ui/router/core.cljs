@@ -3,7 +3,7 @@
             [reagent.core :as reagent]
             [re-frame.core :as re-frame]
             [cljs-react-material-ui.reagent :as ui]
-            [plant-care-ui.components.app.views :refer [app]]
+            [plant-care-ui.components.app.views :refer [app loading-indicator]]
             [plant-care-ui.router.nav :as nav]
             [plant-care-ui.pages.landing.views :refer [landing-page]]
             [plant-care-ui.pages.registration.views :refer [registration-page]]
@@ -21,16 +21,43 @@
 (r/start! nav/*router {:default :landing
                        :on-navigate on-navigate})
 
+(def routing
+  {:landing {:render (fn [_ _] [landing-page])
+             :available-for #{:no-roles "admin" "regularUser"}}
+
+   :registration {:render (fn [_ _] [registration-page])
+                  :available-for #{:no-roles "admin" "regularUser"}}
+
+   :users {:render (fn [_ _] [users-page])
+           :available-for #{"admin"}}
+
+   :user-by-id {:render (fn [params _] [user-by-id-page (:id params)])
+                :available-for #{"admin"}}
+
+   :flowers {:render (fn [_ _] [flowers-page])
+             :available-for #{"regularUser"}}
+
+   :plant-by-id {:render (fn [params _] [flower-by-id-page (:id params)])
+                 :available-for #{"regularUser"}}})
+
 (defn router []
-  (let [{:keys [handler params query]} @(re-frame/subscribe [:route])]
+  (let [{:keys [handler params query]} @(re-frame/subscribe [:route])
+        roles @(re-frame/subscribe [:current-user-roles])
+        requested-route (get routing handler)
+        available? (boolean (some (:available-for requested-route) roles))]
+
+    (println "requested route" requested-route)
+    (println "available?" available?)
+    (println "roles" roles)
+
+    (when-not available?
+      (nav/navigate! :landing))
+
+    (when-not requested-route
+      [:div "NOT FOUND"])
+
     [ui/mui-theme-provider
      [app
-      (case handler
-       :landing [landing-page]
-       :registration [registration-page]
-       :page1-by-id [:div (str "PAGE 1 " params)]
-       :users [users-page]
-       :user-by-id [user-by-id-page (:id params)]
-       :flowers [flowers-page]
-       :plant-by-id [flower-by-id-page (:id params)]
-       [:div "NOT FOUND"])]]))
+      (if available?
+        (apply (:render requested-route) [params query])
+        [loading-indicator])]]))

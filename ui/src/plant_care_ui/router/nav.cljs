@@ -5,7 +5,6 @@
 (def *router
   (r/router [["/" :landing]
              ["/registration" :registration]
-             ["/page1/:id" :page1-by-id]
              ["/users" :users]
              ["/users/:id" :user-by-id]
              ["/flowers" :flowers]
