@@ -32,6 +32,18 @@
   :margin-left 25
   :margin-right 25})
 
+(defn make-handle-image-uploaing [handler]
+  (fn [e]
+   (let [file (aget e "target" "files" 0)
+         reader (js/FileReader.)]
+     (set! (.-onloadend reader) (fn []
+                                  (let [result (aget reader "result")]
+                                    (handler result))))
+     (if (boolean file)
+       (.readAsDataURL reader file)
+       (handler nil)))))
+
+
 (defn flowers-page []
   (reagent/create-class
     {:component-will-mount #(re-frame/dispatch [:get-all-flowers/request])
@@ -59,46 +71,62 @@
                             (swap! form-state assoc field (-> e .-target .-value))))]
     (fn [flower-id]
       (println "form state" @form-state)
-      [:form {:style {:display "flex"
-                      :flex-direction "column"
-                      :width 256}
-              :on-submit (fn [e]
-                           (.preventDefault e)
-                           (re-frame/dispatch
-                             (if (= flower-id "new")
-                               [:create-plant/request @form-state]
-                               [:edit-plant/request flower-id @form-state])))}
-        [ui/text-field
-          {:floating-label-text "Name"
-           :on-change (on-change-field :name)
-           :value (:name @form-state)}]
-        [ui/text-field
-          {:floating-label-text "Species"
-           :on-change (on-change-field :species)
-           :value (:species @form-state)}]
-        [ui/text-field
-          {:floating-label-text "Location"
-           :on-change (on-change-field :location)
-           :value (:location @form-state)}]
-        [ui/text-field
-          {:floating-label-text "Threshold"
-           :on-change (on-change-field :moistureThreshold)
-           :value (:moistureThreshold @form-state)}]
+      [:div {:style {:display "flex"}}
+        [:form {:style {:display "flex"
+                        :flex-direction "column"
+                        :width 256}
+                :on-submit (fn [e]
+                             (.preventDefault e)
+                             (re-frame/dispatch
+                               (if (= flower-id "new")
+                                 [:create-plant/request @form-state]
+                                 [:edit-plant/request flower-id @form-state])))}
+          [ui/text-field
+            {:floating-label-text "Name"
+             :on-change (on-change-field :name)
+             :value (:name @form-state)}]
+          [ui/text-field
+            {:floating-label-text "Species"
+             :on-change (on-change-field :species)
+             :value (:species @form-state)}]
+          [ui/text-field
+            {:floating-label-text "Location"
+             :on-change (on-change-field :location)
+             :value (:location @form-state)}]
+          [ui/text-field
+            {:floating-label-text "Threshold"
+             :on-change (on-change-field :moistureThreshold)
+             :value (:moistureThreshold @form-state)}]
+          [:div {:style {:margin-top 10
+                         :margin-bottom 10}}
+            [:input {:type "file"
+                     :on-change (make-handle-image-uploaing
+                                  #(swap! form-state assoc :image %))}]]
 
-        [ui/raised-button {:type "submit"
-                           :label (if (= flower-id "new")
-                                    "CREATE"
-                                    "SAVE")
-                           :primary true}]
-        (when (not= flower-id "new")
-          [ui/raised-button {:type "button"
-                             :label "RESET"
-                             :on-click #(reset! form-state @init-state)}])
-        (when (not= flower-id "new")
-          [ui/raised-button {:type "button"
-                             :label "DELETE"
-                             :secondary true
-                             :on-click #(re-frame/dispatch [:delete-plant/request flower-id])}])])))
+          [ui/raised-button {:type "submit"
+                             :label (if (= flower-id "new")
+                                      "CREATE"
+                                      "SAVE")
+                             :primary true}]
+          (when (not= flower-id "new")
+            [ui/raised-button {:type "button"
+                               :label "RESET"
+                               :on-click #(reset! form-state @init-state)}])
+          (when (not= flower-id "new")
+            [ui/raised-button {:type "button"
+                               :label "DELETE"
+                               :secondary true
+                               :on-click #(re-frame/dispatch [:delete-plant/request flower-id])}])]
+        [:div {:style {:margin-left 50
+                       :margin-top 25
+                       :border "1px solid grey"
+                       :padding 20
+                       :width 300
+                       :height 300
+                       :background-size "cover"
+                       :background-image (str "url(" (:image @form-state) ")")}}
+           (when-not (boolean (:image @form-state))
+             "Image preview")]])))
 
 (defn flower-by-id-page [id]
   (reagent/create-class
