@@ -4,6 +4,9 @@
             [plant-care-ui.config :as config]
             [ajax.core :as ajax]))
 
+(defn base64<-from-server [base64]
+  (str "data:image/jpeg;base64," base64))
+
 (re-frame/reg-event-fx
   :get-all-flowers/request
   [utils/common-interceptors]
@@ -17,13 +20,19 @@
                     :on-success [:get-all-flowers/success]
                     :on-failure [:get-all-flowers/failure]}})))
 
+(defn map-plant [[id plant-arr]]
+  (let [plant (first plant-arr)]
+    (vector
+      id
+      (assoc plant :image (base64<-from-server (:image plant))))))
+
 (re-frame/reg-event-db
   :get-all-flowers/success
   [utils/common-interceptors]
   (fn [db [_ v]]
     (let [plants (:items v)
           grouped (group-by :id plants)
-          mapped (into {} (map #(vector (first %) (first (second %))) grouped))]
+          mapped (into {} (map map-plant grouped))]
      (assoc-in db [:flowers :all] mapped))))
 
 (re-frame/reg-event-fx
@@ -57,14 +66,12 @@
   :edit-plant/success
   [utils/common-interceptors]
   (fn [_]
-    (println "SUCCESS")
     {:dispatch [:app/show-message "Plant successfully updated"]}))
 
 (re-frame/reg-event-fx
   :edit-plant/failure
   [utils/common-interceptors]
   (fn [_ [_ v]]
-    (println "FAILURE")
     {:dispatch [:app/show-message (str "Error! " (-> v :response :message))]}))
 
 (re-frame/reg-event-fx
@@ -84,7 +91,6 @@
   :delete-plant/success
   [utils/common-interceptors]
   (fn [{:keys [db]} [_ id]]
-    (println "Success")
     {:db (update-in db [:flowers :all (js/parseInt id)] dissoc)
      :dispatch [:app/show-message "Plant successfully deleted"]
      :router {:handler :flowers}}))
@@ -113,7 +119,6 @@
   :create-plant/success
   [utils/common-interceptors]
   (fn [_ [_ v]]
-    (println "response" v)
     {:router {:handler :flowers}
      :dispatch [:app/show-message "Success!"]}))
 

@@ -32,6 +32,14 @@
   :margin-left 25
   :margin-right 25})
 
+(defn base64->to-server [string]
+  (second (.split string "base64,")))
+
+(defn prepare-body-to-request [body]
+  (let [image (:image body)
+        image* (base64->to-server image)]
+    (assoc body :image image*)))
+
 (defn make-handle-image-uploaing [handler]
   (fn [e]
    (let [file (aget e "target" "files" 0)
@@ -70,7 +78,6 @@
                           (fn [e]
                             (swap! form-state assoc field (-> e .-target .-value))))]
     (fn [flower-id]
-      (println "form state" @form-state)
       [:div {:style {:display "flex"}}
         [:form {:style {:display "flex"
                         :flex-direction "column"
@@ -79,8 +86,10 @@
                              (.preventDefault e)
                              (re-frame/dispatch
                                (if (= flower-id "new")
-                                 [:create-plant/request @form-state]
-                                 [:edit-plant/request flower-id @form-state])))}
+                                 [:create-plant/request
+                                   (prepare-body-to-request @form-state)]
+                                 [:edit-plant/request flower-id
+                                   (prepare-body-to-request @form-state)])))}
           [ui/text-field
             {:floating-label-text "Name"
              :on-change (on-change-field :name)
@@ -124,7 +133,9 @@
                        :width 300
                        :height 300
                        :background-size "cover"
-                       :background-image (str "url(" (:image @form-state) ")")}}
+                       :background-image (str "url(" (or
+                                                       (:image @form-state)
+                                                       (:image @init-state) ")"))}}
            (when-not (boolean (:image @form-state))
              "Image preview")]])))
 
