@@ -1,6 +1,8 @@
 (ns plant-care-ui.utils.core
   (:require [reagent.core :as reagent]
-            [re-frame.core :as re-frame]))
+            [re-frame.core :as re-frame]
+            [goog.crypt.base64 :as base64]
+            [clojure.string :as string]))
 
 (def common-interceptors
   [(when ^boolean goog.DEBUG re-frame/debug)])
@@ -52,3 +54,20 @@
                    :cursor "pointer"}
            :on-click #(re-frame/dispatch [action id])}
       id]))
+
+
+; it's bad to use js/JSON not provided by coeffect
+(defn parse-auth-token [token]
+  (js->clj
+   (.parse js/JSON
+    (base64/decodeString
+     (second
+      (string/split token #"\."))))
+   :keywordize-keys true))
+
+
+(defn extract-user-roles [token]
+  (let [roles (:roles (parse-auth-token token))
+        admin? (boolean (some #{"admin"} roles))]
+    {:roles roles
+     :admin? admin?}))

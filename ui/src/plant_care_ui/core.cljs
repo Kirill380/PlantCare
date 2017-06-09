@@ -9,6 +9,7 @@
 
 (defn ^:export main []
   (re-frame/dispatch-sync [:init-db])
+  (re-frame/dispatch-sync [:load-tokens])
   (enable-re-frisk!)
   (reagent/render [router]
    (.getElementById js/document "app")))

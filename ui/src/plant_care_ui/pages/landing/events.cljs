@@ -3,9 +3,7 @@
             [ajax.core :as ajax]
             [day8.re-frame.http-fx]
             [plant-care-ui.utils.core :as utils]
-            [plant-care-ui.config :as config]
-            [goog.crypt.base64 :as base64]
-            [clojure.string :as string]))
+            [plant-care-ui.config :as config]))
 
 (re-frame/reg-event-db
  :landing-set-login
@@ -38,30 +36,23 @@
                   :on-success [:login-success]
                   :on-failure [:login-failure]}})))
 
-; it's bad to use js/JSON not provided by coeffect
-(defn parse-auth-token [token]
-  (js->clj
-   (.parse js/JSON
-    (base64/decodeString
-     (second
-      (string/split token #"\."))))
-   :keywordize-keys true))
-
 (re-frame/reg-event-fx
  :login-success
  [utils/common-interceptors]
  (fn [{:keys [db]} [_ {:keys [token refreshToken]}]]
   (let [{:keys [login]} (get-in db [:pages :landing :fields])
-        roles (:roles (parse-auth-token token))
-        admin? (boolean (some #{"admin"} roles))]
-    {:db (-> db
-             (assoc-in [:users :current :token] token)
-             (assoc-in [:users :current :refresh-token] refreshToken)
-             (assoc-in [:users :current :roles] roles)
-             (assoc-in [:users :current :email] login)
-             (assoc-in [:users :current :logged?] true))
-     :router {:handler (if admin? :users :flowers)}
-     :dispatch (when admin? [:get-all-users/request])})))
+        {:keys [roles admin?]} (utils/extract-user-roles token)]
+      {:db (-> db
+               (assoc-in [:users :current :token] token)
+               (assoc-in [:users :current :refresh-token] refreshToken)
+               (assoc-in [:users :current :roles] roles)
+               (assoc-in [:users :current :email] login)
+               (assoc-in [:users :current :logged?] true))
+       :router {:handler (if admin? :users :flowers)}
+       :dispatch (when admin? [:get-all-users/request])
+       :dispatch-n [[:store-tokens {:token token
+                                    :refresh-token refreshToken
+                                    :email login}]]})))
 
 (re-frame/reg-event-fx
  :login-failure
