@@ -68,12 +68,10 @@
           [flowers-table]])}))
 
 (defn flower-form [flower-id]
-  (let [init-state (when (not= flower-id "new")
+  (let [init-state (if (= flower-id "new")
+                     (reagent/atom {})
                      (re-frame/subscribe [:plant-by-id flower-id]))
-        form-state (reagent/atom
-                     (if (= flower-id "new")
-                       (hash-map)
-                       @init-state))
+        form-state (reagent/atom @init-state)
         on-change-field (fn [field]
                           (fn [e]
                             (swap! form-state assoc field (-> e .-target .-value))))]

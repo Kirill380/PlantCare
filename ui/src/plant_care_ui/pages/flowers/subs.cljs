@@ -12,7 +12,6 @@
 (re-frame/reg-sub
   :all-flowers-list
   (fn [db _]
-    (println "FLOW LIST" (->> db :flowers :all vals))
     (->> db
          :flowers
          :all
