@@ -142,8 +142,8 @@ public class SensorServiceImpl implements SensorService {
             .filter(p -> p.getMoistureThreshold() > value)
             .collect(Collectors.toList());
     for (Plant plant : plants) {
-      if(plant.getLastExceededThreshold() == null ||
-              ChronoUnit.MINUTES.between(LocalDateTime.now(),plant.getLastExceededThreshold()) > notificationsRepeat) {
+      if (plant.getLastExceededThreshold() == null
+              || ChronoUnit.MINUTES.between(LocalDateTime.now(),plant.getLastExceededThreshold()) > notificationsRepeat) {
         //TODO refactor change this field via SQL query
         plant.setLastExceededThreshold(LocalDateTime.now());
         plantDao.save(plant);
