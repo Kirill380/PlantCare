@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum NotificationType {
-  USER_ACTIVATION("activate");
+  USER_ACTIVATION("activate"),
+  THRESHOLD_EXCEEDED("threshold");
 
   private final String name;
 

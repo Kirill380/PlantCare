@@ -52,6 +52,8 @@ public class NotificationSenderEmail implements NotificationSender {
     switch (type) {
       case USER_ACTIVATION:
         return MessageType.ACTIVATION;
+      case THRESHOLD_EXCEEDED:
+        return MessageType.THRESHOLD_EXCEEDED;
       default:
         log.error("Unexpected notification type: " + type);
         throw new NotificationException("Unexpected notification type: " + type, HttpStatus.INTERNAL_SERVER_ERROR);

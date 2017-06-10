@@ -48,7 +48,6 @@ public class User {
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
   private Set<Plant> plants;
 
-
   public void addPlant(Plant plant) {
     addPlant(plant, true);
   }
@@ -62,7 +61,21 @@ public class User {
     }
   }
 
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+  private Set<Sensor> sensors;
 
+  public void addSensor(Sensor sensor) {
+    addSensor(sensor, true);
+  }
+
+  void addSensor(Sensor sensor, boolean bi) {
+    if (sensor != null) {
+      sensors.add(sensor);
+      if (bi) {
+        sensor.setOwner(this, false);
+      }
+    }
+  }
 
   @Column(name = "creation_date")
   private LocalDateTime creationDate;

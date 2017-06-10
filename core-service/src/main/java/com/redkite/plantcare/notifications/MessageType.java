@@ -2,7 +2,9 @@ package com.redkite.plantcare.notifications;
 
 
 public enum MessageType {
-  ACTIVATION("Plant care: Account activation", "activation_letter.ftl");
+  ACTIVATION("Plant care: Account activation", "activation_message.ftl"),
+  THRESHOLD_EXCEEDED("Plant care: Need water", "threshold_message.ftl");
+
 
   private final String subject;
 

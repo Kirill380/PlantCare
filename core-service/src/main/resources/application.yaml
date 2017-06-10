@@ -4,13 +4,15 @@ cassandra:
   init-script: scripts/plant_care.cql
 
 security.jwt:
-  expTime: 15 # mesure in minutes
+  expTime: 15 # measure in minutes
   refreshExpTime: 60
   tokenIssuer: plantcare.io
   tokenSigningKey: n5Ewr42JCF6m1qcHF8hk
 
 server:
   port: 8083
+
+notifications.repeat: 180 # measure in minutes
 
 spring:
   jackson:

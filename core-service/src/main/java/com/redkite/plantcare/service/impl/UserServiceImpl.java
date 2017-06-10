@@ -162,10 +162,8 @@ public class UserServiceImpl implements UserService {
   @Transactional(isolation = Isolation.REPEATABLE_READ)
   public void deleteUser(Long userId) {
     checkExistence(userId);
-    Set<Sensor> sensors = userDao.getOne(userId).getPlants().stream()
-            .flatMap(p -> p.getSensors().stream())
-            .collect(Collectors.toSet());
-
+    User user = userDao.getOne(userId);
+    Set<Sensor> sensors = user.getSensors();
     for (Sensor sensor : sensors) {
       sensorService.deleteSensor(sensor.getId());
     }
@@ -195,4 +193,6 @@ public class UserServiceImpl implements UserService {
       throw new PlantCareException("User with id [" + userId + "] does not exist", HttpStatus.NOT_FOUND);
     }
   }
+
+
 }

@@ -19,4 +19,5 @@ public interface UserDao extends JpaRepository<User, Long> {
 
   @Query("SELECT count(u.id) > 0 FROM User u where u.email = ?1")
   boolean existsByEmail(String email);
+
 }

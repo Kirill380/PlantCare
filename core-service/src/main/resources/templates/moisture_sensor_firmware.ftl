@@ -1,8 +1,8 @@
 #include <ESP8266WiFi.h>
 
-const char* ssid = ${wifiName};
-const char* password = ${wifiPassword};
-const char* server = ${serverAddress};
+const char* ssid = "${wifiName}";
+const char* password = "${wifiPassword}";
+const char* server = "${serverAddress}";
 
 const int redPin = 4; //  ~D2
 const int greenPin = 12; // ~D6
@@ -83,7 +83,7 @@ void loop() {
   // for example, 15000 is 15 seconds. However, the blink will not always be 15 seconds due to other
   // delays set in the code.
 
-  if (millis() - ${logFrequancy} > timeHolder)
+  if (millis() - ${logFrequency} > timeHolder)
   {
     timeHolder = millis();
 
@@ -140,7 +140,7 @@ void loop() {
     Serial.println("connected]");
 
     Serial.println("[Sending a request]");
-    String payload = String("{\"sensorId\" : ${sensorId}, \"dataType\" : ${dataType}, \"value\" : ") + chartValue + "}";
+    String payload = String("{\"sensorId\" : ${sensorId}, \"dataType\" : "${dataType}", \"value\" : ") + chartValue + "}";
     client.println("POST /api/sensors/data HTTP/1.1");
     client.println(String("Host: ") + server);
     client.println("Content-Type: application/json");

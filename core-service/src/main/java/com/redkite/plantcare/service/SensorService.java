@@ -6,9 +6,13 @@ import com.redkite.plantcare.common.dto.SensorRequest;
 import com.redkite.plantcare.common.dto.SensorResponse;
 import com.redkite.plantcare.controllers.filters.SensorFilter;
 
+import freemarker.template.TemplateException;
+
+import java.io.IOException;
+
 public interface SensorService {
 
-  String createSensor(SensorRequest sensorRequest);
+  String createSensor(SensorRequest sensorRequest) throws IOException, TemplateException;
 
   ItemList<SensorResponse> findSensors(SensorFilter sensorFilter);
 
@@ -18,7 +22,7 @@ public interface SensorService {
 
   boolean isActive(Long id);
 
-  void checkExceedTrashHold(Long sensorId, Integer value, String dataType);
+  void checkExceedThreshold(Long sensorId, Integer value, String dataType);
 
   void bindToPlant(Long sensorId, Long plantId);
 

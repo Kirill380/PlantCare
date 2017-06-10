@@ -54,6 +54,8 @@ public class Plant {
   @JoinColumn(name = "owner_id", nullable = false)
   private User owner;
 
+  @Column(name = "last_exceeded_threshold")
+  private LocalDateTime lastExceededThreshold;
 
   public void setOwner(User user) {
     setOwner(user, true);
@@ -88,9 +90,4 @@ public class Plant {
     return this;
   }
 
-
-  @ManyToMany
-  @JoinTable(joinColumns = {@JoinColumn(name = "sensor_id")},
-          inverseJoinColumns = {@JoinColumn(name = "plant_id")})
-  private Set<Sensor> sensors;
 }

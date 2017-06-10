@@ -34,7 +34,7 @@ public class DataCollectionController {
     if (sensorService.isActive(logData.getSensorId())) {
       logData.setLogTime(LocalDateTime.now());
       sensorLogDataDao.save(logDataConverter.toModel(logData));
-      sensorService.checkExceedTrashHold(logData.getSensorId(), logData.getValue(), logData.getDataType());
+      sensorService.checkExceedThreshold(logData.getSensorId(), logData.getValue(), logData.getDataType());
     }
   }
 

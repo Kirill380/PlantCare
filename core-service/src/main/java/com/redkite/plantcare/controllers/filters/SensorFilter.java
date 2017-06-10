@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.springframework.data.domain.Sort;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,4 +18,11 @@ public class SensorFilter extends BaseFilter {
     super(offset, limit, sort);
     this.name = name;
   }
+
+
+  @Override
+  public Sort getSort() {
+    return new Sort(sort != null ? sort : "name");
+  }
+
 }

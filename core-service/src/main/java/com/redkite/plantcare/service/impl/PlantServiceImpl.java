@@ -66,28 +66,21 @@ public class PlantServiceImpl implements PlantService {
 
   @Override
   @Transactional(readOnly = true)
-  public PlantResponse getPlant(Long userId, Long id) {
+  public PlantResponse getPlant(Long userId, Long plantId) {
     checkExistence(userId);
-    User owner = userDao.getOne(userId);
-    //TODO check belongings to user via database
-    Plant plant = owner.getPlants().stream()
-            .filter(p -> p.getId().equals(id))
-            .findAny()
-            .orElseThrow(() -> new PlantCareException("User with id [" + userId + "] does not have plant with id [" + id + "]", HttpStatus.NOT_FOUND));
-
+    checkPlantExistence(plantId);
+    Plant plant = plantDao.getPlantByUser(plantId, userId)
+            .orElseThrow(() -> new PlantCareException("User with id [" + userId + "] does not have plant with id [" + plantId + "]", HttpStatus.NOT_FOUND));
     return plantConverter.toDto(plant);
   }
 
   @Override
   @Transactional(isolation = Isolation.REPEATABLE_READ)
-  public void editPlant(Long userId, Long id, PlantRequest plantRequest) {
+  public void editPlant(Long userId, Long plantId, PlantRequest plantRequest) {
     checkExistence(userId);
-    User owner = userDao.getOne(userId);
-    //TODO check belongings to user via database
-    Plant plant = owner.getPlants().stream()
-            .filter(p -> p.getId().equals(id))
-            .findAny()
-            .orElseThrow(() -> new PlantCareException("User with id [" + userId + "] does not have plant with id [" + id + "]", HttpStatus.NOT_FOUND));
+    checkPlantExistence(plantId);
+    Plant plant = plantDao.getPlantByUser(plantId, userId)
+            .orElseThrow(() -> new PlantCareException("User with id [" + userId + "] does not have plant with id [" + plantId + "]", HttpStatus.NOT_FOUND));
 
     plant.merge(plantRequest);
     plantDao.save(plant);
@@ -96,14 +89,12 @@ public class PlantServiceImpl implements PlantService {
 
   @Override
   @Transactional(isolation = Isolation.REPEATABLE_READ)
-  public void deletePlant(Long userId, Long id) {
+  public void deletePlant(Long userId, Long plantId) {
     checkExistence(userId);
+    checkPlantExistence(plantId);
     User owner = userDao.getOne(userId);
-    //TODO check belongings to user via database
-    Plant plant = owner.getPlants().stream()
-            .filter(p -> p.getId().equals(id))
-            .findAny()
-            .orElseThrow(() -> new PlantCareException("User with id [" + userId + "] does not have plant with id [" + id + "]", HttpStatus.NOT_FOUND));
+    Plant plant = plantDao.getPlantByUser(plantId, userId)
+            .orElseThrow(() -> new PlantCareException("User with id [" + userId + "] does not have plant with id [" + plantId + "]", HttpStatus.NOT_FOUND));
 
     //TODO make appropriate methods in User class
     plant.setOwner(null);
@@ -117,4 +108,9 @@ public class PlantServiceImpl implements PlantService {
     }
   }
 
+  private void checkPlantExistence(Long plantId) {
+    if (!plantDao.exists(plantId)) {
+      throw new PlantCareException("Plant with id [" + plantId + "] does not exist", HttpStatus.NOT_FOUND);
+    }
+  }
 }
