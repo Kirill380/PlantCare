@@ -11,22 +11,22 @@
 (def token-label "plant-care.token")
 (def refresh-token-label "plant-care.refresh-token")
 (def email-label "plant-care.email")
+(def storage js/localStorage)
 
 (re-frame/reg-event-fx
  :load-tokens
  [utils/common-interceptors]
  (fn [{:keys [db]}]
-   (let [storage js/localStorage
-         token (.getItem storage token-label)
-         refresh-token (.getItem storage refresh-token-label)
-         email (.getItem storage email-label)
-         {:keys [roles]} (utils/extract-user-roles token)]
-     {:db (-> db
-              (assoc-in [:users :current :token] token)
-              (assoc-in [:users :current :refresh-token] token)
-              (assoc-in [:users :current :email] email)
-              (assoc-in [:users :current :roles] roles)
-              (assoc-in [:users :current :logged?] true))})))
+     (if-let [token (.getItem storage token-label)]
+       (let [refresh-token (.getItem storage refresh-token-label)
+             email (.getItem storage email-label)
+             {:keys [roles]} (utils/extract-user-roles token)]
+         {:db (-> db
+                  (assoc-in [:users :current :token] token)
+                  (assoc-in [:users :current :refresh-token] token)
+                  (assoc-in [:users :current :email] email)
+                  (assoc-in [:users :current :roles] roles)
+                  (assoc-in [:users :current :logged?] true))}))))
 
 (re-frame/reg-event-fx
  :store-tokens
