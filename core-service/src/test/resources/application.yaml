@@ -1,0 +1,42 @@
+cassandra:
+  host: localhost
+  keyspace: test_plant_care
+  init-script: scripts/test_plant_care.cql
+
+security.jwt:
+  expTime: 15 # measure in minutes
+  refreshExpTime: 60
+  tokenIssuer: plantcare.io
+  tokenSigningKey: n5Ewr42JCF6m1qcHF8hk
+
+server:
+  port: 8083
+
+notifications.repeat: 180 # measure in minutes
+
+spring:
+  jackson:
+    default-property-inclusion: NON_NULL
+    serialization:
+      write-dates-as-timestamps: false
+  freemarker:
+    template-loader-path: classpath:/templates
+  datasource:
+    url: jdbc:h2:~/test;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  mail:
+    username: stonedfox42@gmail.com
+    password: Blackmirror123
+    host: smtp.gmail.com
+    port: 465
+    protocol: smtps
+
+
+
+
+
+
+
