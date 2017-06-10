@@ -60,7 +60,7 @@ public class UserControllerIT {
     userRequest.setPassword("password123");
     String json = objectMapper.writeValueAsString(userRequest);
     MockHttpServletResponse response = mvc.perform(
-            post("/apis/users")
+            post("/api/users")
                     .content(json)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
