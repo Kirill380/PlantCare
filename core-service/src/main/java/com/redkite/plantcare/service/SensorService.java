@@ -2,6 +2,7 @@ package com.redkite.plantcare.service;
 
 
 import com.redkite.plantcare.common.dto.ItemList;
+import com.redkite.plantcare.common.dto.PlantResponse;
 import com.redkite.plantcare.common.dto.SensorRequest;
 import com.redkite.plantcare.common.dto.SensorResponse;
 import com.redkite.plantcare.controllers.filters.SensorFilter;
@@ -9,6 +10,7 @@ import com.redkite.plantcare.controllers.filters.SensorFilter;
 import freemarker.template.TemplateException;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface SensorService {
 
@@ -27,6 +29,8 @@ public interface SensorService {
   void bindToPlant(Long sensorId, Long plantId);
 
   void unbindFromPlant(Long sensorId, Long plantId);
+
+  List<PlantResponse> getPlantsBySensor(Long sensorId);
 
   void deleteSensor(Long id);
 

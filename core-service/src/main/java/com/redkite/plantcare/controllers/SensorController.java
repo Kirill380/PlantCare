@@ -24,9 +24,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -55,6 +57,29 @@ public class SensorController {
   public ItemList<SensorResponse> getUsers(@ModelAttribute SensorFilter filter) {
     return sensorService.findSensors(filter);
   }
+
+
+  @RequestMapping(value = "/{sensorId}/plants", method = RequestMethod.GET)
+  public List<PlantResponse> getPlantsBySensor(@PathVariable("sensorId") Long sensorId) {
+    return sensorService.getPlantsBySensor(sensorId);
+  }
+
+  @RequestMapping(value = "/{sensorId}/plants/{plantId}", method = RequestMethod.PUT)
+  public void bindSensorToPlant(@PathVariable("sensorId") Long sensorId,
+                                @PathVariable("plantId") Long plantId) {
+    sensorService.bindToPlant(sensorId, plantId);
+
+  }
+
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @RequestMapping(value = "/{sensorId}/plants/{plantId}", method = RequestMethod.DELETE)
+  public void unbindSensorFromPlant(@PathVariable("sensorId") Long sensorId,
+                                    @PathVariable("plantId") Long plantId) {
+    sensorService.unbindFromPlant(sensorId, plantId);
+  }
+
+
+
 
   private ErrorDto getErrors(String errorMessage, BindingResult result) {
     List<FieldErrorDto> fieldErrors = result.getFieldErrors().stream()
