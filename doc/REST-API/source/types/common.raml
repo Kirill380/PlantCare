@@ -29,8 +29,12 @@ types:
   UserCreate:
     type: object
     properties:
-      firstName: string
-      lastName: string
+      firstName:
+        type: string
+        required: false
+      lastName:
+        type: string
+        required: false
       email: string
       password:
               type: string
