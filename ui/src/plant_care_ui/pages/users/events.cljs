@@ -168,9 +168,16 @@
                    :on-success [:log-out/success]
                    :on-failure [:log-out/failure]}})))
 
+(defn handle-log-out [{:keys [db]}]
+  {:db (update-in db [:users] dissoc :current)
+   :dispatch [:clear-tokens]})
+
 (re-frame/reg-event-fx
  :log-out/success
  [utils/common-interceptors]
- (fn [{:keys [db]}]
-   {:db (update-in db [:users] dissoc :current)
-    :dispatch [:clear-tokens]}))
+ handle-log-out)
+
+(re-frame/reg-event-fx
+ :log-out/failure
+ [utils/common-interceptors]
+ handle-log-out)
