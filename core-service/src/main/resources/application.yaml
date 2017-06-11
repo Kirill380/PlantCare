@@ -4,8 +4,8 @@ cassandra:
   init-script: scripts/plant_care.cql
 
 security.jwt:
-  expTime: 15 # measure in minutes
-  refreshExpTime: 60
+  expTime: 60 # measure in minutes
+  refreshExpTime: 180
   tokenIssuer: plantcare.io
   tokenSigningKey: n5Ewr42JCF6m1qcHF8hk
 

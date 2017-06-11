@@ -1,6 +1,8 @@
 package com.redkite.plantcare.mocksensor;
 
 
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
 import com.google.common.util.concurrent.Uninterruptibles;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,6 +21,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
 
@@ -72,7 +75,11 @@ public class Sensor {
           logDataRequest.setValue(generator.next());
           httpPost.setEntity(new StringEntity(objectMapper.writeValueAsString(logDataRequest)));
           CloseableHttpResponse response = httpclient.execute(httpPost);
-          log.info("Http status: " + response.getStatusLine().getReasonPhrase());
+          String message = CharStreams.toString(new InputStreamReader(response.getEntity().getContent(), Charsets.UTF_8));
+          log.info("Status code: {}; Reason phrase: {}; Response message: {}; ",
+                  response.getStatusLine().getStatusCode(),
+                  response.getStatusLine().getReasonPhrase(),
+                  message);
         } catch (IOException ex) {
           log.error(ex.getMessage(), ex);
         } finally {
