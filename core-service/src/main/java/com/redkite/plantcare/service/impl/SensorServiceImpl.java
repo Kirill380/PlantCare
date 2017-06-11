@@ -107,8 +107,7 @@ public class SensorServiceImpl implements SensorService {
     firmwareSettings.setDataType(sensorRequest.getDataType());
 
     Template template = freemarkerConfig.getTemplate("moisture_sensor_firmware.ftl");
-    String firmware = FreeMarkerTemplateUtils.processTemplateIntoString(template, firmwareSettings);
-    return firmware;
+    return FreeMarkerTemplateUtils.processTemplateIntoString(template, firmwareSettings);
   }
 
   @Override
@@ -187,9 +186,6 @@ public class SensorServiceImpl implements SensorService {
       plant.getSensors().add(sensor);
       sensor.setStatus(SensorStatus.ACTIVATED);
     }
-
-    //TODO does we need this statement
-    sensorDao.save(sensor);
   }
 
   @Override
@@ -217,8 +213,6 @@ public class SensorServiceImpl implements SensorService {
     if (sensor.getPlants().isEmpty()) {
       sensor.setStatus(SensorStatus.INACTIVE);
     }
-    //TODO does we need this statement
-    sensorDao.save(sensor);
   }
 
   @Override
@@ -259,12 +253,6 @@ public class SensorServiceImpl implements SensorService {
     return sensorDao.getSensorByUser(sensorId, userId).isPresent();
   }
 
-
-  private void checkExistence(Long userId) {
-    if (!userDao.exists(userId)) {
-      throw new PlantCareException("User with id [" + userId + "] does not exist", HttpStatus.NOT_FOUND);
-    }
-  }
 
   private void checkPlantExistence(Long plantId) {
     if (!plantDao.exists(plantId)) {

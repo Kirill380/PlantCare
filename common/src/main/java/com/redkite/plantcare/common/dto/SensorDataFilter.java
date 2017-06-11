@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 public class SensorDataFilter {
 
   @NotNull
-  private Long sensorId;
+  private Long plantId;
 
   private LocalDateTime from;
 
