@@ -52,3 +52,11 @@
         :pages
         :edit-user
         :fields)))
+
+(re-frame/reg-sub
+ :logged?
+ (fn [db]
+   (->> db
+        :users
+        :current
+        :logged?)))

@@ -36,3 +36,11 @@
      (.setItem storage token-label token)
      (.setItem storage refresh-token-label refresh-token)
      (.setItem storage email-label email))))
+
+(re-frame/reg-event-fx
+ :clear-tokens
+ [utils/common-interceptors]
+ (fn [_]
+   (.removeItem storage token-label)
+   (.removeItem storage refresh-token-label)
+   (.removeItem storage email-label)))

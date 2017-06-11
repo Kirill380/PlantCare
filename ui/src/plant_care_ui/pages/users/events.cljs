@@ -148,3 +148,29 @@
    (println "FAILURE REMOVE")
    {:db db
     :dispatch [:app/show-message "Error while deleting user"]}))
+
+
+(re-frame/reg-event-fx
+ :log-out/request
+ [utils/common-interceptors]
+ (fn [{:keys [db]}]
+   (let [current-user (->> db :users :current)
+         token (:token current-user)
+         refresh-token (:refresh-token current-user)
+         body {:accessToken token
+               :refreshToken refresh-token}]
+     {:http-xhrio {:method :post
+                   :uri (str config/api-url "/auth/logout")
+                   :response-format (ajax/text-response-format)
+                   :headers {"Authorization" (str "Bearer " token)}
+                   :format (ajax/json-request-format)
+                   :params body
+                   :on-success [:log-out/success]
+                   :on-failure [:log-out/failure]}})))
+
+(re-frame/reg-event-fx
+ :log-out/success
+ [utils/common-interceptors]
+ (fn [{:keys [db]}]
+   {:db (update-in db [:users] dissoc :current)
+    :dispatch [:clear-tokens]}))

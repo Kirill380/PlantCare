@@ -76,11 +76,14 @@
                           :on-click #(re-frame/dispatch [:delete-user/request user-id])}]])))
 
 
-
-(defn users-page []
-  [:div {:style page-wrapper-style}
-   [:h2 "Users page"]
-   [users-table]])
+(def users-page
+  (reagent/create-class
+   {:component-will-mount #(re-frame/dispatch [:get-all-users/request])
+    :reagent-render
+      (fn []
+        [:div {:style page-wrapper-style}
+         [:h2 "Users page"]
+         [users-table]])}))
 
 (defn user-by-id-page [id]
   [:div {:style page-wrapper-style}

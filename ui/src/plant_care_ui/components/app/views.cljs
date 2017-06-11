@@ -55,10 +55,16 @@
 (defn app [child]
   (let [drawer-open? (utils/listen :app/drawer-open?)
         message (:message (utils/listen :app/snackbar))
-        admin? (utils/listen :current-user/admin?)]
+        admin? (utils/listen :current-user/admin?)
+        logged? (utils/listen :logged?)]
    [:div
     [ui/app-bar {:title (str "Plant Care" (when admin? " Admin Panel"))
-                 :on-left-icon-button-touch-tap toggle-drawer}]
+                 :on-left-icon-button-touch-tap toggle-drawer
+                 :icon-element-right (when logged?
+                                       (reagent/as-component
+                                         [ui/flat-button
+                                           {:on-click #(re-frame/dispatch [:log-out/request])}
+                                           "Log out"]))}]
     [ui/drawer {:docked false
                 :open drawer-open?
                 :on-request-change toggle-drawer}
