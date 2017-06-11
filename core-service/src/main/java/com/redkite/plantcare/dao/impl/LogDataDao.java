@@ -9,7 +9,7 @@ import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.redkite.plantcare.common.dto.LogDataResponse;
 import com.redkite.plantcare.common.dto.SensorDataFilter;
 import com.redkite.plantcare.convertors.LogDataConverter;
-import com.redkite.plantcare.model.nosql.SensorLogData;
+import com.redkite.plantcare.model.nosql.PlantLogData;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,39 +19,51 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public class SensorLogDataDao extends AbstractCassandraDao<SensorLogData, Long> {
+public class LogDataDao extends AbstractCassandraDao<PlantLogData, Long> {
 
   @Autowired
   private LogDataConverter logDataConverter;
 
   @Override
-  protected Class<SensorLogData> getColumnFamilyClass() {
-    return SensorLogData.class;
+  protected Class<PlantLogData> getColumnFamilyClass() {
+    return PlantLogData.class;
   }
 
   @Override
   protected String getColumnFamilyName() {
-    return "sensor_data";
+    return "plant_data";
   }
 
   @Override
-  public SensorLogData save(SensorLogData entity) {
+  public PlantLogData save(PlantLogData entity) {
     return super.save(entity);
   }
 
+  public void deleteByPlantId(Long plantId) {
+    execute(QueryBuilder.delete().all()
+            .from(getColumnFamilyName())
+            .where(eq("plant_id", plantId))
+            .setConsistencyLevel(getConsistencyLevel())
+    );
+  }
+
   public LogDataResponse findByFilter(SensorDataFilter filter) {
-    List<SensorLogData> data;
-    if (filter == null) {
-      data = findAll();
-      //TODO sort on cassandra side not in java
-      data.sort((ld1, ld2) -> ld1.getLogTime().compareTo(ld2.getLogTime()));
+    List<PlantLogData> data;
+    if (filter.getFrom() == null && filter.getTo() == null) {
+      data = execute(QueryBuilder.select()
+              .all()
+              .from(getColumnFamilyName())
+              .where(eq("plant_id", filter.getPlantId()))
+              .orderBy(asc("log_time"))
+              .setConsistencyLevel(getConsistencyLevel())
+      );
     } else {
       Date from = Date.from(filter.getFrom().atZone(ZoneId.systemDefault()).toInstant());
       Date to = Date.from(filter.getTo().atZone(ZoneId.systemDefault()).toInstant());
       data = execute(QueryBuilder.select()
               .all()
               .from(getColumnFamilyName())
-              .where(eq("sensor_id", filter.getSensorId()))
+              .where(eq("plant_id", filter.getPlantId()))
               .and(gte("log_time", from))
               .and(lte("log_time", to))
               .orderBy(asc("log_time"))
@@ -62,4 +74,5 @@ public class SensorLogDataDao extends AbstractCassandraDao<SensorLogData, Long> 
     logDataResponse.putAll(logDataConverter.toDtoList(data));
     return logDataResponse;
   }
+
 }

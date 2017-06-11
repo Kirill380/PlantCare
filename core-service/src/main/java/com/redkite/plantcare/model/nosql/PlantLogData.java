@@ -11,13 +11,13 @@ import java.util.Date;
 
 
 @Data
-@Table(name = "sensor_data")
+@Table(name = "plant_data")
 @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
-public class SensorLogData {
+public class PlantLogData {
 
-  @ClusteringColumn
-  @Column(name = "sensor_id")
-  private Long sensorId;
+  @PartitionKey
+  @Column(name = "plant_id")
+  private Long plantId;
 
   @Column(name = "data_type")
   private String dataType;
@@ -25,7 +25,7 @@ public class SensorLogData {
   @Column
   private Integer value;
 
-  @PartitionKey
+  @ClusteringColumn
   @Column(name = "log_time")
   private Date logTime;
 

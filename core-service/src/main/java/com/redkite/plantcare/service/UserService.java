@@ -16,13 +16,13 @@ public interface UserService {
   @PreAuthorize("hasAuthority('admin')")
   ItemList<UserResponse> findUsers(UserFilter filter);
 
-  //TODO refactor replace with appropriate method that doesn't return model object
+  //TODO refactor replace with appropriate method that return only roles
   User getUserByEmail(String email);
 
   @PreAuthorize("hasAuthority('admin') or principal.userId == #userId")
   UserResponse getUser(Long userId);
 
-  //TODO refactor replace with appropriate method that doesn't return model object
+  //TODO refactor replace with appropriate method that return only roles
   User getFullUser(Long userId);
 
   @PreAuthorize("hasAuthority('admin') or principal.userId == #userId")

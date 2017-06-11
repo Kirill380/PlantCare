@@ -7,6 +7,7 @@ import com.redkite.plantcare.common.dto.ItemList;
 import com.redkite.plantcare.common.dto.PasswordUpdateDto;
 import com.redkite.plantcare.common.dto.PlantRequest;
 import com.redkite.plantcare.common.dto.PlantResponse;
+import com.redkite.plantcare.common.dto.SensorResponse;
 import com.redkite.plantcare.common.dto.UserRequest;
 import com.redkite.plantcare.common.dto.UserResponse;
 import com.redkite.plantcare.controllers.filters.PlantFilter;
@@ -38,7 +39,7 @@ public class PlantController {
   private PlantService plantService;
 
   @RequestMapping(method = RequestMethod.POST)
-  public PlantResponse createUser(@Validated @RequestBody PlantRequest plantRequest,
+  public PlantResponse createPlant(@Validated @RequestBody PlantRequest plantRequest,
                                  BindingResult result) {
     UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -50,7 +51,7 @@ public class PlantController {
 
   
   @RequestMapping(method = RequestMethod.GET)
-  public ItemList<PlantResponse> getUsers(@ModelAttribute PlantFilter filter) {
+  public ItemList<PlantResponse> getPlants(@ModelAttribute PlantFilter filter) {
     UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     return plantService.findPlants(filter, currentUser.getUserId());
   }
@@ -64,13 +65,13 @@ public class PlantController {
 
 
   @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-  public PlantResponse getUser(@PathVariable("id") Long plantId) {
+  public PlantResponse getPlant(@PathVariable("id") Long plantId) {
     UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     return plantService.getPlant(currentUser.getUserId(), plantId);
   }
 
   @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-  public void editUser(@PathVariable("id") Long plantId,
+  public void editPlant(@PathVariable("id") Long plantId,
                        @RequestBody @Validated PlantRequest plantRequest,
                        BindingResult result) {
     UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -80,11 +81,16 @@ public class PlantController {
     plantService.editPlant(currentUser.getUserId(), plantId, plantRequest);
   }
 
+
+  @RequestMapping(value = "/{plantId}/sensors", method = RequestMethod.GET)
+  public List<SensorResponse> getSensorsByPlant(@PathVariable("plantId") Long plantId) {
+    return plantService.getSensorsByPlant(plantId);
+  }
  
 
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-  public void deleteUser(@PathVariable("id") Long plantId) {
+  public void deletePlant(@PathVariable("id") Long plantId) {
     UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     plantService.deletePlant(currentUser.getUserId(), plantId);
   }

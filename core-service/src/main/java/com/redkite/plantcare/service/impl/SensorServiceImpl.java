@@ -50,6 +50,7 @@ import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -61,9 +62,6 @@ public class SensorServiceImpl implements SensorService {
 
   @Autowired
   private NotificationSender sender;
-
-  @Autowired
-  private DataCollectionService dataCollectionService;
 
   @Autowired
   private SensorConverter sensorConverter;
@@ -185,6 +183,8 @@ public class SensorServiceImpl implements SensorService {
     if (!sensor.getPlants().add(plant)) {
       log.warn("Sensor [{}] already has plant with id [{}]", sensorId, plantId);
     } else {
+      //TODO replace with appropriate add method
+      plant.getSensors().add(sensor);
       sensor.setStatus(SensorStatus.ACTIVATED);
     }
 
@@ -211,10 +211,12 @@ public class SensorServiceImpl implements SensorService {
       log.warn("Sensor [{}] does not have plant with id [{}]", sensorId, plantId);
     }
 
+    //TODO replace with appropriate remove method
+    plant.getSensors().remove(sensor);
+
     if (sensor.getPlants().isEmpty()) {
       sensor.setStatus(SensorStatus.INACTIVE);
     }
-
     //TODO does we need this statement
     sensorDao.save(sensor);
   }
@@ -232,8 +234,25 @@ public class SensorServiceImpl implements SensorService {
 
   @Override
   @Transactional(isolation = Isolation.REPEATABLE_READ)
-  public void deleteSensor(Long id) {
+  public void deleteSensor(Long sensorId) {
+    checkSensorExistence(sensorId);
+    UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Sensor sensor = sensorDao.getSensorByUser(sensorId, currentUser.getUserId())
+            .orElseThrow(() -> new PlantCareException("User with id [" + currentUser.getUserId() + "] does not have sensor with id [" + sensorId + "]",
+                    HttpStatus.NOT_FOUND));
 
+    Set<Plant> plants = sensor.getPlants();
+
+    //TODO figure out best practice how to delete in case of bidirectional relations
+    for (Plant plant : plants) {
+      plant.getSensors().remove(sensor);
+      plantDao.save(plant);
+    }
+
+    User owner = sensor.getOwner();
+    owner.getSensors().remove(sensor);
+    sensor.setOwner(null);
+    sensorDao.delete(sensor);
   }
 
   public boolean isSensorBelongsToUser(Long sensorId, Long userId) {

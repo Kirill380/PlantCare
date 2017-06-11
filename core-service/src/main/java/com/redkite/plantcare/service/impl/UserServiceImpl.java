@@ -9,9 +9,11 @@ import com.redkite.plantcare.controllers.filters.UserFilter;
 import com.redkite.plantcare.convertors.UserConverter;
 import com.redkite.plantcare.dao.RoleDao;
 import com.redkite.plantcare.dao.UserDao;
+import com.redkite.plantcare.model.Plant;
 import com.redkite.plantcare.model.Role;
 import com.redkite.plantcare.model.Sensor;
 import com.redkite.plantcare.model.User;
+import com.redkite.plantcare.service.DataCollectionService;
 import com.redkite.plantcare.service.SensorService;
 import com.redkite.plantcare.service.UserService;
 
@@ -57,14 +59,15 @@ public class UserServiceImpl implements UserService {
   private UserConverter userConverter;
 
   @Autowired
+  private DataCollectionService dataCollectionService;
+
+  @Autowired
   @Qualifier("transactionManager")
   private PlatformTransactionManager txManager;
 
   @Value("${spring.jpa.hibernate.ddl-auto}")
   private String createDefaults;
 
-  @Autowired
-  private SensorService sensorService;
 
 
   //TODO move defaults creation to separate SQL script
@@ -163,11 +166,10 @@ public class UserServiceImpl implements UserService {
   public void deleteUser(Long userId) {
     checkExistence(userId);
     User user = userDao.getOne(userId);
-    Set<Sensor> sensors = user.getSensors();
-    for (Sensor sensor : sensors) {
-      sensorService.deleteSensor(sensor.getId());
+    Set<Plant> plants = user.getPlants();
+    for (Plant plant : plants) {
+      dataCollectionService.deleteDataByPlantId(plant.getId());
     }
-
     userDao.delete(userId);
   }
 

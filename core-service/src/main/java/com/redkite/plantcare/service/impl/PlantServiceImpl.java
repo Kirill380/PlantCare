@@ -5,23 +5,30 @@ import com.redkite.plantcare.PlantCareException;
 import com.redkite.plantcare.common.dto.ItemList;
 import com.redkite.plantcare.common.dto.PlantRequest;
 import com.redkite.plantcare.common.dto.PlantResponse;
+import com.redkite.plantcare.common.dto.SensorResponse;
 import com.redkite.plantcare.common.dto.UserResponse;
 import com.redkite.plantcare.controllers.filters.PlantFilter;
 import com.redkite.plantcare.convertors.PlantConverter;
+import com.redkite.plantcare.convertors.SensorConverter;
 import com.redkite.plantcare.dao.PlantDao;
 import com.redkite.plantcare.dao.UserDao;
 import com.redkite.plantcare.model.Plant;
+import com.redkite.plantcare.model.Sensor;
 import com.redkite.plantcare.model.User;
+import com.redkite.plantcare.security.UserContext;
+import com.redkite.plantcare.service.DataCollectionService;
 import com.redkite.plantcare.service.PlantService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -35,8 +42,13 @@ public class PlantServiceImpl implements PlantService {
   private PlantConverter plantConverter;
 
   @Autowired
+  private SensorConverter sensorConverter;
+
+  @Autowired
   private UserDao userDao;
 
+  @Autowired
+  private DataCollectionService dataCollectionService;
 
   @Override
   @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -99,7 +111,18 @@ public class PlantServiceImpl implements PlantService {
     //TODO make appropriate methods in User class
     plant.setOwner(null);
     owner.getPlants().remove(plant);
+    dataCollectionService.deleteDataByPlantId(plantId);
     plantDao.delete(plant);
+  }
+
+  @Override
+  public List<SensorResponse> getSensorsByPlant(Long plantId) {
+    checkPlantExistence(plantId);
+    UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Plant plant = plantDao.getPlantByUser(plantId, currentUser.getUserId())
+            .orElseThrow(() -> new PlantCareException("User with id [" + currentUser.getUserId() + "] does not have plant with id [" + plantId + "]", HttpStatus.NOT_FOUND));
+
+    return sensorConverter.toDtoList(new ArrayList<>(plant.getSensors()));
   }
 
   private void checkExistence(Long userId) {

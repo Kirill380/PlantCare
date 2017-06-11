@@ -39,6 +39,9 @@ public class Sensor {
   @Column(name = "log_frequency")
   private Integer logFrequency;
 
+  @Column(name = "data_type")
+  private String dataType;
+
 
   @Column(name = "creation_date")
   private LocalDateTime creationDate;

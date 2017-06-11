@@ -16,6 +16,7 @@ public class SensorConverter implements ToModelConverter<Sensor, SensorRequest>,
   public Sensor toModel(SensorRequest dto) {
     Sensor sensor = new Sensor();
     sensor.setName(dto.getName());
+    sensor.setDataType(dto.getDataType());
     sensor.setLogFrequency(dto.getLogFrequency());
     return sensor;
   }
@@ -26,6 +27,7 @@ public class SensorConverter implements ToModelConverter<Sensor, SensorRequest>,
     sensorResponse.setId(model.getId());
     sensorResponse.setName(model.getName());
     sensorResponse.setLogFrequency(model.getLogFrequency());
+    sensorResponse.setDataType(model.getDataType());
     sensorResponse.setStatus(model.getStatus().name());
     sensorResponse.setCreationDate(model.getCreationDate());
     return sensorResponse;

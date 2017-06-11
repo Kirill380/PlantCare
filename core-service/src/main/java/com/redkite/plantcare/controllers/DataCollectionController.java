@@ -1,16 +1,12 @@
 package com.redkite.plantcare.controllers;
 
-import com.redkite.plantcare.PlantCareException;
 import com.redkite.plantcare.common.dto.LogDataRequest;
 import com.redkite.plantcare.common.dto.LogDataResponse;
 import com.redkite.plantcare.common.dto.SensorDataFilter;
-import com.redkite.plantcare.convertors.LogDataConverter;
-import com.redkite.plantcare.dao.impl.SensorLogDataDao;
-import com.redkite.plantcare.service.SensorService;
+import com.redkite.plantcare.service.DataCollectionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,34 +19,20 @@ import java.time.LocalDateTime;
 public class DataCollectionController {
 
   @Autowired
-  private SensorLogDataDao sensorLogDataDao;
+  private DataCollectionService dataCollectionService;
 
-  @Autowired
-  private SensorService sensorService;
-
-  @Autowired
-  private LogDataConverter logDataConverter;
 
   @RequestMapping(value = "/api/sensors/data", method = RequestMethod.POST)
   public void logData(@RequestBody LogDataRequest logData) {
-    if (sensorService.isActive(logData.getSensorId())) {
-      if (logData.getLogTime() == null) {
-        logData.setLogTime(LocalDateTime.now());
-      }
-      sensorLogDataDao.save(logDataConverter.toModel(logData));
-      sensorService.checkExceedThreshold(logData.getSensorId(), logData.getValue(), logData.getDataType());
-    } else {
-      throw new PlantCareException("Sensor with id [" + logData.getSensorId() + "] is not activated",
-              HttpStatus.PRECONDITION_REQUIRED);
-    }
+    dataCollectionService.logData(logData);
   }
 
   @RequestMapping(value = "/api/sensors/data", method = RequestMethod.GET)
   public LogDataResponse getFromPeriodOfTime(
-          @RequestParam Long sensorId,
-          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
-          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
-    return sensorLogDataDao.findByFilter(new SensorDataFilter(sensorId, from, to));
+          @RequestParam Long plantId,
+          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
+          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
+    return dataCollectionService.getDataFromPeriodOfTime(new SensorDataFilter(plantId, from, to));
   }
 
 }
