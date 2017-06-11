@@ -8,7 +8,9 @@
              ["/users" :users]
              ["/users/:id" :user-by-id]
              ["/flowers" :flowers]
-             ["/flowers/:id" :plant-by-id]]))
+             ["/flowers/:id" :plant-by-id]
+             ["/sensors" :sensors]
+             ["/sensors/:id" :sensor-by-id]]))
 
 (def navigate! (partial r/navigate! *router))
 

@@ -7,7 +7,8 @@
             [plant-care-ui.utils.core :as utils]
             [plant-care-ui.components.app.subs]
             [plant-care-ui.components.app.events]
-            [plant-care-ui.router.nav :as router]))
+            [plant-care-ui.router.nav :as router]
+            [cljsjs.clipboard]))
 
 (def toggle-drawer #(re-frame/dispatch [:app/toggle-drawer]))
 
@@ -45,7 +46,8 @@
        [ui/menu-item {:primary-text "Sign In"
                       :on-click #(go-to-page :landing)}]
        [ui/menu-item {:primary-text "Sensors page"
-                      :left-icon (icons/hardware-memory)}]
+                      :left-icon (icons/hardware-memory)
+                      :on-click #(go-to-page :sensors)}]
        [ui/menu-item {:primary-text "Flowers page"
                       :left-icon (icons/maps-local-florist)
                       :on-click #(go-to-page :flowers)}]
@@ -123,3 +125,26 @@
            [ui/card-text
             {:expandable true}
             [analytics-block id]])]])))
+
+
+(defn clipboard-button [label target disabled?]
+  (let [clipboard-atom (atom nil)]
+    (reagent/create-class
+     {:display-name "clipboard-button"
+      :component-did-mount
+      #(let [clipboard (new js/Clipboard (reagent/dom-node %))]
+         (reset! clipboard-atom clipboard))
+      :component-will-unmount
+      #(when-not (nil? @clipboard-atom)
+         (.destroy @clipboard-atom)
+         (reset! clipboard-atom nil))
+      :reagent-render
+      (fn [label target disabled?]
+        [ui/flat-button
+         {:label label
+          :disabled disabled?
+          :readOnly true
+          :full-width true
+          :secondary true
+          :class "clipboard"
+          :data-clipboard-target target}])})))

@@ -9,6 +9,7 @@
             [plant-care-ui.pages.registration.views :refer [registration-page]]
             [plant-care-ui.pages.users.views :refer [users-page user-by-id-page]]
             [plant-care-ui.pages.flowers.views :refer [flowers-page flower-by-id-page]]
+            [plant-care-ui.pages.sensors.views :refer [sensors-page sensor-by-id-page]]
             [plant-care-ui.router.subs]
             [plant-care-ui.router.events]))
 
@@ -38,7 +39,11 @@
              :available-for #{"regularUser"}}
 
    :plant-by-id {:render (fn [params _] [flower-by-id-page (:id params)])
-                 :available-for #{"regularUser"}}})
+                 :available-for #{"regularUser"}}
+   :sensors {:render (fn [_ _] [sensors-page])
+             :available-for #{"regularUser"}}
+   :sensor-by-id {:render (fn [{:keys [id]} _] [sensor-by-id-page id])
+                  :available-for #{"regularUser"}}})
 
 (defn router []
   (let [{:keys [handler params query]} @(re-frame/subscribe [:route])
