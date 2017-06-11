@@ -6,7 +6,8 @@
             [plant-care-ui.router.nav :as router]
             [plant-care-ui.utils.core :as utils]
             [plant-care-ui.pages.flowers.events]
-            [plant-care-ui.pages.flowers.subs]))
+            [plant-care-ui.pages.flowers.subs]
+            [plant-care-ui.components.app.views :refer [plant-card]]))
 ;;             [plant-care-ui.pages.users.events]
 
 
@@ -32,13 +33,11 @@
   :margin-left 25
   :margin-right 25})
 
-(defn base64->to-server [string]
-  (second (.split string "base64,")))
-
 (defn prepare-body-to-request [body]
-  (let [image (:image body)
-        image* (base64->to-server image)]
-    (assoc body :image image*)))
+  (let [image (:image body)]
+    (if (not (nil? image))
+      (assoc body :image (utils/base64->to-server image))
+      body)))
 
 (defn make-handle-image-uploaing [handler]
   (fn [e]
@@ -50,6 +49,14 @@
      (if (boolean file)
        (.readAsDataURL reader file)
        (handler nil)))))
+
+
+(defn plants-card-list []
+  (let [plants (utils/listen :all-flowers-list)]
+    [:div
+      (for [plant plants]
+        ^{:key plant}
+         [plant-card plant])]))
 
 
 (defn flowers-page []
@@ -65,11 +72,11 @@
                                      :margin-bottom 25}
                              :on-click #(router/navigate! :plant-by-id {:id :new})}]
 
-          [flowers-table]])}))
+          [plants-card-list]])}))
 
 (defn flower-form [flower-id]
   (let [init-state (if (= flower-id "new")
-                     (reagent/atom {})
+                     (reagent/atom {:image utils/default-plant-image})
                      (re-frame/subscribe [:plant-by-id flower-id]))
         form-state (reagent/atom @init-state)
         on-change-field (fn [field]
@@ -84,7 +91,6 @@
            (reset! form-state @init-state)))
       :reagent-render
        (fn [flower-id]
-         (println "flower id" flower-id)
          [:div {:style {:display "flex"}}
            [:form {:style {:display "flex"
                            :flex-direction "column"

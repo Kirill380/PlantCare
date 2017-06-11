@@ -78,3 +78,48 @@
 
 (defn loading-indicator []
   [ui/circular-progress {:size 60}])
+
+(defn analytics-block [plant-id]
+  [:div (str "chart will be here")
+    [:div
+      [ui/flat-button {:label "Last minute"}]
+      [ui/flat-button {:label "Last hour"}]
+      [ui/flat-button {:label "Last day"}]
+      [ui/flat-button {:label "Last week"}]
+      [ui/flat-button {:label "Last month"}]]])
+
+(defn plant-card [{:keys [id]}]
+  (let [plant (re-frame/subscribe [:plant-by-id id])
+        analytics-shown? (reagent/atom false)]
+    (fn [{:keys [id]}]
+      (println "analytics" @analytics-shown?)
+      [:div {:style {:margin-bottom 20}}
+        [ui/card
+         [ui/card-header
+           {:title (:name @plant)
+            :act-as-expander true
+            :show-expandable-button true}]
+         [ui/card-media
+           [:div {:style {:display "flex"
+                          :justify-content "center"}}
+             [:img {:src (:image @plant)}]]]
+         [ui/card-text
+           {:expandable true}
+           [:div
+             [:div (str "ID: " (:id @plant))]
+             [:div (str "Name: " (:name @plant))]
+             [:div (str "Location: " (:location @plant "Not defined"))]
+             [:div (str "Species: " (:species @plant "Not defined"))]
+             [:div (str "Moisture Threshold: " (:moistureThreshold @plant "Not defined"))]
+             [:div (str "Creation Date: " (:creationDate @plant))]]]
+         [ui/card-actions {:expandable true}
+           [ui/flat-button {:label "Edit"
+                            :on-click #(re-frame/dispatch [:edit-plant id])}]
+           [ui/flat-button {:label (if @analytics-shown?
+                                     "Hide analytics"
+                                     "Show analytics")
+                            :on-click #(swap! analytics-shown? not)}]]
+         (when @analytics-shown?
+           [ui/card-text
+            {:expandable true}
+            [analytics-block id]])]])))

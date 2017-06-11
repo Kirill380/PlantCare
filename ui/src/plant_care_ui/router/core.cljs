@@ -46,10 +46,6 @@
         requested-route (get routing handler)
         available? (boolean (some (:available-for requested-route) roles))]
 
-    (println "requested route" requested-route)
-    (println "available?" available?)
-    (println "roles" roles)
-
     (when-not available?
       (nav/navigate! :landing))
 

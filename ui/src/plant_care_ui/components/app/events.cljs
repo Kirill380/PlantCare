@@ -11,7 +11,6 @@
  app-toggle-drawer)
 
 (defn show-message [db [_ message]]
-  (println "show message" message)
   (assoc-in db [:global :snackbar :message] message))
 
 (re-frame/reg-event-db

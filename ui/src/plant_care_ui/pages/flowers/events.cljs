@@ -4,8 +4,6 @@
             [plant-care-ui.config :as config]
             [ajax.core :as ajax]))
 
-(defn base64<-from-server [base64]
-  (str "data:image/jpeg;base64," base64))
 
 (re-frame/reg-event-fx
   :get-all-flowers/request
@@ -21,10 +19,13 @@
                     :on-failure [:get-all-flowers/failure]}})))
 
 (defn map-plant [[id plant-arr]]
-  (let [plant (first plant-arr)]
-    (vector
-      id
-      (assoc plant :image (base64<-from-server (:image plant))))))
+  (let [plant (first plant-arr)
+        image (:image plant)]
+    (if (not (nil? image))
+      (vector
+        id
+        (assoc plant :image (utils/base64<-from-server (:image plant))))
+      plant)))
 
 (re-frame/reg-event-db
   :get-all-flowers/success
