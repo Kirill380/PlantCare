@@ -1,5 +1,6 @@
 package com.redkite.plantcare.controllers;
 
+import com.redkite.plantcare.PlantCareException;
 import com.redkite.plantcare.common.dto.LogDataRequest;
 import com.redkite.plantcare.common.dto.LogDataResponse;
 import com.redkite.plantcare.common.dto.SensorDataFilter;
@@ -9,6 +10,7 @@ import com.redkite.plantcare.service.SensorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,9 +34,14 @@ public class DataCollectionController {
   @RequestMapping(value = "/api/sensors/data", method = RequestMethod.POST)
   public void logData(@RequestBody LogDataRequest logData) {
     if (sensorService.isActive(logData.getSensorId())) {
-      logData.setLogTime(LocalDateTime.now());
+      if (logData.getLogTime() == null) {
+        logData.setLogTime(LocalDateTime.now());
+      }
       sensorLogDataDao.save(logDataConverter.toModel(logData));
       sensorService.checkExceedThreshold(logData.getSensorId(), logData.getValue(), logData.getDataType());
+    } else {
+      throw new PlantCareException("Sensor with id [" + logData.getSensorId() + "] is not activated",
+              HttpStatus.PRECONDITION_REQUIRED);
     }
   }
 

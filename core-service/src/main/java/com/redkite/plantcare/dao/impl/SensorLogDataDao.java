@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public class SensorLogDataDao extends AbstractCassandraDao<SensorLogData, String> {
+public class SensorLogDataDao extends AbstractCassandraDao<SensorLogData, Long> {
 
   @Autowired
   private LogDataConverter logDataConverter;
