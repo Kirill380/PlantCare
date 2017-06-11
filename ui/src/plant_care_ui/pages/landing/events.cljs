@@ -27,7 +27,6 @@
  (fn [coefx event]
    (let [fields (get-in coefx [:db :pages :landing :fields])
          body (->login-body fields)]
-     (println "body " body)
     {:http-xhrio {:method :post
                   :uri (str config/api-url "/auth/login")
                   :response-format (ajax/json-response-format {:keywords? true})
