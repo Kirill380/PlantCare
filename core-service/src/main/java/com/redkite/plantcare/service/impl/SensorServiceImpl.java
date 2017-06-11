@@ -45,6 +45,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -56,6 +57,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service("sensorService")
 public class SensorServiceImpl implements SensorService {
+
+  private static final String MOISTURE_SENSOR_FIRMWARE_TEMPLATE = "moisture_sensor_firmware.ftl";
 
   @Autowired
   private SensorDao sensorDao;
@@ -96,17 +99,20 @@ public class SensorServiceImpl implements SensorService {
     sensor.setStatus(SensorStatus.INACTIVE);
     sensor.setOwner(user);
     Sensor saved = sensorDao.save(sensor);
+    return generateFirmware(sensorRequest, saved.getId());
+  }
 
+
+  private String generateFirmware(SensorRequest sensorRequest, Long sensorId) throws IOException, TemplateException {
     FirmwareSettings firmwareSettings = new FirmwareSettings();
     firmwareSettings.setWifiName(sensorRequest.getWifiName());
     firmwareSettings.setWifiPassword(sensorRequest.getWifiPassword());
     firmwareSettings.setServerAddress(InetAddress.getLocalHost().getHostAddress());
     firmwareSettings.setLogFrequency(sensorRequest.getLogFrequency());
     firmwareSettings.setServerPort(serverPort);
-    firmwareSettings.setSensorId(saved.getId());
+    firmwareSettings.setSensorId(sensorId);
     firmwareSettings.setDataType(sensorRequest.getDataType());
-
-    Template template = freemarkerConfig.getTemplate("moisture_sensor_firmware.ftl");
+    Template template = freemarkerConfig.getTemplate(MOISTURE_SENSOR_FIRMWARE_TEMPLATE);
     return FreeMarkerTemplateUtils.processTemplateIntoString(template, firmwareSettings);
   }
 
@@ -121,22 +127,33 @@ public class SensorServiceImpl implements SensorService {
 
   @Override
   @Transactional(readOnly = true)
-  public SensorResponse getSensor(Long id) {
-    return null;
+  public SensorResponse getSensor(Long sensorId) {
+    checkSensorExistence(sensorId);
+    UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Sensor sensor = sensorDao.getSensorByUser(sensorId, currentUser.getUserId())
+            .orElseThrow(() -> new PlantCareException("User with id [" + currentUser.getUserId() + "] does not have sensor with id [" + sensorId + "]",
+                    HttpStatus.NOT_FOUND));
+    return sensorConverter.toDto(sensor);
   }
 
   @Override
   @Transactional(isolation = Isolation.REPEATABLE_READ)
-  public String editSensor(Long id, SensorRequest sensorRequest) {
-    return null;
+  public String editSensor(Long sensorId, SensorRequest sensorRequest) throws IOException, TemplateException {
+    checkSensorExistence(sensorId);
+    UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Sensor sensor = sensorDao.getSensorByUser(sensorId, currentUser.getUserId())
+            .orElseThrow(() -> new PlantCareException("User with id [" + currentUser.getUserId() + "] does not have sensor with id [" + sensorId + "]",
+                    HttpStatus.NOT_FOUND));
+    sensor.merge(sensorRequest);
+    sensorDao.save(sensor);
+    return generateFirmware(sensorRequest, sensorId);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public boolean isActive(Long id) {
-    checkSensorExistence(id);
-    //TODO find out this information using SQL query not Java
-    return sensorDao.getOne(id).getStatus() == SensorStatus.ACTIVATED;
+  public boolean isActive(Long sensorId) {
+    checkSensorExistence(sensorId);
+    return sensorDao.isActivated(sensorId);
   }
 
   @Override
@@ -249,7 +266,7 @@ public class SensorServiceImpl implements SensorService {
     sensorDao.delete(sensor);
   }
 
-  public boolean isSensorBelongsToUser(Long sensorId, Long userId) {
+  private boolean isSensorBelongsToUser(Long sensorId, Long userId) {
     return sensorDao.getSensorByUser(sensorId, userId).isPresent();
   }
 

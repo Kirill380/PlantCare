@@ -64,19 +64,19 @@ public class PlantController {
   }
 
 
-  @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-  public PlantResponse getPlant(@PathVariable("id") Long plantId) {
+  @RequestMapping(value = "/{plantId}", method = RequestMethod.GET)
+  public PlantResponse getPlant(@PathVariable("plantId") Long plantId) {
     UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     return plantService.getPlant(currentUser.getUserId(), plantId);
   }
 
-  @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-  public void editPlant(@PathVariable("id") Long plantId,
+  @RequestMapping(value = "/{plantId}", method = RequestMethod.PUT)
+  public void editPlant(@PathVariable("plantId") Long plantId,
                        @RequestBody @Validated PlantRequest plantRequest,
                        BindingResult result) {
     UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     if (result.hasErrors()) {
-      throw new PlantCareException(getErrors("Validation failed during plant creation", result), HttpStatus.BAD_REQUEST);
+      throw new PlantCareException(getErrors("Validation failed during updating plant profile", result), HttpStatus.BAD_REQUEST);
     }
     plantService.editPlant(currentUser.getUserId(), plantId, plantRequest);
   }
@@ -89,8 +89,8 @@ public class PlantController {
  
 
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-  public void deletePlant(@PathVariable("id") Long plantId) {
+  @RequestMapping(value = "/{plantId}", method = RequestMethod.DELETE)
+  public void deletePlant(@PathVariable("plantId") Long plantId) {
     UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     plantService.deletePlant(currentUser.getUserId(), plantId);
   }

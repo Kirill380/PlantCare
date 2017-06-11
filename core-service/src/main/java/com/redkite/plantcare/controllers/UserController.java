@@ -71,13 +71,13 @@ public class UserController {
     return userService.findUsers(filter);
   }
 
-  @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-  public UserResponse getUser(@PathVariable("id") Long userId) {
+  @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+  public UserResponse getUser(@PathVariable("userId") Long userId) {
     return userService.getUser(userId);
   }
 
-  @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-  public void editUser(@PathVariable("id") Long userId,
+  @RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
+  public void editUser(@PathVariable("userId") Long userId,
                        @RequestBody @Validated({UserRequest.UserUpdate.class}) UserRequest userRequest,
                        BindingResult result) {
 
@@ -91,8 +91,8 @@ public class UserController {
     userService.editUser(userId, userRequest);
   }
 
-  @RequestMapping(value = "/{id}/password", method = RequestMethod.PUT)
-  public void changePassword(@PathVariable("id") Long userId,
+  @RequestMapping(value = "/{userId}/password", method = RequestMethod.PUT)
+  public void changePassword(@PathVariable("userId") Long userId,
                              @RequestBody @Validated PasswordUpdateDto updateDto,
                              BindingResult result) {
     if (result.hasErrors()) {
@@ -104,8 +104,8 @@ public class UserController {
   }
 
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-  public void deleteUser(@PathVariable("id") Long userId) {
+  @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
+  public void deleteUser(@PathVariable("userId") Long userId) {
     userService.deleteUser(userId);
   }
 

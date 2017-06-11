@@ -26,7 +26,7 @@ public interface SensorService {
   SensorResponse getSensor(Long id);
 
   @PreAuthorize("hasAuthority('regularUser')")
-  String editSensor(Long id, SensorRequest sensorRequest);
+  String editSensor(Long id, SensorRequest sensorRequest) throws IOException, TemplateException;
 
   boolean isActive(Long id);
 
