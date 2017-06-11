@@ -13,6 +13,8 @@ public class SensorResponse {
 
   private String status;
 
+  private String dataType;
+
   private Integer logFrequency;
 
   private LocalDateTime creationDate;

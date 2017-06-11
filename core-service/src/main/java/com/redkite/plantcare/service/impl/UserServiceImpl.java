@@ -9,9 +9,11 @@ import com.redkite.plantcare.controllers.filters.UserFilter;
 import com.redkite.plantcare.convertors.UserConverter;
 import com.redkite.plantcare.dao.RoleDao;
 import com.redkite.plantcare.dao.UserDao;
+import com.redkite.plantcare.model.Plant;
 import com.redkite.plantcare.model.Role;
 import com.redkite.plantcare.model.Sensor;
 import com.redkite.plantcare.model.User;
+import com.redkite.plantcare.service.DataCollectionService;
 import com.redkite.plantcare.service.SensorService;
 import com.redkite.plantcare.service.UserService;
 
@@ -30,7 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -57,14 +61,15 @@ public class UserServiceImpl implements UserService {
   private UserConverter userConverter;
 
   @Autowired
+  private DataCollectionService dataCollectionService;
+
+  @Autowired
   @Qualifier("transactionManager")
   private PlatformTransactionManager txManager;
 
   @Value("${spring.jpa.hibernate.ddl-auto}")
   private String createDefaults;
 
-  @Autowired
-  private SensorService sensorService;
 
 
   //TODO move defaults creation to separate SQL script
@@ -110,6 +115,7 @@ public class UserServiceImpl implements UserService {
     userResponse.setEmail(null);
     userResponse.setFirstName(null);
     userResponse.setLastName(null);
+    userResponse.setRoles(null);
     return userResponse;
   }
 
@@ -132,8 +138,9 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User getUserByEmail(String email) {
-    return userDao.findByEmail(email);
+  public UserResponse getUserByEmail(String email) {
+    checkExistence(email);
+    return userConverter.toDto(userDao.findByEmail(email));
   }
 
   @Override
@@ -163,11 +170,10 @@ public class UserServiceImpl implements UserService {
   public void deleteUser(Long userId) {
     checkExistence(userId);
     User user = userDao.getOne(userId);
-    Set<Sensor> sensors = user.getSensors();
-    for (Sensor sensor : sensors) {
-      sensorService.deleteSensor(sensor.getId());
+    Set<Plant> plants = user.getPlants();
+    for (Plant plant : plants) {
+      dataCollectionService.deleteDataByPlantId(plant.getId());
     }
-
     userDao.delete(userId);
   }
 
@@ -194,5 +200,10 @@ public class UserServiceImpl implements UserService {
     }
   }
 
+  private void checkExistence(String email) {
+    if (!userDao.existsByEmail(email)) {
+      throw new PlantCareException("User with email [" + email + "] does not exist", HttpStatus.NOT_FOUND);
+    }
+  }
 
 }

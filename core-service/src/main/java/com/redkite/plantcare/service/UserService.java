@@ -9,6 +9,8 @@ import com.redkite.plantcare.model.User;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
+
 public interface UserService {
 
   UserResponse createUser(UserRequest userRequest);
@@ -16,13 +18,12 @@ public interface UserService {
   @PreAuthorize("hasAuthority('admin')")
   ItemList<UserResponse> findUsers(UserFilter filter);
 
-  //TODO refactor replace with appropriate method that doesn't return model object
-  User getUserByEmail(String email);
+  UserResponse getUserByEmail(String email);
 
   @PreAuthorize("hasAuthority('admin') or principal.userId == #userId")
   UserResponse getUser(Long userId);
 
-  //TODO refactor replace with appropriate method that doesn't return model object
+  //TODO refactor replace with appropriate method that return only roles
   User getFullUser(Long userId);
 
   @PreAuthorize("hasAuthority('admin') or principal.userId == #userId")

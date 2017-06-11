@@ -20,6 +20,7 @@ import freemarker.template.TemplateException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +36,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.xml.ws.Response;
+
 @RestController
 @RequestMapping("/api/sensors")
 public class SensorController {
@@ -44,17 +47,17 @@ public class SensorController {
 
 
   @RequestMapping(method = RequestMethod.POST, produces = "text/plain")
-  public String createUser(@Validated @RequestBody SensorRequest sensorRequest,
-                                  BindingResult result) throws IOException, TemplateException {
+  public ResponseEntity<String> createSensor(@Validated @RequestBody SensorRequest sensorRequest,
+                                     BindingResult result) throws IOException, TemplateException {
     if (result.hasErrors()) {
-      throw new PlantCareException(getErrors("Validation failed during plant creation", result), HttpStatus.BAD_REQUEST);
+      throw new PlantCareException(getErrors("Validation failed during sensor creation", result), HttpStatus.BAD_REQUEST);
     }
-    return sensorService.createSensor(sensorRequest);
+    return ResponseEntity.ok(sensorService.createSensor(sensorRequest));
   }
 
 
   @RequestMapping(method = RequestMethod.GET)
-  public ItemList<SensorResponse> getUsers(@ModelAttribute SensorFilter filter) {
+  public ItemList<SensorResponse> getSensors(@ModelAttribute SensorFilter filter) {
     return sensorService.findSensors(filter);
   }
 
@@ -79,6 +82,11 @@ public class SensorController {
   }
 
 
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+  public void deleteSensor(@PathVariable("id") Long sensorId) {
+    sensorService.deleteSensor(sensorId);
+  }
 
 
   private ErrorDto getErrors(String errorMessage, BindingResult result) {

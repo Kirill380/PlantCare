@@ -1,5 +1,7 @@
 package com.redkite.plantcare.security;
 
+import com.redkite.plantcare.PlantCareException;
+import com.redkite.plantcare.common.dto.UserResponse;
 import com.redkite.plantcare.model.User;
 import com.redkite.plantcare.service.UserService;
 
@@ -19,18 +21,16 @@ import org.springframework.util.Assert;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
-  private final PasswordEncoder encoder;
-
   private final UserService userService;
 
   @Autowired
-  public AjaxAuthenticationProvider(final UserService userService, final PasswordEncoder encoder) {
+  public AjaxAuthenticationProvider(final UserService userService) {
     this.userService = userService;
-    this.encoder = encoder;
   }
 
   @Override
@@ -40,21 +40,24 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
     String userEmail = (String) authentication.getPrincipal();
     String password = (String) authentication.getCredentials();
 
-    User user = userService.getUserByEmail(userEmail);
-
-    if (user == null) {
-      throw new UsernameNotFoundException("User not found: " + userEmail);
+    UserResponse user;
+    try {
+      user = userService.getUserByEmail(userEmail);
+    } catch (PlantCareException ex) {
+      throw new UsernameNotFoundException(ex.getMessage());
     }
 
-    if (!encoder.matches(password, user.getPasswordHash())) {
+    if (!userService.checkPasswordMatching(userEmail, password)) {
       throw new BadCredentialsException("Authentication Failed. Username or Password not valid.");
     }
 
-    if (user.getRole() == null) {
+    if (user.getRoles().isEmpty()) {
       throw new InsufficientAuthenticationException("User has no roles assigned");
     }
 
-    List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(user.getRole().getName()));
+    List<GrantedAuthority> authorities = user.getRoles().stream()
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
 
 
     return new UsernamePasswordAuthenticationToken(UserContext.create(user.getId(), authorities), null, authorities);

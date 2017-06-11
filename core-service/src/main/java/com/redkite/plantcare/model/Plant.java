@@ -57,6 +57,9 @@ public class Plant {
   @Column(name = "last_exceeded_threshold")
   private LocalDateTime lastExceededThreshold;
 
+  @ManyToMany(mappedBy = "plants")
+  private Set<Sensor> sensors;
+
   public void setOwner(User user) {
     setOwner(user, true);
   }

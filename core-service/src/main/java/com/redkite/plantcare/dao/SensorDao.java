@@ -20,4 +20,7 @@ public interface SensorDao extends JpaRepository<Sensor, Long> {
 
   @Query("SELECT s FROM Sensor s JOIN s.owner u where s.id = ?1 and u.id = ?2")
   Optional<Sensor> getSensorByUser(Long sensorId, Long userId);
+
+  @Query("SELECT count(s.id) > 0 FROM Sensor s where s.id = ?1 and s.status = 'ACTIVATED'")
+  boolean isActivated(Long sensorId);
 }

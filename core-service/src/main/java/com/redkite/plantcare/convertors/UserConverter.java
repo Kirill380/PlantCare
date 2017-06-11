@@ -8,6 +8,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 @Component
 public class UserConverter implements ToModelConverter<User, UserRequest>, ToDtoConverter<User, UserResponse> {
 
@@ -32,6 +35,7 @@ public class UserConverter implements ToModelConverter<User, UserRequest>, ToDto
     userResponse.setFirstName(model.getFirstName());
     userResponse.setLastName(model.getLastName());
     userResponse.setCreationDate(model.getCreationDate());
+    userResponse.setRoles(Arrays.asList(model.getRole().getName()));
     return userResponse;
   }
 }
