@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
+
   private final AuthenticationFailureHandler failureHandler;
 
   private final JwtTokenExtractor jwtTokenExtractor;

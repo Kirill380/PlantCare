@@ -32,7 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -113,6 +115,7 @@ public class UserServiceImpl implements UserService {
     userResponse.setEmail(null);
     userResponse.setFirstName(null);
     userResponse.setLastName(null);
+    userResponse.setRoles(null);
     return userResponse;
   }
 
@@ -135,8 +138,9 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User getUserByEmail(String email) {
-    return userDao.findByEmail(email);
+  public UserResponse getUserByEmail(String email) {
+    checkExistence(email);
+    return userConverter.toDto(userDao.findByEmail(email));
   }
 
   @Override
@@ -196,5 +200,10 @@ public class UserServiceImpl implements UserService {
     }
   }
 
+  private void checkExistence(String email) {
+    if (!userDao.existsByEmail(email)) {
+      throw new PlantCareException("User with email [" + email + "] does not exist", HttpStatus.NOT_FOUND);
+    }
+  }
 
 }
