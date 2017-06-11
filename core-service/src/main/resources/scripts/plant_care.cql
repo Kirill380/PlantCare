@@ -3,7 +3,7 @@ CREATE KEYSPACE plant_care WITH replication = { 'class' : 'SimpleStrategy', 'rep
 
 #TODO make log_time as partitioning key because one unable to select by from to dates
 CREATE TABLE IF NOT EXISTS plant_care.sensor_data (
-  sensor_id varchar,
+  sensor_id bigint,
   data_type varchar,
   value int,
   log_time timestamp,
