@@ -120,7 +120,8 @@ public class PlantServiceImpl implements PlantService {
     checkPlantExistence(plantId);
     UserContext currentUser = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     Plant plant = plantDao.getPlantByUser(plantId, currentUser.getUserId())
-            .orElseThrow(() -> new PlantCareException("User with id [" + currentUser.getUserId() + "] does not have plant with id [" + plantId + "]", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new PlantCareException("User with id [" + currentUser.getUserId() + "] does not have plant with id [" + plantId + "]",
+                    HttpStatus.NOT_FOUND));
 
     return sensorConverter.toDtoList(new ArrayList<>(plant.getSensors()));
   }
