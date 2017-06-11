@@ -62,6 +62,21 @@ public class SensorController {
   }
 
 
+  @RequestMapping(value = "/{sensorId}", method = RequestMethod.GET)
+  public SensorResponse getSensor(@PathVariable("sensorId") Long sensorId) {
+    return sensorService.getSensor(sensorId);
+  }
+
+  @RequestMapping(value = "/{sensorId}", method = RequestMethod.PUT)
+  public void editSensor(@PathVariable("sensorId") Long sensorId,
+                        @RequestBody @Validated SensorRequest sensorRequest,
+                        BindingResult result) throws IOException, TemplateException {
+    if (result.hasErrors()) {
+      throw new PlantCareException(getErrors("Validation failed during updating sensor profile", result), HttpStatus.BAD_REQUEST);
+    }
+    sensorService.editSensor(sensorId, sensorRequest);
+  }
+
   @RequestMapping(value = "/{sensorId}/plants", method = RequestMethod.GET)
   public List<PlantResponse> getPlantsBySensor(@PathVariable("sensorId") Long sensorId) {
     return sensorService.getPlantsBySensor(sensorId);

@@ -1,10 +1,14 @@
 package com.redkite.plantcare.model;
 
+import com.redkite.plantcare.common.dto.PlantRequest;
+import com.redkite.plantcare.common.dto.SensorRequest;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -42,7 +46,6 @@ public class Sensor {
   @Column(name = "data_type")
   private String dataType;
 
-
   @Column(name = "creation_date")
   private LocalDateTime creationDate;
 
@@ -69,5 +72,19 @@ public class Sensor {
           joinColumns = {@JoinColumn(name = "sensor_id")},
           inverseJoinColumns = {@JoinColumn(name = "plant_id")})
   private Set<Plant> plants;
+
+  public Sensor merge(SensorRequest sensorRequest) {
+    if (sensorRequest.getName() != null) {
+      this.name = sensorRequest.getName();
+    }
+
+    if (sensorRequest.getLogFrequency() != null) {
+      this.logFrequency = sensorRequest.getLogFrequency();
+    }
+    if (sensorRequest.getDataType() != null) {
+      this.logFrequency = sensorRequest.getLogFrequency();
+    }
+    return this;
+  }
 
 }
