@@ -16,6 +16,31 @@
   (toggle-drawer)
   (router/navigate! page-id))
 
+(def menu-settings
+  [{:key :profile
+    :props {:primary-text "Profile"
+            ; :left-icon (icons/social-person)
+            :on-click #(go-to-page :profile)}
+    :available-for #{"admin" "regularUser"}}
+   {:key :users
+    :props {:primary-text "Users"
+            ; :left-icon (icons/social-group)
+            :on-click #(go-to-page :users)}
+    :available-for #{"admin"}}
+   {:key :plants
+    :props {:primary-text "Plants"
+            ; :left-icon (icons/maps-local-florist)
+            :on-click #(go-to-page :flowers)}
+    :available-for #{"regularUser"}}
+   {:key :sensors
+    :props {:primary-text "Sensors"
+            ; :left-icon (icons/hardware-memory)
+            :on-click #(go-to-page :sensors)}
+    :available-for #{"regularUser"}}])
+
+; [ui/menu-item {:primary-text "Connections page"
+               ; :left-icon (icons/action-settings-ethernet)}})
+
 (defn navigation-header [props]
   (let [app-bar-theme (-> (js->clj (get-mui-theme) :keywordize-keys true) :appBar)
         color (:color app-bar-theme)
@@ -35,20 +60,15 @@
 (defn navigation []
   [:div
    [navigation-header]
-   (if-let [admin? (utils/listen :current-user/admin?)]
-     [ui/menu
-       [ui/menu-item {:primary-text "Users"
-                      :left-icon (icons/social-group)
-                      :on-click #(go-to-page :users)}]]
-     [ui/menu
-       [ui/menu-item {:primary-text "Sensors page"
-                      :left-icon (icons/hardware-memory)
-                      :on-click #(go-to-page :sensors)}]
-       [ui/menu-item {:primary-text "Flowers page"
-                      :left-icon (icons/maps-local-florist)
-                      :on-click #(go-to-page :flowers)}]
-       [ui/menu-item {:primary-text "Connections page"
-                      :left-icon (icons/action-settings-ethernet)}]])])
+   [ui/menu
+     (let [roles (utils/listen :current-user-roles)]
+       (for [item menu-settings]
+         ^{:key (:key item)}
+         (let [available-for (:available-for item)
+               available? (boolean (some available-for roles))
+               props (:props item)]
+           (when available?
+             [ui/menu-item ^{:key item} props]))))]])
 
 (defn app [child]
   (let [drawer-open? (utils/listen :app/drawer-open?)

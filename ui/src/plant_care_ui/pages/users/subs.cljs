@@ -16,6 +16,13 @@
 ;    (into [] (vals users-map))))
 
 (re-frame/reg-sub
+ :current-user
+ (fn [db]
+   (->> db
+        :users
+        :current)))
+
+(re-frame/reg-sub
  :current-user/admin?
  (fn [db]
    (boolean

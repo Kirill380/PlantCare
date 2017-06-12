@@ -89,3 +89,65 @@
   [:div {:style page-wrapper-style}
    [:h2 "User page " id]
    [user-form id]])
+
+
+(defn profile-page []
+  (let [id (:id (utils/listen :current-user))
+        init-state (utils/listen :current-user)
+        form-state (reagent/atom init-state)
+        on-change-field (fn [field]
+                          (fn [e]
+                            (println (-> e .-target .-value))
+                            (swap! form-state assoc field (-> e .-target .-value))))]
+    (reagent/create-class
+     {:component-will-mount
+      #(re-frame/dispatch [:get-user-by-id/request id])
+      :reagent-render
+       (fn []
+           [:div {:style page-wrapper-style}
+             [:h2 "Profile page"]
+             [:form {:style {:display "flex"
+                             :flex-direction "column"
+                             :width 256}
+                     :on-submit (fn [e]
+                                  (.preventDefault e)
+                                  (let [{:keys [firstName lastName]} @form-state]
+                                    (re-frame/dispatch [:edit-user/submit id {:firstName firstName
+                                                                              :lastName lastName}]))
+                                  (println @form-state))}
+               [ui/text-field
+                {:floating-label-text "Id"
+                 :value (:id @form-state)}]
+               [ui/text-field
+                {:floating-label-text "First name"
+                 :on-change (on-change-field :firstName)
+                 :value (:firstName @form-state)}]
+               [ui/text-field
+                {:floating-label-text "Last name"
+                 :on-change (on-change-field :lastName)
+                 :value (:lastName @form-state)}]
+               [ui/text-field
+                {:floating-label-text "Email"
+                 :value (:email @form-state)}]
+               [:div {:style {:display "flex"
+                              :align-items "center"
+                              :margin-top 10}}
+                 [:div {:style {:margin-right 25}}
+                   "Roles:"]
+                 (for [role (:roles @form-state)]
+                   ^{:key role}
+                   [ui/chip role])]
+               [ui/text-field
+                {:floating-label-text "Creation date"
+                 :value (:creationDate @form-state)}]
+               [ui/text-field
+                {:floating-label-text "Token"
+                 :value (:token @form-state)}]
+               [ui/text-field
+                 {:floating-label-text "Refresh token"
+                  :value (:refresh-token @form-state)}]
+               [ui/raised-button {:type "submit"
+                                  :label "SAVE"
+                                  :primary true}]
+               [ui/raised-button {:label "RESET"
+                                  :on-click #(reset! form-state init-state)}]]])})))

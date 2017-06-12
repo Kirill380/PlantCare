@@ -67,9 +67,10 @@
 
 
 (defn extract-user-roles [token]
-  (let [roles (:roles (parse-auth-token token))
-        admin? (boolean (some #{"admin"} roles))]
-    {:roles roles
+  (let [parsed-token (parse-auth-token token)
+        admin? (boolean (some #{"admin"} (:roles parsed-token)))]
+    {:roles (:roles parsed-token)
+     :id (:sub parsed-token)
      :admin? admin?}))
 
 

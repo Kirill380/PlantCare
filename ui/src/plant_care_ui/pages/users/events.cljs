@@ -46,6 +46,30 @@
      :router {:handler :user-by-id
               :params {:id v}}}))
 
+(re-frame/reg-event-fx
+ :get-user-by-id/request
+ [utils/common-interceptors]
+ (fn [{:keys [db]} [_ id]]
+   (let [token (get-in db [:users :current :token])]
+     {:http-xhrio {:method :get
+                   :uri (str config/api-url "/api/users/" id)
+                   :response-format (ajax/json-response-format {:keywords? true})
+                   :headers {"Authorization" (str "Bearer " token)}
+                   :format (ajax/json-request-format)
+                   :on-success [:get-user-by-id/success]
+                   :on-failure [:get-user-by-id/failure]}})))
+
+(re-frame/reg-event-fx
+ :get-user-by-id/success
+ [utils/common-interceptors]
+ (fn [{:keys [db]} [_ v]]
+   {:db (update-in db [:users :current] merge v)}))
+
+(re-frame/reg-event-fx
+ :get-user-by-id/failure
+ [utils/common-interceptors]
+ (fn [{:keys [db]} [_ v]]
+   {:dispatch [:app/show-message "Failed fetching current user info"]}))
 
 (re-frame/reg-event-fx
  :edit-user
@@ -83,15 +107,10 @@
  edit-user-reset)
 
 (defn edit-user-submit [{:keys [db]} [_ id fields]]
-  (let [users (get-in db [:users :all])
-        user (first (filter #(= (js/parseInt (:id %)) id) users))
-        index (.indexOf users user)
-        token (get-in db [:users :current :token])]
-    (println "fields" fields)
-  ; {:db (update-in db [:users :all index] merge fields)
+  (let [token (get-in db [:users :current :token])]
    {:http-xhrio {:method :put
                  :uri (str config/api-url "/api/users/" id)
-                 :response-format (ajax/json-response-format {:keywords? true})
+                 :response-format (ajax/text-response-format)
                  :headers {"Authorization" (str "Bearer " token)}
                  :format (ajax/json-request-format)
                  :params fields

@@ -10,7 +10,8 @@
              ["/flowers" :flowers]
              ["/flowers/:id" :plant-by-id]
              ["/sensors" :sensors]
-             ["/sensors/:id" :sensor-by-id]]))
+             ["/sensors/:id" :sensor-by-id]
+             ["/profile" :profile]]))
 
 (def navigate! (partial r/navigate! *router))
 

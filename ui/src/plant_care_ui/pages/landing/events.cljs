@@ -38,9 +38,11 @@
 (re-frame/reg-event-fx
  :login-success
  [utils/common-interceptors]
- (fn [{:keys [db]} [_ {:keys [token refreshToken]}]]
-  (let [{:keys [login]} (get-in db [:pages :landing :fields])
-        {:keys [roles admin?]} (utils/extract-user-roles token)]
+ (fn [{:keys [db]} [_ response]]
+  (let [token (:token response)
+        refreshToken (:refreshToken response)
+        {:keys [login]} (get-in db [:pages :landing :fields])
+        {:keys [roles admin? id]} (utils/extract-user-roles token)]
       {:db (-> db
                (assoc-in [:users :current :token] token)
                (assoc-in [:users :current :refresh-token] refreshToken)
@@ -51,6 +53,7 @@
        :dispatch (when admin? [:get-all-users/request])
        :dispatch-n [[:store-tokens {:token token
                                     :refresh-token refreshToken
+                                    :id id
                                     :email login}]]})))
 
 (re-frame/reg-event-fx
