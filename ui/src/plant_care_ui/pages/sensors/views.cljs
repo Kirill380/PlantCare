@@ -3,6 +3,7 @@
             [re-frame.core :as re-frame]
             [plant-care-ui.router.nav :as router]
             [cljs-react-material-ui.reagent :as ui]
+            [re-frame-datatable.core :as dt]
             [plant-care-ui.utils.core :as utils]
             [plant-care-ui.pages.sensors.events]
             [plant-care-ui.pages.sensors.subs]
@@ -14,16 +15,39 @@
    :margin-left 25
    :margin-right 25})
 
-(defn sensors-page []
- [:div {:style {:display "flex"
-                :flex-direction "column"
-                :margin-left 25}}
-   [:h2 "Sensors page"]
-   [ui/raised-button {:type "button"
-                      :label "Create new sensor"
-                      :style {:width 256
-                              :margin-bottom 25}
-                      :on-click #(router/navigate! :sensor-by-id {:id "new"})}]])
+(defn sensors-table []
+  [dt/datatable
+   :tables/all-sensors
+   [:all-sensors-list]
+   [{::dt/column-key [:id]
+     ::dt/column-label "#"}
+     ; ::dt/render-fn (utils/get-id-link-formatter :edit-plant)}
+    {::dt/column-key [:name] ::dt/column-label "Name"}
+    {::dt/column-key [:status] ::dt/column-label "Status"}
+    {::dt/column-key [:dataType] ::dt/column-label "Data Type"}
+    {::dt/column-key [:logFrequency] ::dt/column-label "Log Frequency"}
+    {::dt/column-key [:creationDate]
+     ::dt/column-label "Creation Date"
+     ::dt/render-fn utils/date-formatter}]
+   {::dt/table-classes ["table__wrapper"]}])
+
+(def sensors-page
+  (reagent/create-class
+   {:component-will-mount
+    #(re-frame/dispatch [:get-all-sensors/request])
+    :reagent-render
+     (fn []
+       [:div {:style {:display "flex"
+                      :flex-direction "column"
+                      :margin-left 25
+                      :margin-right 25}}
+         [:h2 "Sensors page"]
+         [ui/raised-button {:type "button"
+                            :label "Create new sensor"
+                            :style {:width 256
+                                    :margin-bottom 25}
+                            :on-click #(router/navigate! :sensor-by-id {:id "new"})}]
+         [sensors-table]])}))
 
 
 
@@ -79,16 +103,20 @@
                                   :primary true}]]])})))
 
 (defn sensor-by-id-page [id]
-  (let [firmware (utils/listen :last-created-firmware)]
-    [:div {:style page-wrapper-style}
-     [sensor-form id]
-     [:div {:style {:width 256
-                    :margin-top 15}}
-       [clipboard-button "Copy Firmware Code" "#firmware" (nil? firmware)]]
-     [ui/text-field
-      {:id "firmware"
-       :multi-line true
-       :rows-max 15
-       :floating-label-text "Firmware"
-       :value (or firmware "")
-       :on-change (fn [_] _)}]]))
+  (let [firmware (re-frame/subscribe [:last-created-firmware])]
+    (reagent/create-class
+     {:component-will-unmount
+      #(re-frame/dispatch [:clear-last-created-firmware])
+      :reagent-render
+        (fn []
+          [:div {:style page-wrapper-style}
+           [sensor-form id]
+           [:div {:style {:width 256
+                          :margin-top 15}}
+             [clipboard-button "Copy Firmware Code" "#firmware" (empty? @firmware)]]
+           [ui/text-field
+            {:id "firmware"
+             :multi-line true
+             :rows-max 15
+             :floating-label-text "Firmware"
+             :value (or @firmware "")}]])})))

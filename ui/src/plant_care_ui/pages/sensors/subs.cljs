@@ -11,6 +11,14 @@
         :all)))
 
 (re-frame/reg-sub
+  :all-sensors-list
+  (fn [db]
+    (->> db
+         :sensors
+         :all
+         vals)))
+
+(re-frame/reg-sub
  :sensor-by-id
  (fn [db [_ id]]
    (->> db
