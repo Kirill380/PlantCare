@@ -3,18 +3,18 @@ package com.redkite.plantcare.common.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-@Data //TODO refactor -- provide only required constructor and setters
+@Data
 public class LogDataResponse {
 
-  private Map<LocalDateTime, Integer> dataTimeSeries = new LinkedHashMap<>();
+  private List<TimeValuePair> dataTimeSeries = new ArrayList<>();
 
   public void put(LogDataRequest logDataRequest) {
-    dataTimeSeries.put(logDataRequest.getLogTime(), logDataRequest.getValue());
+    long milli = logDataRequest.getLogTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    dataTimeSeries.add(new TimeValuePair(milli, logDataRequest.getValue()));
   }
 
   public void putAll(List<LogDataRequest> list) {

@@ -1,8 +1,6 @@
 package com.redkite.plantcare.mocksensor;
 
 
-import lombok.val;
-
 import java.io.IOException;
 
 public class Launcher {
@@ -24,6 +22,5 @@ public class Launcher {
 
     sensor.stop();
   }
-
 
 }
