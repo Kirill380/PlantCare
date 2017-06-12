@@ -35,16 +35,12 @@
 (defn navigation []
   [:div
    [navigation-header]
-   [ui/menu
-    (if-let [admin? (utils/listen :current-user/admin?)]
-      [ui/menu-item {:primary-text "Users"
-                     :left-icon (icons/social-group)
-                     :on-click #(go-to-page :users)}]
-      [ui/menu
-;;        [ui/menu-item {:primary-text "Dashboard"
-;;                       :left-icon (icons/action-dashboard)}]
-       [ui/menu-item {:primary-text "Sign In"
-                      :on-click #(go-to-page :landing)}]
+   (if-let [admin? (utils/listen :current-user/admin?)]
+     [ui/menu
+       [ui/menu-item {:primary-text "Users"
+                      :left-icon (icons/social-group)
+                      :on-click #(go-to-page :users)}]]
+     [ui/menu
        [ui/menu-item {:primary-text "Sensors page"
                       :left-icon (icons/hardware-memory)
                       :on-click #(go-to-page :sensors)}]
@@ -52,25 +48,28 @@
                       :left-icon (icons/maps-local-florist)
                       :on-click #(go-to-page :flowers)}]
        [ui/menu-item {:primary-text "Connections page"
-                      :left-icon (icons/action-settings-ethernet)}]])]])
+                      :left-icon (icons/action-settings-ethernet)}]])])
 
 (defn app [child]
   (let [drawer-open? (utils/listen :app/drawer-open?)
         message (:message (utils/listen :app/snackbar))
         admin? (utils/listen :current-user/admin?)
-        logged? (utils/listen :logged?)]
+        logged? (utils/listen :user/logged?)]
    [:div
     [ui/app-bar {:title (str "Plant Care" (when admin? " Admin Panel"))
-                 :on-left-icon-button-touch-tap toggle-drawer
+                 :on-left-icon-button-touch-tap (when logged? toggle-drawer)
                  :icon-element-right (when logged?
                                        (reagent/as-component
                                          [ui/flat-button
-                                           {:on-click #(re-frame/dispatch [:log-out/request])}
+                                           {:on-click (fn []
+                                                        (when drawer-open? (toggle-drawer))
+                                                        (re-frame/dispatch [:log-out/request]))}
                                            "Log out"]))}]
-    [ui/drawer {:docked false
-                :open drawer-open?
-                :on-request-change toggle-drawer}
-     [navigation]]
+    (when logged?
+      [ui/drawer {:docked false
+                  :open drawer-open?
+                  :on-request-change toggle-drawer}
+        [navigation]])
     (when (boolean message)
       [ui/snackbar {:open (boolean message)
                     :message message

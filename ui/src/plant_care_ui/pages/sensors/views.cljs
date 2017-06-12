@@ -26,6 +26,7 @@
                       :on-click #(router/navigate! :sensor-by-id {:id "new"})}]])
 
 
+
 (defn sensor-form [id]
   (let [new? (= id "new")
         init-state (if new?

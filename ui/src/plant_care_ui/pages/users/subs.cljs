@@ -54,7 +54,7 @@
         :fields)))
 
 (re-frame/reg-sub
- :logged?
+ :user/logged?
  (fn [db]
    (->> db
         :users
