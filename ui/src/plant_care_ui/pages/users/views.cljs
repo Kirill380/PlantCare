@@ -93,17 +93,25 @@
 
 (defn profile-page []
   (let [id (:id (utils/listen :current-user))
-        init-state (utils/listen :current-user)
-        form-state (reagent/atom init-state)
+        init-state (re-frame/subscribe [:current-user])
+        form-state (reagent/atom @init-state)
         on-change-field (fn [field]
                           (fn [e]
                             (println (-> e .-target .-value))
                             (swap! form-state assoc field (-> e .-target .-value))))]
     (reagent/create-class
-     {:component-will-mount
-      #(re-frame/dispatch [:get-user-by-id/request id])
+     {:component-will-mount #(re-frame/dispatch [:get-user-by-id/request id])
+      :component-did-update
+      (fn []
+        (when (and
+                (nil? (:firstName @form-state))
+                (not (nil? @init-state)))
+          (reset! form-state @init-state)))
       :reagent-render
        (fn []
+           (println "id" id)
+           (println "form state" @form-state)
+           (println "init state" @init-state)
            [:div {:style page-wrapper-style}
              [:h2 "Profile page"]
              [:form {:style {:display "flex"
@@ -140,12 +148,12 @@
                [ui/text-field
                 {:floating-label-text "Creation date"
                  :value (:creationDate @form-state)}]
-               [ui/text-field
-                {:floating-label-text "Token"
-                 :value (:token @form-state)}]
-               [ui/text-field
-                 {:floating-label-text "Refresh token"
-                  :value (:refresh-token @form-state)}]
+              ;  [ui/text-field
+              ;   {:floating-label-text "Token"
+              ;    :value (:token @form-state)}]
+              ;  [ui/text-field
+              ;    {:floating-label-text "Refresh token"
+              ;     :value (:refresh-token @form-state)}]
                [ui/raised-button {:type "submit"
                                   :label "SAVE"
                                   :primary true}]

@@ -63,6 +63,7 @@
  :get-user-by-id/success
  [utils/common-interceptors]
  (fn [{:keys [db]} [_ v]]
+   (println "v" v)
    {:db (update-in db [:users :current] merge v)}))
 
 (re-frame/reg-event-fx
