@@ -1,3 +1,5 @@
+<#setting number_format="computer">
+
 #include <ESP8266WiFi.h>
 
 const char* ssid = "${wifiName}";
@@ -140,7 +142,7 @@ void loop() {
     Serial.println("connected]");
 
     Serial.println("[Sending a request]");
-    String payload = String("{\"sensorId\" : ${sensorId}, \"dataType\" : "${dataType}", \"value\" : ") + chartValue + "}";
+    String payload = String("{\"sensorId\" : ${sensorId}, \"dataType\" : \"${dataType}\", \"value\" : ") + chartValue + "}";
     client.println("POST /api/sensors/data HTTP/1.1");
     client.println(String("Host: ") + server);
     client.println("Content-Type: application/json");

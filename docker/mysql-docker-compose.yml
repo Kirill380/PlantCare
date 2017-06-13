@@ -2,7 +2,7 @@ version: '2'
 services:
   mysql-service:
     image: mysql:5.6
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max_allowed_packet=16M
     environment:
       - MYSQL_ROOT_PASSWORD=send08
       - MYSQL_DATABASE=plant_care
