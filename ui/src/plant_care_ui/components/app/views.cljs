@@ -105,21 +105,32 @@
   [ui/circular-progress {:size 60}])
 
 (defn analytics-block [plant-id]
-  [:div (str "chart will be here")
-    [:div
-      [ui/flat-button {:label "Last minute"}]
-      [ui/flat-button {:label "Last hour"}]
-      [ui/flat-button {:label "Last day"}]
-      [ui/flat-button {:label "Last week"}]
-      [ui/flat-button {:label "Last month"}]]])
+  (let [create-fetch-raw-data-fn (fn [plant-id time-range]
+                                   (fn []
+                                     (re-frame/dispatch [:fetch-raw-sensor-data/request plant-id time-range])))]
+    [:div (str "chart will be here")
+      [:div
+        [ui/flat-button {:label "Last minute"
+                         :on-click (create-fetch-raw-data-fn plant-id :last-minute)}]
+        [ui/flat-button {:label "Last hour"
+                         :on-click (create-fetch-raw-data-fn plant-id :last-hour)}]
+        [ui/flat-button {:label "Last day"
+                         :on-click (create-fetch-raw-data-fn plant-id :last-day)}]
+        [ui/flat-button {:label "Last week"
+                         :on-click (create-fetch-raw-data-fn plant-id :last-week)}]
+        [ui/flat-button {:label "Last month"
+                         :on-click (create-fetch-raw-data-fn plant-id :last-month)}]]]))
 
 (defn plant-card [{:keys [id]}]
   (let [plant (re-frame/subscribe [:plant-by-id id])
+        card-expanded? (reagent/atom false)
+        toggle-card-expand #(swap! card-expanded? not)
         analytics-shown? (reagent/atom false)]
     (fn [{:keys [id]}]
       (println "analytics" @analytics-shown?)
       [:div {:style {:margin-bottom 20}}
-        [ui/card
+        [ui/card {:expanded @card-expanded?
+                  :on-expand-change toggle-card-expand}
          [ui/card-header
            {:title (:name @plant)
             :act-as-expander true
@@ -128,6 +139,10 @@
            [:div {:style {:display "flex"
                           :justify-content "center"}}
              [:img {:src (:image @plant)}]]]
+         [ui/card-actions
+           [ui/flat-button
+             {:label "Toggle Card Info"
+              :on-click toggle-card-expand}]]
          [ui/card-text
            {:expandable true}
            [:div

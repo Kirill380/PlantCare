@@ -128,3 +128,48 @@
   [utils/common-interceptors]
   (fn [_ [_ v]]
     {:dispatch [:app/show-message (str "Error! " (:message (:response v)))]}))
+
+(def time-range-hash
+  {:last-minute (* 60 1000)
+   :last-hour (* 60 60 1000)
+   :last-day (* 24 60 60 1000)
+   :last-week (* 7 24 60 60 1000)
+   :last-month (* 31 24 60 60 1000)})
+
+(defn get-from-to [time-range]
+  (let [past-ms (get time-range-hash time-range)
+        to (+ (.now js/Date) (* 60 1000 60 24))
+        from (- to past-ms)
+        to-formatted (utils/Date->cool-format (js/Date. to))
+        from-formatted (utils/Date->cool-format (js/Date. from))]
+    {:from from-formatted
+     :to to-formatted}))
+
+(re-frame/reg-event-fx
+  :fetch-raw-sensor-data/request
+  [utils/common-interceptors]
+  (fn [{:keys [db]} [_ plant-id time-range]]
+    (println (get-from-to time-range))
+    (let [token (get-in db [:users :current :token])]
+      {:http-xhrio {:method :get
+                    :uri (str config/api-url "/api/sensors/data")
+                    :params (merge
+                              (when time-range (get-from-to time-range))
+                              {:plantId plant-id})
+                    :response-format (ajax/json-response-format)
+                    :format (ajax/json-request-format)
+                    :headers {"Authorization" (str "Bearer " token)}
+                    :on-success [:fetch-raw-sensor-data/success]
+                    :on-failure [:fetch-raw-sensor-data/failure]}})))
+
+(re-frame/reg-event-fx
+  :fetch-raw-sensor-data/success
+  [utils/common-interceptors]
+  (fn [{:keys [db]} [_ resp]]
+    (println "success" resp)))
+
+(re-frame/reg-event-fx
+  :fetch-raw-sensor-data/failure
+  [utils/common-interceptors]
+  (fn [{:keys [db]} [_ resp]]
+    (println "failure" resp)))

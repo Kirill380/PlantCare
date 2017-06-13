@@ -46,6 +46,10 @@
 (defn date-formatter [date]
   [:span (format-date date)])
 
+(defn Date->cool-format [date]
+  (let [iso-date (.toISOString date)]
+    (first (.split iso-date "."))))
+
 (defn get-id-link-formatter [action]
   (fn [id]
     [:div {:style {:color "red"
