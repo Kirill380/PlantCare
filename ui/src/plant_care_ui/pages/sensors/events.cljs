@@ -34,7 +34,7 @@
  :create-sensor/failure
  [utils/common-interceptors]
  (fn [{:keys [db]} [_ v]]
-   (println "failure" v)))
+   {:dispatch [:app/show-message "Error while creating new sensor"]}))
 
 
 (re-frame/reg-event-fx

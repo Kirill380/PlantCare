@@ -54,9 +54,11 @@
 (defn plants-card-list []
   (let [plants (utils/listen :all-flowers-list)]
     [:div
-      (for [plant plants]
-        ^{:key plant}
-         [plant-card plant])]))
+      (if (empty? plants)
+        [:div "No plants yet. Please, create new plant"]
+        (for [plant plants]
+          ^{:key plant}
+           [plant-card plant]))]))
 
 
 (defn flowers-page []
@@ -65,7 +67,7 @@
      :reagent-render
       (fn []
         [:div {:style page-wrapper-style}
-          [:h2 "Plants page!"]
+          [:h2 "Plants page"]
           [ui/raised-button {:type "button"
                              :label "Create new plant"
                              :style {:width 256

@@ -92,7 +92,7 @@
   :delete-plant/success
   [utils/common-interceptors]
   (fn [{:keys [db]} [_ id]]
-    {:db (update-in db [:flowers :all (js/parseInt id)] dissoc)
+    {:db (update-in db [:flowers :all] dissoc (js/parseInt id))
      :dispatch [:app/show-message "Plant successfully deleted"]
      :router {:handler :flowers}}))
 
@@ -138,7 +138,7 @@
 
 (defn get-from-to [time-range]
   (let [past-ms (get time-range-hash time-range)
-        to (+ (.now js/Date) (* 60 1000 60 24))
+        to (+ (.now js/Date) (* 3 60 60 1000))
         from (- to past-ms)
         to-formatted (utils/Date->cool-format (js/Date. to))
         from-formatted (utils/Date->cool-format (js/Date. from))]

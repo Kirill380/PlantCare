@@ -202,12 +202,16 @@
              [:div (str "Moisture Threshold: " (:moistureThreshold @plant "Not defined"))]
              [:div (str "Creation Date: " (:creationDate @plant))]]]
          [ui/card-actions {:expandable true}
-           [ui/flat-button {:label "Edit"
-                            :on-click #(re-frame/dispatch [:edit-plant id])}]
            [ui/flat-button {:label (if @analytics-shown?
                                      "Hide analytics"
                                      "Show analytics")
-                            :on-click #(swap! analytics-shown? not)}]]
+                            :on-click #(swap! analytics-shown? not)}]
+           [ui/flat-button {:label "Edit"
+                            :primary true
+                            :on-click #(re-frame/dispatch [:edit-plant id])}]
+           [ui/flat-button {:label "Remove"
+                            :secondary true
+                            :on-click #(re-frame/dispatch [:delete-plant/request id])}]]
          (when @analytics-shown?
            [ui/card-text
             {:expandable true}
