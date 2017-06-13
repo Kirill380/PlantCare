@@ -36,6 +36,10 @@
     :props {:primary-text "Sensors"
             ; :left-icon (icons/hardware-memory)
             :on-click #(go-to-page :sensors)}
+    :available-for #{"regularUser"}}
+   {:key :connections
+    :props {:primary-text "Connections"
+            :on-click #(go-to-page :connections)}
     :available-for #{"regularUser"}}])
 
 ; [ui/menu-item {:primary-text "Connections page"

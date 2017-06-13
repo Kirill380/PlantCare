@@ -21,7 +21,8 @@
                  [cljs-ajax "0.6.0"]
                  [camel-snake-kebab "0.4.0"]
                  [re-frame-datatable "0.5.2"]
-                 [cljsjs/clipboard "1.6.1-1"]]
+                 [cljsjs/clipboard "1.6.1-1"]
+                 [day8.re-frame/async-flow-fx "0.0.7"]]
 
   :npm {:dependencies []}
 

@@ -55,6 +55,11 @@
            :on-click #(re-frame/dispatch [action id])}
       id]))
 
+(defn create-remove-button [action path]
+  (fn [_ entry]
+    [:button {:on-click #(println
+                          [action (get-in entry path)])}
+      "REMOVE"]))
 
 ; it's bad to use js/JSON not provided by coeffect
 (defn parse-auth-token [token]

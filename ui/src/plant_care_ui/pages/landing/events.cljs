@@ -1,7 +1,6 @@
 (ns plant-care-ui.pages.landing.events
   (:require [re-frame.core :as re-frame]
             [ajax.core :as ajax]
-            [day8.re-frame.http-fx]
             [plant-care-ui.utils.core :as utils]
             [plant-care-ui.config :as config]))
 

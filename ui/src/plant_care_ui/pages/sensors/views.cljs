@@ -28,7 +28,10 @@
     {::dt/column-key [:logFrequency] ::dt/column-label "Log Frequency"}
     {::dt/column-key [:creationDate]
      ::dt/column-label "Creation Date"
-     ::dt/render-fn utils/date-formatter}]
+     ::dt/render-fn utils/date-formatter}
+    {::dt/column-key [:remove]
+     ::dt/column-label "Remove"
+     ::dt/render-fn (utils/create-remove-button :lol [:id])}]
    {::dt/table-classes ["table__wrapper"]}])
 
 (def sensors-page

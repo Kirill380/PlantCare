@@ -1,6 +1,5 @@
 (ns plant-care-ui.pages.users.events
   (:require [re-frame.core :as re-frame]
-            [day8.re-frame.http-fx]
             [ajax.core :as ajax]
             ; [plant-care-ui.router.nav :as nav]
             [plant-care-ui.config :as config]
