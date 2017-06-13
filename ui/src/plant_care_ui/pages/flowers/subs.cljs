@@ -24,3 +24,10 @@
         :flowers
         :all
         (get (js/parseInt id)))))
+
+(re-frame/reg-sub
+  :raw-data-for-plant
+  (fn [db [_ id]]
+    (-> db
+        :raw-data
+        (get id))))

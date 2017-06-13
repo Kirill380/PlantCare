@@ -8,7 +8,10 @@
             [plant-care-ui.components.app.subs]
             [plant-care-ui.components.app.events]
             [plant-care-ui.router.nav :as router]
-            [cljsjs.clipboard]))
+            [cljsjs.clipboard]
+            [cljsjs.moment]
+            [cljsjs.chartjs]))
+
 
 (def toggle-drawer #(re-frame/dispatch [:app/toggle-drawer]))
 
@@ -104,11 +107,58 @@
 (defn loading-indicator []
   [ui/circular-progress {:size 60}])
 
+(defn map-time-series-datum [{:keys [timestamp value]}]
+  {:x (js/Date. timestamp)
+   :y value})
+
+
+(defn map-time-series-data [dataset]
+  (map map-time-series-datum dataset))
+
+(defn show-chart [elem-id data]
+  (let [context (.getContext (.getElementById js/document elem-id) "2d")
+        chart-data {:type "line"
+                    :data {:datasets [{:data data
+                                       :backgroundColor "lightgreen"
+                                       :pointBackgroundColor "green"}]}
+                    :options
+                      {:scales
+                        {:xAxes [{:display true
+                                  :type "time"
+                                  :scaleLabel {:display true
+                                               :labelString "Date"}}]
+                         :yAxes [{:display true
+                                  :scaleLabel {:display true
+                                               :labelString "Value"}}]}}}]
+    (js/Chart. context (clj->js chart-data))))
+
+
+(defn chart [data {:keys [id]}]
+  (reagent/create-class
+    {:component-did-mount #(show-chart id data)
+     :component-did-update #(show-chart id data)
+     :display-name "chart"
+     :reagent-render
+       (fn [data {:keys [id]}]
+         [:canvas {:id id
+                   :width 300
+                   :height 300}])}))
+
 (defn analytics-block [plant-id]
   (let [create-fetch-raw-data-fn (fn [plant-id time-range]
                                    (fn []
-                                     (re-frame/dispatch [:fetch-raw-sensor-data/request plant-id time-range])))]
-    [:div (str "chart will be here")
+                                     (re-frame/dispatch [:fetch-raw-sensor-data/request plant-id time-range])))
+        raw-data (re-frame/subscribe [:raw-data-for-plant plant-id])
+        mapped-data (map-time-series-data @raw-data)]
+    [:div
+      (if (empty? mapped-data)
+        [:div {:style {:display "flex"
+                       :justify-content "center"}}
+          "No data for selected period"]
+        [:div {:style {:display "flex"
+                       :justify-content "center"}}
+          [:div {:style {:width "50%"}}
+            [chart mapped-data {:id "chart_id"}]]])
       [:div
         [ui/flat-button {:label "Last minute"
                          :on-click (create-fetch-raw-data-fn plant-id :last-minute)}]
@@ -127,7 +177,6 @@
         toggle-card-expand #(swap! card-expanded? not)
         analytics-shown? (reagent/atom false)]
     (fn [{:keys [id]}]
-      (println "analytics" @analytics-shown?)
       [:div {:style {:margin-bottom 20}}
         [ui/card {:expanded @card-expanded?
                   :on-expand-change toggle-card-expand}

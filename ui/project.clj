@@ -22,7 +22,9 @@
                  [camel-snake-kebab "0.4.0"]
                  [re-frame-datatable "0.5.2"]
                  [cljsjs/clipboard "1.6.1-1"]
-                 [day8.re-frame/async-flow-fx "0.0.7"]]
+                 [day8.re-frame/async-flow-fx "0.0.7"]
+                 [cljsjs/chartjs "2.5.0-0"]
+                 [cljsjs/moment "2.17.1-1"]]
 
   :npm {:dependencies []}
 

@@ -156,17 +156,19 @@
                     :params (merge
                               (when time-range (get-from-to time-range))
                               {:plantId plant-id})
-                    :response-format (ajax/json-response-format)
+                    :response-format (ajax/json-response-format {:keywords? true})
                     :format (ajax/json-request-format)
                     :headers {"Authorization" (str "Bearer " token)}
-                    :on-success [:fetch-raw-sensor-data/success]
+                    :on-success [:fetch-raw-sensor-data/success plant-id]
                     :on-failure [:fetch-raw-sensor-data/failure]}})))
 
 (re-frame/reg-event-fx
   :fetch-raw-sensor-data/success
   [utils/common-interceptors]
-  (fn [{:keys [db]} [_ resp]]
-    (println "success" resp)))
+  (fn [{:keys [db]} [_ plant-id resp]]
+    (let [data (:dataTimeSeries resp)]
+      (println data)
+      {:db (update-in db [:raw-data] assoc (js/parseInt plant-id) data)})))
 
 (re-frame/reg-event-fx
   :fetch-raw-sensor-data/failure
