@@ -41,13 +41,18 @@
  (fn [{:keys [db]} [_ response]]
   (let [token (:token response)
         refreshToken (:refreshToken response)
+        firstName (:firstName response)
+        lastName (:lastName response)
         {:keys [login]} (get-in db [:pages :landing :fields])
         {:keys [roles admin? id]} (utils/extract-user-roles token)]
       {:db (-> db
+               (assoc-in [:users :current :id] id)
                (assoc-in [:users :current :token] token)
                (assoc-in [:users :current :refresh-token] refreshToken)
                (assoc-in [:users :current :roles] roles)
                (assoc-in [:users :current :email] login)
+               (assoc-in [:users :current :firstName] firstName)
+               (assoc-in [:users :current :lastName] lastName)
                (assoc-in [:users :current :logged?] true))
        :router {:handler (if admin? :users :flowers)}
        :dispatch (when admin? [:get-all-users/request])
