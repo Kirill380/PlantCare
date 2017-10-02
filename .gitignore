@@ -1,3 +1,4 @@
+### Maven ###
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
@@ -22,3 +23,12 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+### Non source files ###
+*.log
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
